@@ -15,11 +15,13 @@
 
     <TextView
         android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/golden_egg"
-        android:layout_marginTop="56dp"
-        android:id="@+id/eggCountTextView" />
+        android:layout_width="300dp"
+        android:layout_height="35dp"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:id="@+id/eggCountTextView"
+        android:layout_above="@+id/golden_egg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="61dp" />
 
 </RelativeLayout>
