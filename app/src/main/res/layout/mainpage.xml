@@ -13,4 +13,13 @@
         android:layout_centerHorizontal="true"
         android:onClick="onButtonClick" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/golden_egg"
+        android:layout_marginTop="56dp"
+        android:id="@+id/eggCountTextView" />
+
 </RelativeLayout>
