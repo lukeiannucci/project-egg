@@ -1,4 +1,4 @@
-package project_egg.project_egg;
+package com.jordanluke.egg;
 
 /**
  * Created by jmattingley23 on 12/19/2016.

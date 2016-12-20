@@ -1,11 +1,14 @@
-package project_egg.project_egg;
+package com.jordanluke.egg;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.os.Vibrator;
 
-import project_egg.project_egg.BigNumber;
+import com.jordanluke.R;
+import com.jordanluke.egg.BigNumber;
 
 /**
  * Created by Luke on 12/19/2016.
@@ -13,18 +16,21 @@ import project_egg.project_egg.BigNumber;
 
 public class MainActivity extends AppCompatActivity{
     BigNumber eggCount = new BigNumber();
+    Vibrator phoneVibrate;
     int egg_count = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainpage);
-        update();
+        phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
+        update(); //initial call to update function
     }
 
     protected void onButtonClick(View egg) {
         if(egg.getId() == R.id.golden_egg) {
-            eggCount.add(1);
-            update();
+            eggCount.add(1); //increment number
+            update(); //update count TextView
+            phoneVibrate.vibrate(30); //vibrate phone
         }
     }
 
