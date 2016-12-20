@@ -17,7 +17,8 @@ import com.jordanluke.egg.BigNumber;
 public class MainActivity extends AppCompatActivity{
     BigNumber eggCount = new BigNumber();
     Vibrator phoneVibrate;
-    int egg_count = 0;
+    int egg_count = 1;
+    int multiplier = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +29,11 @@ public class MainActivity extends AppCompatActivity{
 
     protected void onButtonClick(View egg) {
         if(egg.getId() == R.id.golden_egg) {
-            eggCount.add(1); //increment number
+
+
+            //eggCount.add(1); //increment number
+            eggCount.add(egg_count);
+            egg_count *= multiplier;
             update(); //update count TextView
             phoneVibrate.vibrate(30); //vibrate phone
         }
