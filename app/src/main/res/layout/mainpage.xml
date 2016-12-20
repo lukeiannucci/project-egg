@@ -2,16 +2,21 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:elevation="1dp"
+    android:clipToPadding="false"
+    android:background="#FFFFFF">
 
     <ImageButton
-        android:layout_width="200dp"
-        android:layout_height="205dp"
-        android:background="@drawable/golden_egg"
+        android:background="@drawable/egg_state"
         android:id="@+id/golden_egg"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:onClick="onButtonClick" />
+        android:onClick="onButtonClick"
+        android:adjustViewBounds="true"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        />
 
     <TextView
         android:text="TextView"
