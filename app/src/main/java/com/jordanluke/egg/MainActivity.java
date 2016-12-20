@@ -10,15 +10,18 @@ import android.os.Vibrator;
 import com.jordanluke.R;
 import com.jordanluke.egg.BigNumber;
 
+import java.math.BigInteger;
+
 /**
- * Created by Luke on 12/19/2016.
+ * My thoughts are that we can delete the BigNumber class and implement everything in the Main Activity
+ * Not sure how you want the counter to work but we can implement that pretty easily
  */
 
 public class MainActivity extends AppCompatActivity{
     BigNumber eggCount = new BigNumber();
     Vibrator phoneVibrate;
-    int egg_count = 1;
-    int multiplier = 5;
+    int egg_count = 0; //start at 0
+    int MAX_INT = Integer.MAX_VALUE; //for testing purposes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,18 +32,28 @@ public class MainActivity extends AppCompatActivity{
 
     protected void onButtonClick(View egg) {
         if(egg.getId() == R.id.golden_egg) {
-
-
-            //eggCount.add(1); //increment number
-            eggCount.add(egg_count);
-            egg_count *= multiplier;
+            //only do if egg count is g>= MAX_INT (testing purposes)
+            if(egg_count >= MAX_INT) {
+                //testing purposes
+                BigInteger bigNumber = new BigInteger("1234567617181920");
+                eggCount.addB(bigNumber);
+            } else {
+                eggCount.add(egg_count); //increment number
+                egg_count = MAX_INT;
+            }
             update(); //update count TextView
             phoneVibrate.vibrate(30); //vibrate phone
         }
     }
 
     public void update() {
-        TextView eggCountDisplay = (TextView) findViewById(R.id.eggCountTextView);
-        eggCountDisplay.setText(eggCount.toString() + " eggs");
+        if (egg_count < MAX_INT) {
+            //testing purposes
+            TextView eggCountDisplay = (TextView) findViewById(R.id.eggCountTextView);
+            eggCountDisplay.setText(eggCount.toString() + " eggs");
+        } else {
+            TextView eggCountDisplay = (TextView) findViewById(R.id.eggCountTextView);
+            eggCountDisplay.setText(eggCount.largeCount.toString() + " eggs");
+        }
     }
 }
