@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity{
     Vibrator phoneVibrate;
     int egg_count = 0; //start at 0
     int MAX_INT = Integer.MAX_VALUE; //for testing purposes
-    int hello;
+    int hello= 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
