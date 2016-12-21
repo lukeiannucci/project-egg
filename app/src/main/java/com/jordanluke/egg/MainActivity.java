@@ -6,17 +6,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.os.Vibrator;
+import android.view.WindowManager;
 
 import com.jordanluke.R;
-import com.jordanluke.egg.BigNumber;
-
-import java.math.BigInteger;
 
 /**
  * My thoughts are that we can delete the BigNumber class and implement everything in the Main Activity
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity{
         theGame = new Game(this);
         setContentView(theGame);
     }
+    Context context = this;
+    Display display;
 
     class Game extends SurfaceView implements Runnable {
         Thread gameThread = null;
@@ -68,7 +71,16 @@ public class MainActivity extends AppCompatActivity{
         private long timeThisFrame; //current frame time
 
         Bitmap mainEggGraphic;
+        int counter = 0;
+        Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
+        WindowManager wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
+        Display display = wm.getDefaultDisplay();
+        int screenWidthActual = display.getWidth();
+        int screenHeightActual = display.getHeight();
+        int screenWidthTarget = 1080;
+        int screenHeightTarget = 1920;
+        double scaleFactor = screenWidthActual * 1.0 / screenWidthTarget;
         /**
          * Game constructor
          */
@@ -79,8 +91,8 @@ public class MainActivity extends AppCompatActivity{
             paint = new Paint();
 
             //initialize graphics
-            mainEggGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.main_egg_down);
-
+            mainEggGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.main_egg_down); //get image file
+            mainEggGraphic = Bitmap.createScaledBitmap(mainEggGraphic, (int)(850 * scaleFactor), (int)(850 * scaleFactor), false); //set size
         }
         /**
          * Main Loop
@@ -114,13 +126,33 @@ public class MainActivity extends AppCompatActivity{
                 canvas.drawColor(Color.argb(255, 255, 255, 255)); //white background color
 
                 paint.setColor(Color.argb(255, 0, 0, 0)); //black text
-                paint.setTextSize(80);
+                paint.setTextSize(50);
                 canvas.drawText("FPS:" + fps, 20, 80, paint); //draw fps counter
+                canvas.drawText(screenWidthActual + "x" + screenHeightActual, 20, 140, paint);
+                canvas.drawText("scale factor = " + scaleFactor, 20, 200, paint);
 
-                canvas.drawBitmap(mainEggGraphic, 0, 200, paint); //draw main egg
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText(counter + " eggs", (int)(540 * scaleFactor), 300, paint); //draw egg counter
+                paint.setTextAlign(Paint.Align.LEFT);
+
+                canvas.drawBitmap(mainEggGraphic, (int)(115 * scaleFactor), (int)(535 * scaleFactor), paint); //draw main egg
 
                 ourHolder.unlockCanvasAndPost(canvas); //finalize
             }
+        }
+
+        /**
+         * Thi function gets called if the screen is touched
+         */
+        @Override
+        public boolean onTouchEvent(MotionEvent motionEvent) {
+            switch(motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+                case MotionEvent.ACTION_DOWN:
+                    counter++;
+                    phoneVibrate.vibrate(30); //vibrate phone
+                    break;
+            }
+            return true;
         }
         public void pause() {
             playing = false;

@@ -7,26 +7,4 @@
     android:clipToPadding="false"
     android:background="#FFFFFF">
 
-    <ImageButton
-        android:background="@drawable/egg_state"
-        android:id="@+id/golden_egg"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="onButtonClick"
-        android:adjustViewBounds="true"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="300dp"
-        android:layout_height="35dp"
-        android:textSize="25dp"
-        android:gravity="center"
-        android:id="@+id/eggCountTextView"
-        android:layout_above="@+id/golden_egg"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="61dp" />
-
 </RelativeLayout>
