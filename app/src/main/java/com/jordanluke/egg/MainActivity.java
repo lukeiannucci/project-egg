@@ -15,6 +15,7 @@ import java.math.BigInteger;
 /**
  * My thoughts are that we can delete the BigNumber class and implement everything in the Main Activity
  * Not sure how you want the counter to work but we can implement that pretty easily
+ * test
  */
 
 public class MainActivity extends AppCompatActivity{
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity{
     Vibrator phoneVibrate;
     int egg_count = 0; //start at 0
     int MAX_INT = Integer.MAX_VALUE; //for testing purposes
+    int hello;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
