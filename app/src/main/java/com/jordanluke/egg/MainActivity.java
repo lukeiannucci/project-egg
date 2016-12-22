@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity{
 
         Bitmap mainEggGraphic;
 
+        Bitmap eggAnimation;
+
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
         WindowManager wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
@@ -87,6 +89,10 @@ public class MainActivity extends AppCompatActivity{
         int screenWidthTarget = 1080;
         int screenHeightTarget = 1920;
         double scaleFactor = screenWidthActual * 1.0 / screenWidthTarget;
+
+        int x_eggAnimationStart ;
+        int y_eggAnimationStart;
+        int x_dir, y_dir = 2; //variables to move animations x and y
         /**
          * Game constructor
          */
@@ -95,10 +101,16 @@ public class MainActivity extends AppCompatActivity{
             //initialize stuff
             ourHolder = getHolder();
             paint = new Paint();
-
             //initialize graphics
             mainEggGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.main_egg_down); //get image file
             mainEggGraphic = Bitmap.createScaledBitmap(mainEggGraphic, (int)(850 * scaleFactor), (int)(850 * scaleFactor), false); //set size
+
+            eggAnimation = BitmapFactory.decodeResource(this.getResources(), R.drawable.flying_egg);
+            eggAnimation = Bitmap.createScaledBitmap(eggAnimation, (int)(200 * scaleFactor), (int)(200 * scaleFactor), false);
+
+            x_eggAnimationStart = 23 * (int)scaleFactor;
+            y_eggAnimationStart = 107 * (int)scaleFactor;
+
         }
         /**
          * Main Loop
@@ -127,6 +139,7 @@ public class MainActivity extends AppCompatActivity{
          */
         public void draw() {
             if(ourHolder.getSurface().isValid()) { //idk what this does but some tutorial said to do it
+                BigInteger counterCheck = new BigInteger("0");
                 canvas = ourHolder.lockCanvas(); //ready to draw
 
                 canvas.drawColor(Color.argb(255, 255, 255, 255)); //white background color
@@ -147,6 +160,15 @@ public class MainActivity extends AppCompatActivity{
                 paint.setTextAlign(Paint.Align.LEFT);
 
                 canvas.drawBitmap(mainEggGraphic, (int)(115 * scaleFactor), (int)(535 * scaleFactor), paint); //draw main egg
+
+                if(!counterCheck.toString().equals(counter.toString())){
+
+                    x_eggAnimationStart = x_eggAnimationStart + x_dir;
+                    y_eggAnimationStart = y_eggAnimationStart + y_dir;
+
+
+                    canvas.drawBitmap(eggAnimation, x_eggAnimationStart, y_eggAnimationStart, null); //draw main egg
+                }
 
                 ourHolder.unlockCanvasAndPost(canvas); //finalize
             }
