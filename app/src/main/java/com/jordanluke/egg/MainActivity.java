@@ -21,6 +21,8 @@ import android.view.WindowManager;
 import com.jordanluke.R;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * My thoughts are that we can delete the BigNumber class and implement everything in the Main Activity
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(theGame);
     }
     Context context = this;
+
     Display display;
 
 
@@ -78,10 +81,12 @@ public class MainActivity extends AppCompatActivity{
         long fps; //fps counter
         private long timeThisFrame; //current frame time
         String gamestate;
-
+        FlyingEgg new_animation = new FlyingEgg(context);
         Bitmap mainEggGraphic;
+        List<FlyingEgg> animationList = new ArrayList<>();
 
-        Bitmap eggAnimation;
+
+
 
 
         Bitmap menuButtonGraphic;
@@ -97,9 +102,7 @@ public class MainActivity extends AppCompatActivity{
         int screenHeightTarget = 1920;
         double scaleFactor = screenWidthActual * 1.0 / screenWidthTarget;
 
-        int x_eggAnimationStart ;
-        int y_eggAnimationStart;
-        int x_dir, y_dir = 2; //variables to move animations x and y
+
         /**
          * Game constructor
          */
@@ -114,12 +117,8 @@ public class MainActivity extends AppCompatActivity{
             mainEggGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.main_egg_down); //get image file
             mainEggGraphic = Bitmap.createScaledBitmap(mainEggGraphic, (int)(850 * scaleFactor), (int)(850 * scaleFactor), false); //set size
 
-            eggAnimation = BitmapFactory.decodeResource(this.getResources(), R.drawable.flying_egg);
-            eggAnimation = Bitmap.createScaledBitmap(eggAnimation, (int)(200 * scaleFactor), (int)(200 * scaleFactor), false);
 
-            x_eggAnimationStart = 23 * (int)scaleFactor;
-            y_eggAnimationStart = 107 * (int)scaleFactor;
-            
+
             menuButtonGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.menu_button); //get image file
             menuButtonGraphic = Bitmap.createScaledBitmap(menuButtonGraphic, (int)(256 * scaleFactor), (int)(256 * scaleFactor), false); //set size
         }
@@ -131,7 +130,7 @@ public class MainActivity extends AppCompatActivity{
             while(playing) { //run until paused
                 long startFrameTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
                 update(); //calculations
-                draw(); //redraw the screen
+                draw(animationList); //redraw the screen
                 timeThisFrame = System.currentTimeMillis() - startFrameTime; //get elapsed time after screen is updated
                 if(timeThisFrame > 0) {
                     fps = 1000 / timeThisFrame; //update fps counter
@@ -145,14 +144,13 @@ public class MainActivity extends AppCompatActivity{
         public void update() {
             //todo
         }
+
         /**
          * This redraws everything on screen each frame
          */
-        public void draw() {
-            if(ourHolder.getSurface().isValid()) { //idk what this does but some tutorial said to do it
-                BigInteger counterCheck = new BigInteger("0");
+        public void draw(List<FlyingEgg> animation) {
+            if (ourHolder.getSurface().isValid()) { //idk what this does but some tutorial said to do it
                 canvas = ourHolder.lockCanvas(); //ready to draw
-
                 canvas.drawColor(Color.argb(255, 255, 255, 255)); //white background color
 
                 paint.setColor(Color.argb(255, 0, 0, 0)); //black text
@@ -163,7 +161,7 @@ public class MainActivity extends AppCompatActivity{
                 canvas.drawText("gamestate = " + gamestate, 20, 260, paint);
 
                 paint.setTextAlign(Paint.Align.CENTER);
-                if(counter.toString().equals("1")) {
+                if (counter.toString().equals("1")) {
                     canvas.drawText(counter.toString() + " egg", (int) (540 * scaleFactor), 300, paint); //draw egg counter
                 } else {
                     canvas.drawText(counter.toString() + " eggs", (int) (540 * scaleFactor), 300, paint); //draw egg counter
@@ -171,21 +169,19 @@ public class MainActivity extends AppCompatActivity{
                 }
                 paint.setTextAlign(Paint.Align.LEFT);
 
-                canvas.drawBitmap(mainEggGraphic, (int)(115 * scaleFactor), (int)(535 * scaleFactor), paint); //draw main egg
-                canvas.drawBitmap(menuButtonGraphic, (int)(35 * scaleFactor), (int)(1629 * scaleFactor), paint);
+                canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
+                canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
 
-                if(!counterCheck.toString().equals(counter.toString())){
-
-                    x_eggAnimationStart = x_eggAnimationStart + x_dir;
-                    y_eggAnimationStart = y_eggAnimationStart + y_dir;
-
-
-                    canvas.drawBitmap(eggAnimation, x_eggAnimationStart, y_eggAnimationStart, null); //draw main egg
+                for(int i = 0; i < animation.size(); i++) {
+                    animation.get(i).getSurfaceHolder(ourHolder, canvas);
+                    animation.get(i).run();
                 }
 
                 ourHolder.unlockCanvasAndPost(canvas); //finalize
             }
         }
+
+
 
         /**
          * Thi function gets called if the screen is touched
@@ -201,6 +197,9 @@ public class MainActivity extends AppCompatActivity{
                                 && motionEvent.getY() > (int) (600 * scaleFactor)
                                 && motionEvent.getY() < (int) (1300 * scaleFactor)) {
                             counter = counter.add(addToCounter);
+                            FlyingEgg animation = new FlyingEgg(context);
+                            animationList.add(animation);
+                            draw(animationList);
                             phoneVibrate.vibrate(30); //vibrate phone
                         }
                     }
