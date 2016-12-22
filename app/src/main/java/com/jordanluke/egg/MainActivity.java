@@ -19,6 +19,8 @@ import android.view.WindowManager;
 
 import com.jordanluke.R;
 
+import java.math.BigInteger;
+
 /**
  * My thoughts are that we can delete the BigNumber class and implement everything in the Main Activity
  * Not sure how you want the counter to work but we can implement that pretty easily
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity{
     Context context = this;
     Display display;
 
+
+
     class Game extends SurfaceView implements Runnable {
         Thread gameThread = null;
         SurfaceHolder ourHolder;
@@ -71,10 +75,12 @@ public class MainActivity extends AppCompatActivity{
         private long timeThisFrame; //current frame time
 
         Bitmap mainEggGraphic;
-        int counter = 0;
+
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
         WindowManager wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
+        BigInteger counter = new BigInteger("0"); //start at zero
+        BigInteger addToCounter = new BigInteger("1"); //not this will change depending on how fast they are clicking
         Display display = wm.getDefaultDisplay();
         int screenWidthActual = display.getWidth();
         int screenHeightActual = display.getHeight();
@@ -132,7 +138,12 @@ public class MainActivity extends AppCompatActivity{
                 canvas.drawText("scale factor = " + scaleFactor, 20, 200, paint);
 
                 paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText(counter + " eggs", (int)(540 * scaleFactor), 300, paint); //draw egg counter
+                if(counter.toString().equals("1")) {
+                    canvas.drawText(counter.toString() + " egg", (int) (540 * scaleFactor), 300, paint); //draw egg counter
+                } else {
+                    canvas.drawText(counter.toString() + " eggs", (int) (540 * scaleFactor), 300, paint); //draw egg counter
+
+                }
                 paint.setTextAlign(Paint.Align.LEFT);
 
                 canvas.drawBitmap(mainEggGraphic, (int)(115 * scaleFactor), (int)(535 * scaleFactor), paint); //draw main egg
@@ -148,7 +159,7 @@ public class MainActivity extends AppCompatActivity{
         public boolean onTouchEvent(MotionEvent motionEvent) {
             switch(motionEvent.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
-                    counter++;
+                    counter = counter.add(addToCounter);
                     phoneVibrate.vibrate(30); //vibrate phone
                     break;
             }
