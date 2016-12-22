@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity{
             while(playing) { //run until paused
                 long startFrameTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
                 update(); //calculations
-                draw(animationList); //redraw the screen
+                draw(); //redraw the screen
                 timeThisFrame = System.currentTimeMillis() - startFrameTime; //get elapsed time after screen is updated
                 if(timeThisFrame > 0) {
                     fps = 1000 / timeThisFrame; //update fps counter
@@ -148,9 +148,10 @@ public class MainActivity extends AppCompatActivity{
         /**
          * This redraws everything on screen each frame
          */
-        public void draw(List<FlyingEgg> animation) {
+        public void draw() {
             if (ourHolder.getSurface().isValid()) { //idk what this does but some tutorial said to do it
                 canvas = ourHolder.lockCanvas(); //ready to draw
+
                 canvas.drawColor(Color.argb(255, 255, 255, 255)); //white background color
 
                 paint.setColor(Color.argb(255, 0, 0, 0)); //black text
@@ -159,6 +160,25 @@ public class MainActivity extends AppCompatActivity{
                 canvas.drawText(screenWidthActual + "x" + screenHeightActual, 20, 140, paint);
                 canvas.drawText("scale factor = " + scaleFactor, 20, 200, paint);
                 canvas.drawText("gamestate = " + gamestate, 20, 260, paint);
+                List<FlyingEgg> itemsToRemove = new ArrayList<>();
+                List<FlyingEgg> itemsToRemoveInFront = new ArrayList<>();
+                List<FlyingEgg> inFront = new ArrayList<>();
+                for(int i = 0; i < animationList.size(); i++) {
+                    if(animationList.get(i).randomSize <= 240){
+                        animationList.get(i).getSurfaceHolder(ourHolder, canvas);
+                        animationList.get(i).run();
+                    } else {
+                        inFront.add(animationList.get(i));
+                    }
+
+                    if(animationList.get(i).y_eggAnimationStart >= screenHeightActual){
+                        itemsToRemove.add(animationList.get(i));
+                    }
+                }
+                animationList.removeAll(itemsToRemove);
+                for(int i = 0; i < itemsToRemove.size(); i++){
+                    itemsToRemove.remove(i);
+                }
 
                 paint.setTextAlign(Paint.Align.CENTER);
                 if (counter.toString().equals("1")) {
@@ -170,12 +190,25 @@ public class MainActivity extends AppCompatActivity{
                 paint.setTextAlign(Paint.Align.LEFT);
 
 
-                for(int i = 0; i < animation.size(); i++) {
-                    animation.get(i).getSurfaceHolder(ourHolder, canvas);
-                    animation.get(i).run();
-                }
 
                 canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
+
+                for(int i = 0; i < inFront.size(); i++) {
+                    inFront.get(i).getSurfaceHolder(ourHolder, canvas);
+                    inFront.get(i).run();
+
+
+                    if(inFront.get(i).y_eggAnimationStart >= screenHeightActual){
+                        itemsToRemoveInFront.add(inFront.get(i));
+                    }
+
+                }
+                inFront.removeAll(itemsToRemoveInFront);
+                for(int i = 0; i < itemsToRemoveInFront.size(); i++){
+                    itemsToRemoveInFront.remove(i);
+                }
+
+
                 canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
 
                 ourHolder.unlockCanvasAndPost(canvas); //finalize
@@ -200,7 +233,7 @@ public class MainActivity extends AppCompatActivity{
                             counter = counter.add(addToCounter);
                             FlyingEgg animation = new FlyingEgg(scaleFactor, context);
                             animationList.add(animation);
-                            draw(animationList);
+                            draw();
                             phoneVibrate.vibrate(30); //vibrate phone
                         }
                     }

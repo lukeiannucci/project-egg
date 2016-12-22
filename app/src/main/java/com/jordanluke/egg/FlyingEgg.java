@@ -16,11 +16,7 @@ import com.jordanluke.R;
  */
 
 public class FlyingEgg extends SurfaceView implements Runnable{
-    WindowManager wm;
-    Display display;
-    int screenWidthActual;// = display.getWidth();
-    int screenWidthTarget;// = 1080;
-    double scaleFactor;// = screenWidthActual * 1.0 / screenWidthTarget;
+    int randomSize;
     Canvas canvas;
     SurfaceHolder ourHolder;
 
@@ -32,8 +28,8 @@ public class FlyingEgg extends SurfaceView implements Runnable{
 
     public FlyingEgg(double scaleFactor, Context context) {
         super(context);
-        int randomStart = (int)(Math.random() * (1080 * scaleFactor) - 200);
-        int randomSize = (int)(Math.random() * 200 + 50);
+        int randomStart = (int)(Math.random() * (1080 * scaleFactor) - 150);
+        randomSize = (int)(Math.random() * 200 + 50);
         x_eggAnimationStart = randomStart * (int)scaleFactor;
         y_eggAnimationStart = -200 * (int)scaleFactor;
         eggAnimation = BitmapFactory.decodeResource(context.getResources(), R.drawable.flying_egg);
