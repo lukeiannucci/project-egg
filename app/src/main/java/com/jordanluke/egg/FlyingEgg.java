@@ -30,14 +30,9 @@ public class FlyingEgg extends SurfaceView implements Runnable{
     int x_dir = 0;
     int y_dir = 4; //variables to move animations x and y
 
-    public FlyingEgg(Context context) {
+    public FlyingEgg(double scaleFactor, Context context) {
         super(context);
-        wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
-        display = wm.getDefaultDisplay();
-        screenWidthActual = display.getWidth();
-        screenWidthTarget = 1080;
-        scaleFactor = screenWidthActual * 1.0 / screenWidthTarget;
-        int randomStart = (int)(Math.random() * screenWidthActual - 200);
+        int randomStart = (int)(Math.random() * 1080 - 200);
         int randomSize = (int)(Math.random() * 200 + 50);
         x_eggAnimationStart = randomStart * (int)scaleFactor;
         y_eggAnimationStart = -200 * (int)scaleFactor;

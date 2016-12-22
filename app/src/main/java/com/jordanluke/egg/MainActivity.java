@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity{
         long fps; //fps counter
         private long timeThisFrame; //current frame time
         String gamestate;
-        FlyingEgg new_animation = new FlyingEgg(context);
         Bitmap mainEggGraphic;
         List<FlyingEgg> animationList = new ArrayList<>();
 
@@ -102,6 +101,7 @@ public class MainActivity extends AppCompatActivity{
         int screenHeightTarget = 1920;
         double scaleFactor = screenWidthActual * 1.0 / screenWidthTarget;
 
+        FlyingEgg new_animation = new FlyingEgg(scaleFactor, context);
 
         /**
          * Game constructor
@@ -169,13 +169,14 @@ public class MainActivity extends AppCompatActivity{
                 }
                 paint.setTextAlign(Paint.Align.LEFT);
 
-                canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
-                canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
 
                 for(int i = 0; i < animation.size(); i++) {
                     animation.get(i).getSurfaceHolder(ourHolder, canvas);
                     animation.get(i).run();
                 }
+                
+                canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
+                canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
 
                 ourHolder.unlockCanvasAndPost(canvas); //finalize
             }
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity{
                                 && motionEvent.getY() > (int) (600 * scaleFactor)
                                 && motionEvent.getY() < (int) (1300 * scaleFactor)) {
                             counter = counter.add(addToCounter);
-                            FlyingEgg animation = new FlyingEgg(context);
+                            FlyingEgg animation = new FlyingEgg(scaleFactor, context);
                             animationList.add(animation);
                             draw(animationList);
                             phoneVibrate.vibrate(30); //vibrate phone
