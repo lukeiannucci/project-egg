@@ -32,7 +32,7 @@ public class FlyingEgg extends SurfaceView implements Runnable{
 
     public FlyingEgg(double scaleFactor, Context context) {
         super(context);
-        int randomStart = (int)(Math.random() * 1080 - 200);
+        int randomStart = (int)(Math.random() * (1080 * scaleFactor) - 200);
         int randomSize = (int)(Math.random() * 200 + 50);
         x_eggAnimationStart = randomStart * (int)scaleFactor;
         y_eggAnimationStart = -200 * (int)scaleFactor;

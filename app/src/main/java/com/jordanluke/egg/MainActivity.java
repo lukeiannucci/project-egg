@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity{
                     animation.get(i).getSurfaceHolder(ourHolder, canvas);
                     animation.get(i).run();
                 }
-                
+
                 canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
                 canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
 
