@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.os.Vibrator;
+import android.view.Window;
 import android.view.WindowManager;
 
 import com.jordanluke.R;
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         theGame = new Game(this);
         setContentView(theGame);
     }
@@ -73,11 +77,14 @@ public class MainActivity extends AppCompatActivity{
 
         long fps; //fps counter
         private long timeThisFrame; //current frame time
+        String gamestate;
 
         Bitmap mainEggGraphic;
 
         Bitmap eggAnimation;
 
+
+        Bitmap menuButtonGraphic;
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
         WindowManager wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
@@ -101,6 +108,8 @@ public class MainActivity extends AppCompatActivity{
             //initialize stuff
             ourHolder = getHolder();
             paint = new Paint();
+            gamestate = "main";
+
             //initialize graphics
             mainEggGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.main_egg_down); //get image file
             mainEggGraphic = Bitmap.createScaledBitmap(mainEggGraphic, (int)(850 * scaleFactor), (int)(850 * scaleFactor), false); //set size
@@ -110,7 +119,9 @@ public class MainActivity extends AppCompatActivity{
 
             x_eggAnimationStart = 23 * (int)scaleFactor;
             y_eggAnimationStart = 107 * (int)scaleFactor;
-
+            
+            menuButtonGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.menu_button); //get image file
+            menuButtonGraphic = Bitmap.createScaledBitmap(menuButtonGraphic, (int)(256 * scaleFactor), (int)(256 * scaleFactor), false); //set size
         }
         /**
          * Main Loop
@@ -149,6 +160,7 @@ public class MainActivity extends AppCompatActivity{
                 canvas.drawText("FPS:" + fps, 20, 80, paint); //draw fps counter
                 canvas.drawText(screenWidthActual + "x" + screenHeightActual, 20, 140, paint);
                 canvas.drawText("scale factor = " + scaleFactor, 20, 200, paint);
+                canvas.drawText("gamestate = " + gamestate, 20, 260, paint);
 
                 paint.setTextAlign(Paint.Align.CENTER);
                 if(counter.toString().equals("1")) {
@@ -160,6 +172,7 @@ public class MainActivity extends AppCompatActivity{
                 paint.setTextAlign(Paint.Align.LEFT);
 
                 canvas.drawBitmap(mainEggGraphic, (int)(115 * scaleFactor), (int)(535 * scaleFactor), paint); //draw main egg
+                canvas.drawBitmap(menuButtonGraphic, (int)(35 * scaleFactor), (int)(1629 * scaleFactor), paint);
 
                 if(!counterCheck.toString().equals(counter.toString())){
 
@@ -181,8 +194,26 @@ public class MainActivity extends AppCompatActivity{
         public boolean onTouchEvent(MotionEvent motionEvent) {
             switch(motionEvent.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
-                    counter = counter.add(addToCounter);
-                    phoneVibrate.vibrate(30); //vibrate phone
+                    if(gamestate.equals("main")) {
+                        //Touched main egg
+                        if (motionEvent.getX() < (int) (850 * scaleFactor)
+                                && motionEvent.getX() > (int) (260 * scaleFactor)
+                                && motionEvent.getY() > (int) (600 * scaleFactor)
+                                && motionEvent.getY() < (int) (1300 * scaleFactor)) {
+                            counter = counter.add(addToCounter);
+                            phoneVibrate.vibrate(30); //vibrate phone
+                        }
+                    }
+                    // Touched menu button
+                    if(motionEvent.getX() < (int)(270 * scaleFactor)
+                            && motionEvent.getY() > (int)(1600 * scaleFactor)) {
+                        if(gamestate.equals("main")) {
+                            gamestate = "menu";
+                        } else {
+                            gamestate = "main";
+                        }
+                        phoneVibrate.vibrate(30); //vibrate phone
+                    }
                     break;
             }
             return true;
