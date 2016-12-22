@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity{
                     y_eggAnimationStart = y_eggAnimationStart + y_dir;
 
 
-                    canvas.drawBitmap(eggAnimation, x_eggAnimationStart, y_eggAnimationStart, null); //draw main egg
+                    canvas.drawBitmap(eggAnimation, x_eggAnimationStart, y_eggAnimationStart, null);
                 }
 
                 ourHolder.unlockCanvasAndPost(canvas); //finalize
