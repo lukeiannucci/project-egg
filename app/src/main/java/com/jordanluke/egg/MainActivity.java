@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity{
         private long timeThisFrame; //current frame time
         String gamestate;
         Bitmap mainEggGraphic;
-        List<FlyingEgg> animationList = new ArrayList<>();
+        List<FlyingEgg> animationListBack = new ArrayList<>();
+        List<FlyingEgg> animationListFront = new ArrayList<>();
 
         Bitmap menuButtonGraphic;
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
@@ -175,52 +176,53 @@ public class MainActivity extends AppCompatActivity{
         }
 
         public void drawMainScreen() {
+            //create an list of flying eggs to remove
             List<FlyingEgg> itemsToRemove = new ArrayList<>();
-            List<FlyingEgg> itemsToRemoveInFront = new ArrayList<>();
-            List<FlyingEgg> inFront = new ArrayList<>();
-            for (int i = 0; i < animationList.size(); i++) {
-                if (animationList.get(i).randomSize <= 240) {
-                    animationList.get(i).getSurfaceHolder(ourHolder, canvas);
-                    animationList.get(i).run();
-                } else {
-                    inFront.add(animationList.get(i));
+
+            //loop through and run each animation until it reaches the bottom of the screen
+            for (int i = 0; i < animationListBack.size(); i++) {
+                animationListBack.get(i).getSurfaceHolder(ourHolder, canvas);
+                animationListBack.get(i).run();
+
+                //check if it is at the bottom, if so store it into our store list
+                if (animationListBack.get(i).y_eggAnimationStart >= screenHeightActual) {
+                    itemsToRemove.add(animationListBack.get(i));
+                }
+            }
+
+            //remove the animations at the bottom
+            animationListBack.removeAll(itemsToRemove);
+
+            //free up our list
+            itemsToRemove.clear();
+
+            canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
+
+            //loop through and run our front animations until it reaches the bottom of the screen
+            for (int i = 0; i < animationListFront.size(); i++) {
+                animationListFront.get(i).getSurfaceHolder(ourHolder, canvas);
+                animationListFront.get(i).run();
+
+                //check if it is at the bottom, if so store it into our remove list
+                if (animationListFront.get(i).y_eggAnimationStart >= screenHeightActual) {
+                    itemsToRemove.add(animationListFront.get(i));
                 }
 
-                if (animationList.get(i).y_eggAnimationStart >= screenHeightActual) {
-                    itemsToRemove.add(animationList.get(i));
-                }
             }
-            animationList.removeAll(itemsToRemove);
-            for (int i = 0; i < itemsToRemove.size(); i++) {
-                itemsToRemove.remove(i);
-            }
+
+            //remove the animations at the bottom
+            animationListFront.removeAll(itemsToRemove);
+
+            //free up our list
+            itemsToRemove.clear();
 
             paint.setTextAlign(Paint.Align.CENTER);
             if (counter.toString().equals("1")) {
                 canvas.drawText(counter.toString() + " egg", (int) (540 * scaleFactor), (int)(300 * scaleFactor), paint); //draw egg counter
             } else {
                 canvas.drawText(counter.toString() + " eggs", (int) (540 * scaleFactor), (int)(300 * scaleFactor), paint); //draw egg counter
-
             }
             paint.setTextAlign(Paint.Align.LEFT);
-
-
-            canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
-
-            for (int i = 0; i < inFront.size(); i++) {
-                inFront.get(i).getSurfaceHolder(ourHolder, canvas);
-                inFront.get(i).run();
-
-
-                if (inFront.get(i).y_eggAnimationStart >= screenHeightActual) {
-                    itemsToRemoveInFront.add(inFront.get(i));
-                }
-
-            }
-            inFront.removeAll(itemsToRemoveInFront);
-            for (int i = 0; i < itemsToRemoveInFront.size(); i++) {
-                itemsToRemoveInFront.remove(i);
-            }
             canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
         }
 
@@ -271,8 +273,15 @@ public class MainActivity extends AppCompatActivity{
                                 && motionEvent.getY() > (int) (600 * scaleFactor)
                                 && motionEvent.getY() < (int) (1300 * scaleFactor)) {
                             counter = counter.add(addToCounter);
+                            //create a new animation each press
                             FlyingEgg animation = new FlyingEgg(scaleFactor, context);
-                            animationList.add(animation);
+
+                            //add it to the appropriate list depending on the size
+                            if (animation.randomSize <= 240) {
+                                animationListBack.add(animation);
+                            } else {
+                                animationListFront.add(animation);
+                            }
                             draw();
                             phoneVibrate.vibrate(30); //vibrate phone
                         }
