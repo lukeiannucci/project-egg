@@ -1,6 +1,8 @@
 package com.jordanluke.egg;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -64,10 +67,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(theGame);
     }
     Context context = this;
-
     Display display;
-
-
 
     class Game extends SurfaceView implements Runnable {
         Thread gameThread = null;
@@ -84,10 +84,6 @@ public class MainActivity extends AppCompatActivity{
         Bitmap mainEggGraphic;
         List<FlyingEgg> animationList = new ArrayList<>();
 
-
-
-
-
         Bitmap menuButtonGraphic;
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
@@ -100,6 +96,8 @@ public class MainActivity extends AppCompatActivity{
         int screenWidthTarget = 1080;
         int screenHeightTarget = 1920;
         double scaleFactor = screenWidthActual * 1.0 / screenWidthTarget;
+
+        int menuAnchor = 1920;
 
         FlyingEgg new_animation = new FlyingEgg(scaleFactor, context);
 
@@ -154,71 +152,113 @@ public class MainActivity extends AppCompatActivity{
 
                 canvas.drawColor(Color.argb(255, 255, 255, 255)); //white background color
 
+                if(gamestate.equals("main")) {
+                    drawMainScreen();
+                } else if(gamestate.equals("menu")) {
+                    drawMenuScreen(menuAnchor);
+                } else if(gamestate.equals("mainToMenu")) {
+                    drawMainToMenuScreen();
+                } else if(gamestate.equals("menuToMain")) {
+                    drawMenuToMainScreen();
+                }
+
+                //debug stuff always on top
                 paint.setColor(Color.argb(255, 0, 0, 0)); //black text
                 paint.setTextSize(50);
                 canvas.drawText("FPS:" + fps, 20, 80, paint); //draw fps counter
                 canvas.drawText(screenWidthActual + "x" + screenHeightActual, 20, 140, paint);
                 canvas.drawText("scale factor = " + scaleFactor, 20, 200, paint);
                 canvas.drawText("gamestate = " + gamestate, 20, 260, paint);
-                List<FlyingEgg> itemsToRemove = new ArrayList<>();
-                List<FlyingEgg> itemsToRemoveInFront = new ArrayList<>();
-                List<FlyingEgg> inFront = new ArrayList<>();
-                for(int i = 0; i < animationList.size(); i++) {
-                    if(animationList.get(i).randomSize <= 240){
-                        animationList.get(i).getSurfaceHolder(ourHolder, canvas);
-                        animationList.get(i).run();
-                    } else {
-                        inFront.add(animationList.get(i));
-                    }
-
-                    if(animationList.get(i).y_eggAnimationStart >= screenHeightActual){
-                        itemsToRemove.add(animationList.get(i));
-                    }
-                }
-                animationList.removeAll(itemsToRemove);
-                for(int i = 0; i < itemsToRemove.size(); i++){
-                    itemsToRemove.remove(i);
-                }
-
-                paint.setTextAlign(Paint.Align.CENTER);
-                if (counter.toString().equals("1")) {
-                    canvas.drawText(counter.toString() + " egg", (int) (540 * scaleFactor), 300, paint); //draw egg counter
-                } else {
-                    canvas.drawText(counter.toString() + " eggs", (int) (540 * scaleFactor), 300, paint); //draw egg counter
-
-                }
-                paint.setTextAlign(Paint.Align.LEFT);
-
-
-
-                canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
-
-                for(int i = 0; i < inFront.size(); i++) {
-                    inFront.get(i).getSurfaceHolder(ourHolder, canvas);
-                    inFront.get(i).run();
-
-
-                    if(inFront.get(i).y_eggAnimationStart >= screenHeightActual){
-                        itemsToRemoveInFront.add(inFront.get(i));
-                    }
-
-                }
-                inFront.removeAll(itemsToRemoveInFront);
-                for(int i = 0; i < itemsToRemoveInFront.size(); i++){
-                    itemsToRemoveInFront.remove(i);
-                }
-
-
-                canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
 
                 ourHolder.unlockCanvasAndPost(canvas); //finalize
             }
         }
 
+        public void drawMainScreen() {
+            List<FlyingEgg> itemsToRemove = new ArrayList<>();
+            List<FlyingEgg> itemsToRemoveInFront = new ArrayList<>();
+            List<FlyingEgg> inFront = new ArrayList<>();
+            for (int i = 0; i < animationList.size(); i++) {
+                if (animationList.get(i).randomSize <= 240) {
+                    animationList.get(i).getSurfaceHolder(ourHolder, canvas);
+                    animationList.get(i).run();
+                } else {
+                    inFront.add(animationList.get(i));
+                }
 
+                if (animationList.get(i).y_eggAnimationStart >= screenHeightActual) {
+                    itemsToRemove.add(animationList.get(i));
+                }
+            }
+            animationList.removeAll(itemsToRemove);
+            for (int i = 0; i < itemsToRemove.size(); i++) {
+                itemsToRemove.remove(i);
+            }
+
+            paint.setTextAlign(Paint.Align.CENTER);
+            if (counter.toString().equals("1")) {
+                canvas.drawText(counter.toString() + " egg", (int) (540 * scaleFactor), (int)(300 * scaleFactor), paint); //draw egg counter
+            } else {
+                canvas.drawText(counter.toString() + " eggs", (int) (540 * scaleFactor), (int)(300 * scaleFactor), paint); //draw egg counter
+
+            }
+            paint.setTextAlign(Paint.Align.LEFT);
+
+
+            canvas.drawBitmap(mainEggGraphic, (int) (115 * scaleFactor), (int) (535 * scaleFactor), paint); //draw main egg
+
+            for (int i = 0; i < inFront.size(); i++) {
+                inFront.get(i).getSurfaceHolder(ourHolder, canvas);
+                inFront.get(i).run();
+
+
+                if (inFront.get(i).y_eggAnimationStart >= screenHeightActual) {
+                    itemsToRemoveInFront.add(inFront.get(i));
+                }
+
+            }
+            inFront.removeAll(itemsToRemoveInFront);
+            for (int i = 0; i < itemsToRemoveInFront.size(); i++) {
+                itemsToRemoveInFront.remove(i);
+            }
+            canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
+        }
+
+        public void drawMenuScreen(int anchorPoint) {
+            paint.setARGB(255, 255, 255, 255);
+            canvas.drawRect(0, (int)(scaleFactor * anchorPoint), (int)(1080 * scaleFactor), (int)(1920 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+            paint.setARGB(255, 0, 0, 0);
+            //canvas.drawText("0x" + 0 + (int)(scaleFactor * anchorPoint) + "x" + (int)(1080 * scaleFactor) + "x" +  ((int)(1920 * scaleFactor) + (int)(scaleFactor)), 300, 300, paint);
+            canvas.drawText("Menu", (int)(540 * scaleFactor), (int)(300 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+            canvas.drawText("item_1", (int)(540 * scaleFactor), (int)(400 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+            canvas.drawText("item_2", (int)(540 * scaleFactor), (int)(480 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+            canvas.drawText("item_3", (int)(540 * scaleFactor), (int)(560 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+        }
+
+        public void drawMainToMenuScreen() {
+            drawMainScreen(); //contine to draw the main screen until the menu is completely covering it
+            drawMenuScreen(menuAnchor);
+            if(menuAnchor > 0) {
+                menuAnchor-=150;
+            } else {
+                menuAnchor = 0; //ensure the final value is correct
+                gamestate = "menu"; //switch to only drawing menu
+            }
+        }
+
+        public void drawMenuToMainScreen() {
+            drawMainScreen(); //main screen on bottom
+            drawMenuScreen(menuAnchor);
+            if(menuAnchor < 1920) {
+                menuAnchor+=150;
+            } else {
+                menuAnchor = 1920; //ensure the final value is correct
+                gamestate = "main"; //switch to only drawing menu
+            }
+        }
 
         /**
-         * Thi function gets called if the screen is touched
+         * This function gets called if the screen is touched
          */
         @Override
         public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -241,9 +281,9 @@ public class MainActivity extends AppCompatActivity{
                     if(motionEvent.getX() < (int)(270 * scaleFactor)
                             && motionEvent.getY() > (int)(1600 * scaleFactor)) {
                         if(gamestate.equals("main")) {
-                            gamestate = "menu";
-                        } else {
-                            gamestate = "main";
+                            gamestate = "mainToMenu";
+                        } else if(gamestate.equals("menu")){
+                            gamestate = "menuToMain";
                         }
                         phoneVibrate.vibrate(30); //vibrate phone
                     }
@@ -251,6 +291,15 @@ public class MainActivity extends AppCompatActivity{
             }
             return true;
         }
+
+        public boolean backButton() {
+            if(gamestate.equals("menu")) {
+                gamestate = "menuToMain";
+                return true;
+            }
+            return false;
+        }
+
         public void pause() {
             playing = false;
             try {
@@ -265,6 +314,26 @@ public class MainActivity extends AppCompatActivity{
             gameThread.start();
         }
     }
+
+    /**
+     * Back button was pressed
+     */
+    @Override
+    public void onBackPressed() {
+        if(!theGame.backButton()) { //game didn't handle the back button press
+            new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -275,56 +344,4 @@ public class MainActivity extends AppCompatActivity{
         super.onPause();
         theGame.pause();
     }
-    /**
-     BigNumber eggCount = new BigNumber();
-     Vibrator phoneVibrate;
-     RelativeLayout.LayoutParams floatingEggParams;
-     int egg_count = 0; //start at 0
-     int MAX_INT = Integer.MAX_VALUE; //for testing purposes
-     @Override
-     protected void onCreate(Bundle savedInstanceState) {
-     super.onCreate(savedInstanceState);
-     setContentView(R.layout.mainpage);
-
-     phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
-
-     floatingEggParams = new RelativeLayout.LayoutParams(200,200);
-     floatingEggParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-     update(); //initial call to update function
-     }
-
-     protected void onButtonClick(View egg) {
-     if(egg.getId() == R.id.golden_egg) {
-     //only do if egg count is g>= MAX_INT (testing purposes)
-     if(egg_count >= MAX_INT) {
-     //testing purposes
-     BigInteger bigNumber = new BigInteger("1234567617181920");
-     eggCount.addB(bigNumber);
-     } else {
-     eggCount.add(egg_count); //increment number
-     egg_count = MAX_INT;
-     }
-     update(); //update count TextView
-     phoneVibrate.vibrate(30); //vibrate phone
-
-     ImageView floatingEgg = new ImageView(this);
-     floatingEgg.setLayoutParams(floatingEggParams);
-     floatingEgg.setImageResource(R.drawable.main_egg_down);
-     RelativeLayout myLayout = (RelativeLayout)findViewById(R.id.main_layout);
-     myLayout.addView(floatingEgg);
-     }
-     }
-
-     public void update() {
-     if (egg_count < MAX_INT) {
-     //testing purposes
-     TextView eggCountDisplay = (TextView) findViewById(R.id.eggCountTextView);
-     eggCountDisplay.setText(eggCount.toString() + " eggs");
-     } else {
-     TextView eggCountDisplay = (TextView) findViewById(R.id.eggCountTextView);
-     eggCountDisplay.setText(eggCount.largeCount.toString() + " eggs");
-     }
-     }
-     */
 }
