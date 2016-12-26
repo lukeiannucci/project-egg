@@ -23,6 +23,8 @@ import android.view.WindowManager;
 
 import com.jordanluke.R;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.net.Proxy;
 import java.util.ArrayList;
@@ -131,6 +133,7 @@ public class MainActivity extends AppCompatActivity{
          */
         @Override
         public void run() {
+            load();
             while(playing) { //run until paused
                 long startFrameTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
                 BigInteger startEggs = counter;
@@ -346,6 +349,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         public void pause() {
+            save();
             playing = false;
             try {
                 gameThread.join();
@@ -357,6 +361,23 @@ public class MainActivity extends AppCompatActivity{
             playing = true;
             gameThread = new Thread(this);
             gameThread.start();
+        }
+
+        public void save() {
+            String filename = "save.dat";
+            FileOutputStream outputStream;
+            File file = new File(context.getFilesDir(), filename);
+            try {
+                outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+                outputStream.write(gamestate.getBytes());
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void load() {
+
         }
     }
 
