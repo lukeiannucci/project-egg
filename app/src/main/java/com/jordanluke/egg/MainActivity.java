@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity{
         List<FlyingEgg> animationListBack = new ArrayList<>();
         List<FlyingEgg> animationListFront = new ArrayList<>();
 
+        List<PointAnimation> pointAnimationList = new ArrayList<>();
+
         Bitmap menuButtonGraphic;
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
@@ -188,6 +190,7 @@ public class MainActivity extends AppCompatActivity{
         public void drawMainScreen() {
             //create an list of flying eggs to remove
             List<FlyingEgg> itemsToRemove = new ArrayList<>();
+            List<PointAnimation> pointsToRemove = new ArrayList<>();
 
             //loop through and run each animation until it reaches the bottom of the screen
             for (int i = 0; i < animationListBack.size(); i++) {
@@ -230,6 +233,21 @@ public class MainActivity extends AppCompatActivity{
 
             //free up our list
             itemsToRemove.clear();
+
+            //loop through and run each animation until it reaches the bottom of the screen
+            for (int i = 0; i < animationListBack.size(); i++) {
+                pointAnimationList.get(i).getSurfaceHolder(ourHolder, canvas);
+                pointAnimationList.get(i).run();
+
+                //check if it is at the bottom, if so store it into our store list
+                //if (pointAnimationList.get(i).y_pointAnimationStart >= 300) {
+                //pointsToRemove.add(pointAnimationList.get(i));
+                //}
+            }
+
+            pointAnimationList.remove(pointsToRemove);
+
+            pointsToRemove.clear();
 
             paint.setTextAlign(Paint.Align.CENTER);
             paint.setTypeface(typeface_bold);
@@ -311,7 +329,8 @@ public class MainActivity extends AppCompatActivity{
                                     mainEggFrameCounter = 5;
                                     //create a new animation each press
                                     FlyingEgg animation = new FlyingEgg(scaleFactor, context);
-
+                                    PointAnimation points = new PointAnimation(scaleFactor, context);
+                                    pointAnimationList.add(points);
                                     //add it to the appropriate list depending on the size
                                     if (animation.randomSize <= 240) {
                                         animationListBack.add(animation);
