@@ -57,9 +57,7 @@ public class MainActivity extends AppCompatActivity{
         //load in the file
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         String temp = sharedPref.getString("counter", "");
-        if (temp.equals("")){
-            counter = new BigInteger("0");
-        } else {
+        if (!temp.equals("")){
             counter = new BigInteger(temp);
         }
 
