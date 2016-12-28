@@ -22,14 +22,15 @@ public class PointAnimation extends SurfaceView implements Runnable{
     int x_pointAnimationStart;
     int y_pointAnimationStart;
     int x_dir = 0;
-    int y_dir = -4; //variables to move animations x and y
+    int y_dir = -14; //variables to move animations x and y
 
     public PointAnimation(double scaleFactor, Context context) {
         super(context);
-        int randomStart = (int)(Math.random() * (int)(1300 * scaleFactor));
+        int randomStartX = (int)(Math.random() * 800 + 200);
+        int randomStartY = (int)(Math.random() * 1100 + 900);
         pointSize = 120;
-        x_pointAnimationStart = randomStart * (int)scaleFactor;
-        y_pointAnimationStart = 1000 * (int)scaleFactor;
+        x_pointAnimationStart = randomStartX * (int)scaleFactor;
+        y_pointAnimationStart = randomStartY * (int)scaleFactor;
         pointAnimation = BitmapFactory.decodeResource(context.getResources(), R.drawable.number);
         pointAnimation = Bitmap.createScaledBitmap(pointAnimation, (int) (pointSize * scaleFactor), (int) (pointSize * scaleFactor), false);
     }

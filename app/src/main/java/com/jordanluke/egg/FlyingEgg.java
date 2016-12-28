@@ -24,7 +24,7 @@ public class FlyingEgg extends SurfaceView implements Runnable{
     int x_eggAnimationStart;
     int y_eggAnimationStart;
     int x_dir = 0;
-    int y_dir = 4; //variables to move animations x and y
+    int y_dir = 12; //variables to move animations x and y
 
     public FlyingEgg(double scaleFactor, Context context) {
         super(context);

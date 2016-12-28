@@ -23,6 +23,10 @@ import android.view.WindowManager;
 
 import com.jordanluke.R;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.Proxy;
 import java.util.ArrayList;
@@ -39,13 +43,44 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
     Game theGame;
+    String filename = "savedData.txt";
+    String data= "0";
+    BigInteger counter;
+    boolean fileWritten;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        try {
+            //create the file
+            FileOutputStream os;
+            os = openFileOutput(filename, Context.MODE_PRIVATE);
+            os.write(data.getBytes());
+            os.close();
 
+            FileInputStream is;
+            is = openFileInput(filename);
+            if(is == null){
+                counter = new BigInteger("0");
+            } else {
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader bufferedReader = new BufferedReader(isr);
+                String dataInFile = "0";
+                while((dataInFile = bufferedReader.readLine()) != null) {
+                    data = dataInFile;
+                }
+                if(data.equals("0")){
+                    counter = new BigInteger("0");
+                }else{
+                    counter = new BigInteger(dataInFile);
+                }
+            }
+
+        } catch (Exception input) {
+            input.printStackTrace();
+        }
         theGame = new Game(this);
         setContentView(theGame);
     }
@@ -81,7 +116,7 @@ public class MainActivity extends AppCompatActivity{
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
         WindowManager wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
-        BigInteger counter = new BigInteger("0"); //start at zero
+         //start at zero
         BigInteger addToCounter = new BigInteger("1"); //not this will change depending on how fast they are clicking
         Display display = wm.getDefaultDisplay();
         int screenWidthActual = display.getWidth();
@@ -95,8 +130,6 @@ public class MainActivity extends AppCompatActivity{
 
         Typeface typeface_bold;
         Typeface typeface_regular;
-
-        FlyingEgg new_animation = new FlyingEgg(scaleFactor, context);
 
         BigInteger eggsPerSecond;
 
@@ -232,17 +265,17 @@ public class MainActivity extends AppCompatActivity{
             itemsToRemove.clear();
 
             //loop through and run each animation until it reaches the bottom of the screen
-            for (int i = 0; i < animationListBack.size(); i++) {
+            for (int i = 0; i < pointAnimationList.size(); i++) {
                 pointAnimationList.get(i).getSurfaceHolder(ourHolder, canvas);
                 pointAnimationList.get(i).run();
 
                 //check if it is at the bottom, if so store it into our store list
-                //if (pointAnimationList.get(i).y_pointAnimationStart >= 300) {
-                //pointsToRemove.add(pointAnimationList.get(i));
-                //}
+                if (pointAnimationList.get(i).y_pointAnimationStart <= -100) {
+                    pointsToRemove.add(pointAnimationList.get(i));
+                }
             }
 
-            pointAnimationList.remove(pointsToRemove);
+            pointAnimationList.removeAll(pointsToRemove);
 
             pointsToRemove.clear();
 
@@ -322,20 +355,29 @@ public class MainActivity extends AppCompatActivity{
                                 && motionEvent.getX() > (int) (150 * scaleFactor)
                                 && motionEvent.getY() > (int) (620 * scaleFactor)
                                 && motionEvent.getY() < (int) (1675 * scaleFactor)) {
-                                    counter = counter.add(addToCounter);
-                                    mainEggFrameCounter = 5;
-                                    //create a new animation each press
-                                    FlyingEgg animation = new FlyingEgg(scaleFactor, context);
-                                    PointAnimation points = new PointAnimation(scaleFactor, context);
-                                    pointAnimationList.add(points);
-                                    //add it to the appropriate list depending on the size
-                                    if (animation.randomSize <= 240) {
-                                        animationListBack.add(animation);
-                                    } else {
-                                        animationListFront.add(animation);
-                                    }
-                                    draw();
-                                    phoneVibrate.vibrate(30); //vibrate phone
+                            try {
+                                counter = counter.add(addToCounter);
+                                mainEggFrameCounter = 5;
+                                data = counter.toString();
+                                FileOutputStream os;
+                                os = openFileOutput(filename, Context.MODE_PRIVATE);
+                                os.write(data.getBytes());
+                                os.close();
+                                //create a new animation each press
+                                FlyingEgg animation = new FlyingEgg(scaleFactor, context);
+                                PointAnimation points = new PointAnimation(scaleFactor, context);
+                                pointAnimationList.add(points);
+                                //add it to the appropriate list depending on the size
+                                if (animation.randomSize <= 240) {
+                                    animationListBack.add(animation);
+                                } else {
+                                    animationListFront.add(animation);
+                                }
+                                draw();
+                                phoneVibrate.vibrate(30); //vibrate phone
+                            } catch(Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                     // Touched menu button
