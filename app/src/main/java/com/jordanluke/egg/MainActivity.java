@@ -47,6 +47,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity{
     Game theGame;
     BigInteger counter = new BigInteger("0");
+    boolean secondPassed = false;
+    long startFrameTime = 0;
+    BigInteger startEggs = new BigInteger("0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +113,7 @@ public class MainActivity extends AppCompatActivity{
         Typeface typeface_bold;
         Typeface typeface_regular;
 
-        BigInteger eggsPerSecond;
+        BigInteger eggsPerSecond = new BigInteger("0");
 
         /**
          * Game constructor
@@ -146,11 +149,22 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void run() {
             while(playing) { //run until paused
-                long startFrameTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
-                BigInteger startEggs = counter;
+                if(secondPassed == false) {
+                    startFrameTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
+                    startEggs = counter;
+                    secondPassed = true;
+                }
+                long testFrameTime = System.currentTimeMillis();
+                long isSecond = testFrameTime - startFrameTime;
+
+                if(isSecond >= 1000){
+                    //BigInteger endEggs = counter;
+                    eggsPerSecond = (counter.subtract(startEggs));
+                    secondPassed = false;
+                }
                 update(); //calculations
                 draw(); //redraw the screen
-                eggsPerSecond = (counter.subtract(startEggs));
+
                 timeThisFrame = System.currentTimeMillis() - startFrameTime; //get elapsed time after screen is updated
                 if(timeThisFrame > 0) {
                     fps = 1000 / timeThisFrame; //update fps counter
@@ -341,6 +355,7 @@ public class MainActivity extends AppCompatActivity{
                                 //create a new animation each press
                                 FlyingEgg animation = new FlyingEgg(scaleFactor, context);
                                 PointAnimation points = new PointAnimation(scaleFactor, context);
+                                points.getEggsPerSec(eggsPerSecond);
                                 if(pointAnimationList.size() <= 25){
                                     pointAnimationList.add(points);
                                 }
