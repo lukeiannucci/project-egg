@@ -25,6 +25,9 @@ public class PointAnimation {
     int y_dir = -10; //variables to move animations x and y
     int y_count = 0;
     BigInteger eggsPerSec = new BigInteger("0");
+    double sf = 0;
+    Bitmap bitImage;
+    int counter = 0;
 
     public PointAnimation(double scaleFactor) {
         int randomStartX = (int)(Math.random() * (int)(550 * scaleFactor) + (int)(200 * scaleFactor));
@@ -32,10 +35,16 @@ public class PointAnimation {
         x_pointAnimationStart = randomStartX * (int)scaleFactor;
         y_pointAnimationStart = randomStartY * (int)scaleFactor;
         y_old = y_pointAnimationStart;
+        sf = scaleFactor;
     }
 
     public void getEggsPerSec(BigInteger eps){
         eggsPerSec = eps;
+    }
+
+    public void setBitMapImageAndCount(Bitmap image, int count){
+        bitImage = image;
+        counter = count;
     }
 
     public int getXPos() {
@@ -57,8 +66,8 @@ public class PointAnimation {
     public int getYPos() {
         y_pointAnimationStart = y_pointAnimationStart + y_dir;
         y_count = y_old - y_pointAnimationStart;
-        if(y_count >= 270) {
-            y_dir = -30;
+        if(y_count >= (sf *270)) {
+            y_dir = -25;
         }
         return y_pointAnimationStart;
     }
