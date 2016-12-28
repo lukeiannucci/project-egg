@@ -3,6 +3,7 @@ package com.jordanluke.egg;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -43,49 +44,27 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
     Game theGame;
-    String filename = "savedData.txt";
-    String data= "0";
-    BigInteger counter;
-    boolean fileWritten;
+    BigInteger counter = new BigInteger("0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        try {
-            //create the file
-            FileOutputStream os;
-            os = openFileOutput(filename, Context.MODE_PRIVATE);
-            os.write(data.getBytes());
-            os.close();
 
-            FileInputStream is;
-            is = openFileInput(filename);
-            if(is == null){
-                counter = new BigInteger("0");
-            } else {
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader bufferedReader = new BufferedReader(isr);
-                String dataInFile = "0";
-                while((dataInFile = bufferedReader.readLine()) != null) {
-                    data = dataInFile;
-                }
-                if(data.equals("0")){
-                    counter = new BigInteger("0");
-                }else{
-                    counter = new BigInteger(dataInFile);
-                }
-            }
-
-        } catch (Exception input) {
-            input.printStackTrace();
+        //load in the file
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String temp = sharedPref.getString("counter", "");
+        if (temp.equals("")){
+            counter = new BigInteger("0");
+        } else {
+            counter = new BigInteger(temp);
         }
+
         theGame = new Game(this);
         setContentView(theGame);
     }
     Context context = this;
-    Display display;
 
     class Game extends SurfaceView implements Runnable {
         Thread gameThread = null;
@@ -319,7 +298,7 @@ public class MainActivity extends AppCompatActivity{
         //add in number of frames failsafe for menu transition
 
         public void drawMainToMenuScreen() {
-            drawMainScreen(); //contine to draw the main screen until the menu is completely covering it
+            drawMainScreen(); //continue to draw the main screen until the menu is completely covering it
             drawMenuScreen(menuAnchor);
             if(menuAnchor > 0) {
                 menuAnchor-=menuTransitionSpeed;
@@ -358,18 +337,26 @@ public class MainActivity extends AppCompatActivity{
                             try {
                                 counter = counter.add(addToCounter);
                                 mainEggFrameCounter = 5;
-                                data = counter.toString();
-                                FileOutputStream os;
-                                os = openFileOutput(filename, Context.MODE_PRIVATE);
-                                os.write(data.getBytes());
-                                os.close();
+
+                                //save counter
+                                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                String temp = counter.toString();
+                                editor.putString("counter", temp);
+                                editor.commit();
+
                                 //create a new animation each press
                                 FlyingEgg animation = new FlyingEgg(scaleFactor, context);
                                 PointAnimation points = new PointAnimation(scaleFactor, context);
-                                pointAnimationList.add(points);
+                                if(pointAnimationList.size() <= 25){
+                                    pointAnimationList.add(points);
+                                }
+
                                 //add it to the appropriate list depending on the size
                                 if (animation.randomSize <= 240) {
-                                    animationListBack.add(animation);
+                                    if(animationListBack.size() <= 25) {
+                                        animationListBack.add(animation);
+                                    }
                                 } else {
                                     animationListFront.add(animation);
                                 }
