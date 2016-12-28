@@ -45,16 +45,16 @@ public class PointAnimation {
         if(x_dir >= x_old && x_dir <= 10){
             x_old = x_dir;
             x_dir++;
-
         }
         else {
             x_old = x_dir;
+            if(x_dir == -10){
+                x_dir++;
+            } else {
+                x_dir--;
+            }
         }
-        if(x_dir == -10){
-            x_dir++;
-        } else {
-            x_dir--;
-        }
+
 
         return x_pointAnimationStart;
     }

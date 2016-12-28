@@ -277,13 +277,15 @@ public class MainActivity extends AppCompatActivity{
             for (int i = 0; i < pointAnimationList.size(); i++) {
                 if(eggsPerSecond.intValue() <= 3) {
                     canvas.drawBitmap(pointImage1, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
+                    addToCounter = BigInteger.valueOf(1);
                 }
                 else if (eggsPerSecond.intValue() <= 6) {
                     canvas.drawBitmap(pointImage2, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
+                    addToCounter = BigInteger.valueOf(2);
                 }
                 else {
                     canvas.drawBitmap(pointImage3, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
-
+                    addToCounter = BigInteger.valueOf(3);
                 }
 
                 //check if it is at the bottom, if so store it into our store list
