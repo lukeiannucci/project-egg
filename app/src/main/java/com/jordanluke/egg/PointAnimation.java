@@ -21,15 +21,20 @@ public class PointAnimation extends SurfaceView implements Runnable{
     Bitmap pointAnimation;
     int x_pointAnimationStart;
     int y_pointAnimationStart;
-    int x_dir = 0;
-    int y_dir = -4; //variables to move animations x and y
+    int y_old = 0;
+    int x_dir = 1;
+    int x_old = 0;
+    int y_dir = -10; //variables to move animations x and y
+    int y_count = 0;
 
     public PointAnimation(double scaleFactor, Context context) {
         super(context);
-        int randomStart = (int)(Math.random() * (int)(1300 * scaleFactor));
-        pointSize = 120;
-        x_pointAnimationStart = randomStart * (int)scaleFactor;
-        y_pointAnimationStart = 1000 * (int)scaleFactor;
+        int randomStartX = (int)(Math.random() * (int)(550 * scaleFactor) + (int)(200 * scaleFactor));
+        int randomStartY = (int)(Math.random() * (int)(800 * scaleFactor) + (int)(700 * scaleFactor));
+        pointSize = (int)(100 * scaleFactor);
+        x_pointAnimationStart = randomStartX * (int)scaleFactor;
+        y_pointAnimationStart = randomStartY * (int)scaleFactor;
+        y_old = y_pointAnimationStart;
         pointAnimation = BitmapFactory.decodeResource(context.getResources(), R.drawable.number);
         pointAnimation = Bitmap.createScaledBitmap(pointAnimation, (int) (pointSize * scaleFactor), (int) (pointSize * scaleFactor), false);
     }
@@ -43,7 +48,24 @@ public class PointAnimation extends SurfaceView implements Runnable{
     public void run() {
         if(ourHolder.getSurface().isValid()) { //idk what this does but some tutorial said to do it
             x_pointAnimationStart = x_pointAnimationStart + x_dir;
+            if(x_dir >= x_old && x_dir <= 10){
+                x_old = x_dir;
+                x_dir++;
+
+            } else {
+                x_old = x_dir;
+                if(x_dir == -10){
+                    x_dir++;
+                } else {
+                    x_dir--;
+                }
+            }
+
             y_pointAnimationStart = y_pointAnimationStart + y_dir;
+            y_count = y_old - y_pointAnimationStart;
+            if(y_count >= 270) {
+                y_dir = -30;
+            }
             canvas.drawBitmap(pointAnimation, x_pointAnimationStart, y_pointAnimationStart, null);
         }
     }

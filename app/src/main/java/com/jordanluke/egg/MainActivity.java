@@ -3,6 +3,7 @@ package com.jordanluke.egg;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -25,6 +26,10 @@ import com.jordanluke.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.Proxy;
 import java.util.ArrayList;
@@ -41,6 +46,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
     Game theGame;
+    BigInteger counter = new BigInteger("0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +54,19 @@ public class MainActivity extends AppCompatActivity{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        //load in the file
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String temp = sharedPref.getString("counter", "");
+        if (temp.equals("")){
+            counter = new BigInteger("0");
+        } else {
+            counter = new BigInteger(temp);
+        }
+
         theGame = new Game(this);
         setContentView(theGame);
     }
     Context context = this;
-    Display display;
 
     class Game extends SurfaceView implements Runnable {
         Thread gameThread = null;
@@ -83,7 +97,7 @@ public class MainActivity extends AppCompatActivity{
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
         WindowManager wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
-        BigInteger counter = new BigInteger("0"); //start at zero
+         //start at zero
         BigInteger addToCounter = new BigInteger("1"); //not this will change depending on how fast they are clicking
         Display display = wm.getDefaultDisplay();
         int screenWidthActual = display.getWidth();
@@ -97,8 +111,6 @@ public class MainActivity extends AppCompatActivity{
 
         Typeface typeface_bold;
         Typeface typeface_regular;
-
-        FlyingEgg new_animation = new FlyingEgg(scaleFactor, context);
 
         BigInteger eggsPerSecond;
 
@@ -235,17 +247,17 @@ public class MainActivity extends AppCompatActivity{
             itemsToRemove.clear();
 
             //loop through and run each animation until it reaches the bottom of the screen
-            for (int i = 0; i < animationListBack.size(); i++) {
+            for (int i = 0; i < pointAnimationList.size(); i++) {
                 pointAnimationList.get(i).getSurfaceHolder(ourHolder, canvas);
                 pointAnimationList.get(i).run();
 
                 //check if it is at the bottom, if so store it into our store list
-                //if (pointAnimationList.get(i).y_pointAnimationStart >= 300) {
-                //pointsToRemove.add(pointAnimationList.get(i));
-                //}
+                if (pointAnimationList.get(i).y_pointAnimationStart <= -100) {
+                    pointsToRemove.add(pointAnimationList.get(i));
+                }
             }
 
-            pointAnimationList.remove(pointsToRemove);
+            pointAnimationList.removeAll(pointsToRemove);
 
             pointsToRemove.clear();
 
@@ -289,7 +301,7 @@ public class MainActivity extends AppCompatActivity{
         //add in number of frames failsafe for menu transition
 
         public void drawMainToMenuScreen() {
-            drawMainScreen(); //contine to draw the main screen until the menu is completely covering it
+            drawMainScreen(); //continue to draw the main screen until the menu is completely covering it
             drawMenuScreen(menuAnchor);
             if(menuAnchor > 0) {
                 menuAnchor-=menuTransitionSpeed;
@@ -325,20 +337,37 @@ public class MainActivity extends AppCompatActivity{
                                 && motionEvent.getX() > (int) (150 * scaleFactor)
                                 && motionEvent.getY() > (int) (620 * scaleFactor)
                                 && motionEvent.getY() < (int) (1675 * scaleFactor)) {
-                                    counter = counter.add(addToCounter);
-                                    mainEggFrameCounter = 5;
-                                    //create a new animation each press
-                                    FlyingEgg animation = new FlyingEgg(scaleFactor, context);
-                                    PointAnimation points = new PointAnimation(scaleFactor, context);
+                            try {
+                                counter = counter.add(addToCounter);
+                                mainEggFrameCounter = 5;
+
+                                //save counter
+                                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                String temp = counter.toString();
+                                editor.putString("counter", temp);
+                                editor.commit();
+
+                                //create a new animation each press
+                                FlyingEgg animation = new FlyingEgg(scaleFactor, context);
+                                PointAnimation points = new PointAnimation(scaleFactor, context);
+                                if(pointAnimationList.size() <= 25){
                                     pointAnimationList.add(points);
-                                    //add it to the appropriate list depending on the size
-                                    if (animation.randomSize <= 240) {
+                                }
+
+                                //add it to the appropriate list depending on the size
+                                if (animation.randomSize <= 240) {
+                                    if(animationListBack.size() <= 25) {
                                         animationListBack.add(animation);
-                                    } else {
-                                        animationListFront.add(animation);
                                     }
-                                    draw();
-                                    phoneVibrate.vibrate(30); //vibrate phone
+                                } else {
+                                    animationListFront.add(animation);
+                                }
+                                draw();
+                                phoneVibrate.vibrate(30); //vibrate phone
+                            } catch(Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                     // Touched menu button
