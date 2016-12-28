@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity{
          */
         @Override
         public void run() {
-            load();
             while(playing) { //run until paused
                 long startFrameTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
                 BigInteger startEggs = counter;
@@ -341,13 +340,6 @@ public class MainActivity extends AppCompatActivity{
                                 counter = counter.add(addToCounter);
                                 mainEggFrameCounter = 5;
 
-                                //save counter
-                                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                String temp = counter.toString();
-                                editor.putString("counter", temp);
-                                editor.commit();
-
                                 //create a new animation each press
                                 FlyingEgg animation = new FlyingEgg(scaleFactor, context);
                                 PointAnimation points = new PointAnimation(scaleFactor, context);
@@ -412,20 +404,12 @@ public class MainActivity extends AppCompatActivity{
         }
 
         public void save() {
-            String filename = "save.dat";
-            FileOutputStream outputStream;
-            File file = new File(context.getFilesDir(), filename);
-            try {
-                outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-                outputStream.write(gamestate.getBytes());
-                outputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void load() {
-
+            //save counter
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            String temp = counter.toString();
+            editor.putString("counter", temp);
+            editor.commit();
         }
     }
 

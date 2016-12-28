@@ -31,7 +31,7 @@ public class PointAnimation extends SurfaceView implements Runnable{
         super(context);
         int randomStartX = (int)(Math.random() * (int)(550 * scaleFactor) + (int)(200 * scaleFactor));
         int randomStartY = (int)(Math.random() * (int)(800 * scaleFactor) + (int)(700 * scaleFactor));
-        pointSize = (int)(100 * scaleFactor);
+        pointSize = (int)(60 * scaleFactor);
         x_pointAnimationStart = randomStartX * (int)scaleFactor;
         y_pointAnimationStart = randomStartY * (int)scaleFactor;
         y_old = y_pointAnimationStart;
