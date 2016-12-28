@@ -15,10 +15,8 @@ import com.jordanluke.R;
  * Created by Luke on 12/21/2016.
  */
 
-public class FlyingEgg extends SurfaceView implements Runnable{
+public class FlyingEgg {
     int randomSize;
-    Canvas canvas;
-    SurfaceHolder ourHolder;
 
     Bitmap eggAnimation;
     int x_eggAnimationStart;
@@ -26,27 +24,24 @@ public class FlyingEgg extends SurfaceView implements Runnable{
     int x_dir = 0;
     int y_dir = 12; //variables to move animations x and y
 
-    public FlyingEgg(double scaleFactor, Context context) {
-        super(context);
+    public FlyingEgg(double scaleFactor, Bitmap image) {
         int randomStart = (int)(Math.random() * (1080 * scaleFactor) - 150);
         randomSize = (int)(Math.random() * 200 + 50);
         x_eggAnimationStart = randomStart * (int)scaleFactor;
         y_eggAnimationStart = -200 * (int)scaleFactor;
-        eggAnimation = BitmapFactory.decodeResource(context.getResources(), R.drawable.flying_egg);
-        eggAnimation = Bitmap.createScaledBitmap(eggAnimation, (int) (randomSize * scaleFactor), (int) (randomSize * scaleFactor), false);
+        eggAnimation = Bitmap.createScaledBitmap(image, (int) (randomSize * scaleFactor), (int) (randomSize * scaleFactor), false);
     }
 
-    public void getSurfaceHolder(SurfaceHolder sv, Canvas c){
-        ourHolder = sv;
-        canvas = c;
+    public int getXPos() {
+        x_eggAnimationStart = x_eggAnimationStart + x_dir;
+        return x_eggAnimationStart;
+    }
+    public int getYPos() {
+        y_eggAnimationStart = y_eggAnimationStart + y_dir;
+        return y_eggAnimationStart;
     }
 
-    @Override
-    public void run() {
-        if(ourHolder.getSurface().isValid()) { //idk what this does but some tutorial said to do it
-                x_eggAnimationStart = x_eggAnimationStart + x_dir;
-                y_eggAnimationStart = y_eggAnimationStart + y_dir;
-                canvas.drawBitmap(eggAnimation, x_eggAnimationStart, y_eggAnimationStart, null);
-        }
+    public Bitmap getSizedBitmap() {
+        return eggAnimation;
     }
 }
