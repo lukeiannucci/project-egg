@@ -47,13 +47,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity{
     Game theGame;
     BigInteger counter = new BigInteger("0");
-    boolean secondPassed = false;
-    long startFrameTime = 0;
-    long startSecondTime =0;
-    BigInteger startEggs = new BigInteger("0");
-    BigInteger tapsPerSec = new BigInteger("0");
-    BigInteger startTaps = new BigInteger("0");
-    BigInteger tapsCounter = new BigInteger("0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,60 +69,68 @@ public class MainActivity extends AppCompatActivity{
     class Game extends SurfaceView implements Runnable {
         Thread gameThread = null;
         SurfaceHolder ourHolder;
-
         volatile boolean playing;
 
+        //for drawing
         Canvas canvas;
         Paint paint;
 
+        //initialize
         long fps; //fps counter
         private long timeThisFrame; //current frame time
         String gamestate;
-
-        Bitmap mainEggGraphic;
-        Bitmap mainEggGraphicDown;
-        List<Bitmap> mainEggFrames = new ArrayList<>();
         int mainEggFrame;
         int mainEggFrameCounter;
 
+        //Bitmap images
         Bitmap pointImage1;
         Bitmap pointImage2;
         Bitmap pointImage3;
-
-
-        List<FlyingEgg> animationListBack = new ArrayList<>();
-        List<FlyingEgg> animationListFront = new ArrayList<>();
-
-        List<PointAnimation> pointAnimationList = new ArrayList<>();
-
+        Bitmap mainEggGraphic;
+        Bitmap mainEggGraphicDown;
         Bitmap menuButtonGraphic;
-        Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
-
         Bitmap flyingEggGraphic;
         Bitmap flyingEggGraphicMe;
         Bitmap flyingEggGraphicSmall;
         Bitmap flyingEggGraphicMedium;
         Bitmap flyingEggGraphicLarge;
         Bitmap flyingEggGraphicHuge;
+
+        //for calculations
+        boolean secondPassed = false;
+        long startFrameTime = 0;
+        long startSecondTime =0;
+        BigInteger startEggs = new BigInteger("0");
+        BigInteger tapsPerSec = new BigInteger("0");
+        BigInteger startTaps = new BigInteger("0");
+        BigInteger tapsCounter = new BigInteger("0");
+        BigInteger addToCounter = new BigInteger("1"); //not this will change depending on how fast they are clicking
+        BigInteger eggsPerSecond = new BigInteger("0");
+
+        //Lists
+        List<FlyingEgg> animationListBack = new ArrayList<>();
+        List<FlyingEgg> animationListFront = new ArrayList<>();
+        List<Bitmap> mainEggFrames = new ArrayList<>();
+        List<PointAnimation> pointAnimationList = new ArrayList<>();
         List<Bitmap> flyingEggGraphics = new ArrayList<>();
 
+        Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
+
         WindowManager wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
-         //start at zero
-        BigInteger addToCounter = new BigInteger("1"); //not this will change depending on how fast they are clicking
         Display display = wm.getDefaultDisplay();
+
+        //screen initialize
         int screenWidthActual = display.getWidth();
         int screenHeightActual = display.getHeight();
         int screenWidthTarget = 1080;
-        int screenHeightTarget = 1920;
         double scaleFactor = screenWidthActual * 1.0 / screenWidthTarget;
 
+        //menu initialize
         int menuAnchor = 1920;
         double menuTransitionSpeed = 200;
 
         Typeface typeface_bold;
         Typeface typeface_regular;
-
-        BigInteger eggsPerSecond = new BigInteger("0");
 
         /**
          * Game constructor
@@ -300,6 +301,7 @@ public class MainActivity extends AppCompatActivity{
             for (int i = 0; i < pointAnimationList.size(); i++) {
                 canvas.drawBitmap(pointAnimationList.get(i).bitImage, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
                 addToCounter = BigInteger.valueOf(pointAnimationList.get(i).counter);
+
                 //check if it is at the bottom, if so store it into our store list
                 if (pointAnimationList.get(i).y_pointAnimationStart <= (scaleFactor * -75)) {
                     pointsToRemove.add(pointAnimationList.get(i));
@@ -332,8 +334,6 @@ public class MainActivity extends AppCompatActivity{
             paint.setTextSize((int)(37 * scaleFactor));
             paint.setTextAlign(Paint.Align.LEFT);
             canvas.drawBitmap(menuButtonGraphic, (int) (35 * scaleFactor), (int) (1629 * scaleFactor), paint);
-
-            //canvas.drawRect((int)(scaleFactor * 150), (int)(scaleFactor * 620), (int)(930* scaleFactor), (int)(1675 * scaleFactor), paint); //egg touch target
         }
 
         public void drawMenuScreen(int anchorPoint) {
