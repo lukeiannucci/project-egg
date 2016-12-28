@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity{
     boolean secondPassed = false;
     long startFrameTime = 0;
     BigInteger startEggs = new BigInteger("0");
+    int tapsPerSec = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
