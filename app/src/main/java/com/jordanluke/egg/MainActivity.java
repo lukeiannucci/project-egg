@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity{
     long startFrameTime = 0;
     long startSecondTime =0;
     BigInteger startEggs = new BigInteger("0");
+    BigInteger tapsPerSec = new BigInteger("0");
+    BigInteger startTaps = new BigInteger("0");
+    BigInteger tapsCounter = new BigInteger("0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,14 +192,15 @@ public class MainActivity extends AppCompatActivity{
                 if(secondPassed == false) {
                     startSecondTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
                     startEggs = counter;
+                    startTaps = tapsCounter;
                     secondPassed = true;
                 }
                 long testFrameTime = System.currentTimeMillis();
                 long isSecond = testFrameTime - startSecondTime;
 
                 if(isSecond >= 1000){
-                    //BigInteger endEggs = counter;
                     eggsPerSecond = (counter.subtract(startEggs));
+                    tapsPerSec = (tapsCounter.subtract(startTaps));
                     secondPassed = false;
                 }
                 update(); //calculations
@@ -294,21 +298,10 @@ public class MainActivity extends AppCompatActivity{
 
             //loop through and run each animation until it reaches the bottom of the screen
             for (int i = 0; i < pointAnimationList.size(); i++) {
-                if(eggsPerSecond.intValue() <= 3) {
-                    canvas.drawBitmap(pointImage1, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
-                    addToCounter = BigInteger.valueOf(1);
-                }
-                else if (eggsPerSecond.intValue() <= 6) {
-                    canvas.drawBitmap(pointImage2, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
-                    addToCounter = BigInteger.valueOf(2);
-                }
-                else {
-                    canvas.drawBitmap(pointImage3, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
-                    addToCounter = BigInteger.valueOf(3);
-                }
-
+                canvas.drawBitmap(pointAnimationList.get(i).bitImage, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
+                addToCounter = BigInteger.valueOf(pointAnimationList.get(i).counter);
                 //check if it is at the bottom, if so store it into our store list
-                if (pointAnimationList.get(i).y_pointAnimationStart <= -100) {
+                if (pointAnimationList.get(i).y_pointAnimationStart <= (scaleFactor * -75)) {
                     pointsToRemove.add(pointAnimationList.get(i));
                 }
             }
@@ -396,12 +389,23 @@ public class MainActivity extends AppCompatActivity{
                             try {
                                 counter = counter.add(addToCounter);
                                 mainEggFrameCounter = 5;
+                                BigInteger add1 = new BigInteger("1");
+                                tapsPerSec = tapsPerSec.add(add1);
 
                                 //create a new animation each press
                                 int randomSize = (int)(Math.random() * flyingEggGraphics.size());
                                 FlyingEgg animation = new FlyingEgg(scaleFactor, randomSize);
                                 PointAnimation points = new PointAnimation(scaleFactor);
                                 points.getEggsPerSec(eggsPerSecond);
+                                if(tapsPerSec.intValue() <= 3) {
+                                    points.setBitMapImageAndCount(pointImage1, 1);
+                                }
+                                else if (tapsPerSec.intValue() <= 5) {
+                                    points.setBitMapImageAndCount(pointImage2, 2);
+                                }
+                                else {
+                                    points.setBitMapImageAndCount(pointImage3, 3);
+                                }
                                 if(pointAnimationList.size() <= 25){
                                     pointAnimationList.add(points);
                                 }
