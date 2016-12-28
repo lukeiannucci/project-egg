@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity{
     BigInteger counter = new BigInteger("0");
     boolean secondPassed = false;
     long startFrameTime = 0;
+    long startSecondTime =0;
     BigInteger startEggs = new BigInteger("0");
     int tapsPerSec = 0;
     @Override
@@ -151,13 +152,13 @@ public class MainActivity extends AppCompatActivity{
             menuButtonGraphic = Bitmap.createScaledBitmap(menuButtonGraphic, (int)(256 * scaleFactor), (int)(256 * scaleFactor), false); //set size
 
             pointImage1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.number); //get image file
-            pointImage1 = Bitmap.createScaledBitmap(pointImage1, (int)(60 * scaleFactor), (int)(60 * scaleFactor), false);
+            pointImage1 = Bitmap.createScaledBitmap(pointImage1, (int)(60 * scaleFactor), (int)(80 * scaleFactor), false);
 
             pointImage2 = BitmapFactory.decodeResource(this.getResources(), R.drawable.number2); //get image file
-            pointImage2 = Bitmap.createScaledBitmap(pointImage2, (int)(60 * scaleFactor), (int)(60 * scaleFactor), false);
+            pointImage2 = Bitmap.createScaledBitmap(pointImage2, (int)(60 * scaleFactor), (int)(80 * scaleFactor), false);
 
             pointImage3 = BitmapFactory.decodeResource(this.getResources(), R.drawable.number3); //get image file
-            pointImage3 = Bitmap.createScaledBitmap(pointImage3, (int)(60 * scaleFactor), (int)(60 * scaleFactor), false);
+            pointImage3 = Bitmap.createScaledBitmap(pointImage3, (int)(60 * scaleFactor), (int)(80 * scaleFactor), false);
 
             flyingEggGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.flying_egg);
 
@@ -168,13 +169,14 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void run() {
             while(playing) { //run until paused
+                startFrameTime = System.currentTimeMillis();
                 if(secondPassed == false) {
-                    startFrameTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
+                    startSecondTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
                     startEggs = counter;
                     secondPassed = true;
                 }
                 long testFrameTime = System.currentTimeMillis();
-                long isSecond = testFrameTime - startFrameTime;
+                long isSecond = testFrameTime - startSecondTime;
 
                 if(isSecond >= 1000){
                     //BigInteger endEggs = counter;
