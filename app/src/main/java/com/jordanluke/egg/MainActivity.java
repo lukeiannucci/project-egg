@@ -103,6 +103,12 @@ public class MainActivity extends AppCompatActivity{
         Vibrator phoneVibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE); //initialize vibrator
 
         Bitmap flyingEggGraphic;
+        Bitmap flyingEggGraphicMe;
+        Bitmap flyingEggGraphicSmall;
+        Bitmap flyingEggGraphicMedium;
+        Bitmap flyingEggGraphicLarge;
+        Bitmap flyingEggGraphicHuge;
+        List<Bitmap> flyingEggGraphics = new ArrayList<>();
 
         WindowManager wm = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE));
          //start at zero
@@ -151,15 +157,26 @@ public class MainActivity extends AppCompatActivity{
             menuButtonGraphic = Bitmap.createScaledBitmap(menuButtonGraphic, (int)(256 * scaleFactor), (int)(256 * scaleFactor), false); //set size
 
             pointImage1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.number); //get image file
-            pointImage1 = Bitmap.createScaledBitmap(pointImage1, (int)(60 * scaleFactor), (int)(80 * scaleFactor), false);
+            pointImage1 = Bitmap.createScaledBitmap(pointImage1, (int)(70 * scaleFactor), (int)(70 * scaleFactor), false);
 
             pointImage2 = BitmapFactory.decodeResource(this.getResources(), R.drawable.number2); //get image file
-            pointImage2 = Bitmap.createScaledBitmap(pointImage2, (int)(60 * scaleFactor), (int)(80 * scaleFactor), false);
+            pointImage2 = Bitmap.createScaledBitmap(pointImage2, (int)(70 * scaleFactor), (int)(70 * scaleFactor), false);
 
             pointImage3 = BitmapFactory.decodeResource(this.getResources(), R.drawable.number3); //get image file
-            pointImage3 = Bitmap.createScaledBitmap(pointImage3, (int)(60 * scaleFactor), (int)(80 * scaleFactor), false);
+            pointImage3 = Bitmap.createScaledBitmap(pointImage3, (int)(70 * scaleFactor), (int)(70 * scaleFactor), false);
 
-            flyingEggGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.flying_egg);
+            flyingEggGraphic = BitmapFactory.decodeResource(this.getResources(), R.drawable.flying_egg_big);
+            flyingEggGraphicMe = BitmapFactory.decodeResource(this.getResources(), R.drawable.flying_egg_medium);
+
+            flyingEggGraphicSmall = Bitmap.createScaledBitmap(flyingEggGraphicMe, (int) (100 * scaleFactor), (int) (100 * scaleFactor), false);
+            flyingEggGraphicMedium = Bitmap.createScaledBitmap(flyingEggGraphicMe, (int) (150 * scaleFactor), (int) (150 * scaleFactor), false);
+            flyingEggGraphicLarge = Bitmap.createScaledBitmap(flyingEggGraphic, (int) (200 * scaleFactor), (int) (200 * scaleFactor), false);
+            flyingEggGraphicHuge = Bitmap.createScaledBitmap(flyingEggGraphic, (int) (250 * scaleFactor), (int) (250 * scaleFactor), false);
+
+            flyingEggGraphics.add(flyingEggGraphicSmall);
+            flyingEggGraphics.add(flyingEggGraphicMedium);
+            flyingEggGraphics.add(flyingEggGraphicLarge);
+            flyingEggGraphics.add(flyingEggGraphicHuge);
 
         }
         /**
@@ -237,7 +254,7 @@ public class MainActivity extends AppCompatActivity{
 
             //loop through and run each animation until it reaches the bottom of the screen
             for (int i = 0; i < animationListBack.size(); i++) {
-                canvas.drawBitmap(animationListBack.get(i).getSizedBitmap(), animationListBack.get(i).getXPos(), animationListBack.get(i).getYPos(), paint);
+                canvas.drawBitmap(flyingEggGraphics.get(animationListBack.get(i).getSizeId()), animationListBack.get(i).getXPos(), animationListBack.get(i).getYPos(), paint);
 
                 //check if it is at the bottom, if so store it into our store list
                 if (animationListBack.get(i).y_eggAnimationStart >= screenHeightActual) {
@@ -260,7 +277,7 @@ public class MainActivity extends AppCompatActivity{
 
             //loop through and run our front animations until it reaches the bottom of the screen
             for (int i = 0; i < animationListFront.size(); i++) {
-                canvas.drawBitmap(animationListFront.get(i).getSizedBitmap(), animationListFront.get(i).getXPos(), animationListFront.get(i).getYPos(), paint);
+                canvas.drawBitmap(flyingEggGraphics.get(animationListFront.get(i).getSizeId()), animationListFront.get(i).getXPos(), animationListFront.get(i).getYPos(), paint);
 
                 //check if it is at the bottom, if so store it into our remove list
                 if (animationListFront.get(i).y_eggAnimationStart >= screenHeightActual) {
@@ -381,7 +398,8 @@ public class MainActivity extends AppCompatActivity{
                                 mainEggFrameCounter = 5;
 
                                 //create a new animation each press
-                                FlyingEgg animation = new FlyingEgg(scaleFactor, flyingEggGraphic);
+                                int randomSize = (int)(Math.random() * flyingEggGraphics.size());
+                                FlyingEgg animation = new FlyingEgg(scaleFactor, randomSize);
                                 PointAnimation points = new PointAnimation(scaleFactor);
                                 points.getEggsPerSec(eggsPerSecond);
                                 if(pointAnimationList.size() <= 25){
@@ -389,8 +407,8 @@ public class MainActivity extends AppCompatActivity{
                                 }
 
                                 //add it to the appropriate list depending on the size
-                                if (animation.randomSize <= 240) {
-                                    if(animationListBack.size() <= 25) {
+                                if (randomSize <= 2) {
+                                    if(animationListBack.size() <= 20) {
                                         animationListBack.add(animation);
                                     }
                                 } else {
