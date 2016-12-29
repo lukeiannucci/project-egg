@@ -9,6 +9,7 @@ import android.view.SurfaceView;
 
 import com.jordanluke.R;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -24,7 +25,7 @@ public class PointAnimation {
     int x_old = 0;
     int y_dir = -10; //variables to move animations x and y
     int y_count = 0;
-    BigInteger eggsPerSec = new BigInteger("0");
+    BigDecimal eggsPerSec = new BigDecimal("0.0");
     double sf = 0;
     Bitmap bitImage;
     int counter = 0;
@@ -38,7 +39,7 @@ public class PointAnimation {
         sf = scaleFactor;
     }
 
-    public void getEggsPerSec(BigInteger eps){
+    public void getEggsPerSec(BigDecimal eps){
         eggsPerSec = eps;
     }
 

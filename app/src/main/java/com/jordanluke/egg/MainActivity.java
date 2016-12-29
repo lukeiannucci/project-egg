@@ -24,13 +24,9 @@ import android.view.WindowManager;
 
 import com.jordanluke.R;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +42,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
     Game theGame;
-    BigInteger counter = new BigInteger("0");
+    BigDecimal counter = new BigDecimal("0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         String temp = sharedPref.getString("counter", "");
         if (!temp.equals("")){
-            counter = new BigInteger(temp);
+            counter = new BigDecimal(temp);
         }
 
         theGame = new Game(this);
@@ -100,12 +96,13 @@ public class MainActivity extends AppCompatActivity{
         boolean secondPassed = false;
         long startFrameTime = 0;
         long startSecondTime =0;
-        BigInteger startEggs = new BigInteger("0");
-        BigInteger tapsPerSec = new BigInteger("0");
-        BigInteger startTaps = new BigInteger("0");
-        BigInteger tapsCounter = new BigInteger("0");
-        BigInteger addToCounter = new BigInteger("1"); //not this will change depending on how fast they are clicking
-        BigInteger eggsPerSecond = new BigInteger("0");
+        BigDecimal startEggs = new BigDecimal("0.0");
+        double tapsPerSec = 0.0;
+        int tapsCounter = 0;
+        BigDecimal addToCounter = new BigDecimal("1.0"); //not this will change depending on how fast they are clicking
+        BigDecimal eggsPerSecond = new BigDecimal("0.0");
+        //BigInteger secondsDivisor = new BigInteger("0");
+        BigDecimal eggsGained = new BigDecimal("0.0");
 
         //Lists
         List<FlyingEgg> animationListBack = new ArrayList<>();
@@ -191,17 +188,20 @@ public class MainActivity extends AppCompatActivity{
             while(playing) { //run until paused
                 startFrameTime = System.currentTimeMillis();
                 if(secondPassed == false) {
+                    tapsCounter = 0;
                     startSecondTime = System.currentTimeMillis(); //each time the loop runs is one frame, so we record when it starts here
                     startEggs = counter;
-                    startTaps = tapsCounter;
                     secondPassed = true;
                 }
                 long testFrameTime = System.currentTimeMillis();
-                long isSecond = testFrameTime - startSecondTime;
+                double milliSecond = testFrameTime - startSecondTime;
+                double second = ((double)(milliSecond / 1000.0));
 
-                if(isSecond >= 1000){
-                    eggsPerSecond = (counter.subtract(startEggs));
-                    tapsPerSec = (tapsCounter.subtract(startTaps));
+                if(second >= 1){
+                    BigDecimal secondsDivisor = new BigDecimal(Double.toString(second));
+                    eggsGained = counter.subtract(startEggs);
+                    eggsPerSecond = eggsGained.divide(secondsDivisor, 0, RoundingMode.HALF_UP);
+                    tapsPerSec = Math.round(tapsCounter / second);
                     secondPassed = false;
                 }
                 update(); //calculations
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity{
             //loop through and run each animation until it reaches the bottom of the screen
             for (int i = 0; i < pointAnimationList.size(); i++) {
                 canvas.drawBitmap(pointAnimationList.get(i).bitImage, pointAnimationList.get(i).getXPos(), pointAnimationList.get(i).getYPos(), paint);
-                addToCounter = BigInteger.valueOf(pointAnimationList.get(i).counter);
+                addToCounter = BigDecimal.valueOf(pointAnimationList.get(i).counter);
 
                 //check if it is at the bottom, if so store it into our store list
                 if (pointAnimationList.get(i).y_pointAnimationStart <= (scaleFactor * -75)) {
@@ -316,14 +316,14 @@ public class MainActivity extends AppCompatActivity{
             paint.setTypeface(typeface_bold);
             paint.setARGB(255, 50, 50, 50);
             paint.setTextSize((int)(150 * scaleFactor));
-            if (counter.toString().equals("1")) {
-                canvas.drawText(counter.toString() + " egg", (int) (545 * scaleFactor), (int)(375 * scaleFactor), paint); //draw egg counter
+            if (counter.toBigInteger().toString().equals("1")) {
+                canvas.drawText(counter.toBigInteger().toString() + " egg", (int) (545 * scaleFactor), (int)(375 * scaleFactor), paint); //draw egg counter
                 paint.setARGB(255, 255, 255, 255);
-                canvas.drawText(counter.toString() + " egg", (int) (540 * scaleFactor), (int)(370 * scaleFactor), paint); //draw egg counter
+                canvas.drawText(counter.toBigInteger().toString() + " egg", (int) (540 * scaleFactor), (int)(370 * scaleFactor), paint); //draw egg counter
             } else {
-                canvas.drawText(counter.toString() + " eggs", (int) (545 * scaleFactor), (int)(375 * scaleFactor), paint); //draw egg counter
+                canvas.drawText(counter.toBigInteger().toString() + " eggs", (int) (545 * scaleFactor), (int)(375 * scaleFactor), paint); //draw egg counter
                 paint.setARGB(255, 255, 255, 255);
-                canvas.drawText(counter.toString() + " eggs", (int) (540 * scaleFactor), (int)(370 * scaleFactor), paint); //draw egg counter
+                canvas.drawText(counter.toBigInteger().toString() + " eggs", (int) (540 * scaleFactor), (int)(370 * scaleFactor), paint); //draw egg counter
             }
             paint.setTypeface(typeface_regular);
             paint.setARGB(255, 0, 0, 0);
@@ -389,18 +389,17 @@ public class MainActivity extends AppCompatActivity{
                             try {
                                 counter = counter.add(addToCounter);
                                 mainEggFrameCounter = 5;
-                                BigInteger add1 = new BigInteger("1");
-                                tapsPerSec = tapsPerSec.add(add1);
+                                tapsCounter++;
 
                                 //create a new animation each press
                                 int randomSize = (int)(Math.random() * flyingEggGraphics.size());
                                 FlyingEgg animation = new FlyingEgg(scaleFactor, randomSize);
                                 PointAnimation points = new PointAnimation(scaleFactor);
                                 points.getEggsPerSec(eggsPerSecond);
-                                if(tapsPerSec.intValue() <= 3) {
+                                if(tapsPerSec <= 3) {
                                     points.setBitMapImageAndCount(pointImage1, 1);
                                 }
-                                else if (tapsPerSec.intValue() <= 5) {
+                                else if (tapsPerSec <= 5) {
                                     points.setBitMapImageAndCount(pointImage2, 2);
                                 }
                                 else {
