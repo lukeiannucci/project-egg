@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity{
         Bitmap flyingEggGraphicMedium;
         Bitmap flyingEggGraphicLarge;
         Bitmap flyingEggGraphicHuge;
+        Bitmap menuUpgradesButton;
+        Bitmap menuItemsButton;
 
         //for calculations
         boolean secondPassed = false;
@@ -124,7 +126,9 @@ public class MainActivity extends AppCompatActivity{
 
         //menu initialize
         int menuAnchor = 1920;
+        int menuAnchorX = 0;
         double menuTransitionSpeed = 200;
+        String menustate = "items";
 
         Typeface typeface_bold;
         Typeface typeface_regular;
@@ -178,6 +182,11 @@ public class MainActivity extends AppCompatActivity{
             flyingEggGraphics.add(flyingEggGraphicMedium);
             flyingEggGraphics.add(flyingEggGraphicLarge);
             flyingEggGraphics.add(flyingEggGraphicHuge);
+
+            menuItemsButton = BitmapFactory.decodeResource(this.getResources(), R.drawable.items_button);
+            menuItemsButton = Bitmap.createScaledBitmap(menuItemsButton, (int)(400 * scaleFactor), (int)(200 * scaleFactor), false);
+            menuUpgradesButton = BitmapFactory.decodeResource(this.getResources(), R.drawable.upgrades_button);
+            menuUpgradesButton = Bitmap.createScaledBitmap(menuUpgradesButton, (int)(400 * scaleFactor), (int)(200 * scaleFactor), false);
 
         }
         /**
@@ -241,12 +250,14 @@ public class MainActivity extends AppCompatActivity{
                 }
 
                 //debug stuff always on top
+                paint.setTextAlign(Paint.Align.LEFT);
                 paint.setColor(Color.argb(255, 0, 0, 0)); //black text
                 paint.setTextSize((int)(37 * scaleFactor));
                 canvas.drawText("FPS:" + fps, 20, 80, paint); //draw fps counter
                 canvas.drawText(screenWidthActual + "x" + screenHeightActual, 20, 140, paint);
                 canvas.drawText("scale factor = " + scaleFactor, 20, 200, paint);
                 canvas.drawText("gamestate = " + gamestate, 20, 260, paint);
+                canvas.drawText("menustate = " + menustate, 20, 320, paint);
 
                 ourHolder.unlockCanvasAndPost(canvas); //finalize
             }
@@ -337,14 +348,29 @@ public class MainActivity extends AppCompatActivity{
         }
 
         public void drawMenuScreen(int anchorPoint) {
+            if(menustate.equals("upgrades") && menuAnchorX > -1080) {
+                if((menuAnchorX-=65) < -1080) {
+                    menuAnchorX = -1080;
+                } else {
+                    menuAnchorX -= 65;
+                }
+            } else if(menustate.equals("items") && menuAnchorX < 0) {
+                if((menuAnchorX+=65) > 0) {
+                    menuAnchorX = 0;
+                } else {
+                    menuAnchorX += 65;
+                }
+            }
             paint.setARGB(255, 255, 255, 255);
             canvas.drawRect(0, (int)(scaleFactor * anchorPoint), (int)(1080 * scaleFactor), (int)(1920 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
             paint.setARGB(255, 0, 0, 0);
             //canvas.drawText("0x" + 0 + (int)(scaleFactor * anchorPoint) + "x" + (int)(1080 * scaleFactor) + "x" +  ((int)(1920 * scaleFactor) + (int)(scaleFactor)), 300, 300, paint);
-            canvas.drawText("Menu", (int)(540 * scaleFactor), (int)(300 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
-            canvas.drawText("item_1", (int)(540 * scaleFactor), (int)(400 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
-            canvas.drawText("item_2", (int)(540 * scaleFactor), (int)(480 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
-            canvas.drawText("item_3", (int)(540 * scaleFactor), (int)(560 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+            paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("item_1", (int)(540 * scaleFactor) + (int)(scaleFactor * menuAnchorX), (int)(400 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+            canvas.drawText("upgrade_1", (int)(1620 * scaleFactor) + (int)(scaleFactor * menuAnchorX), (int)(400 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+
+            canvas.drawBitmap(menuItemsButton, (int)(92 * scaleFactor), (int)(100 * scaleFactor) + (int)(scaleFactor * menuAnchor), paint);
+            canvas.drawBitmap(menuUpgradesButton, (int)(584 * scaleFactor), (int)(100 * scaleFactor) + (int)(scaleFactor * menuAnchor), paint);
         }
 
         //add in number of frames failsafe for menu transition
@@ -424,11 +450,31 @@ public class MainActivity extends AppCompatActivity{
                             }
                         }
                     }
+                    if(gamestate.equals("menu")) {
+                        if(motionEvent.getX() < (int)(492 * scaleFactor)
+                            && motionEvent.getX() > (int)(92 * scaleFactor)
+                            && motionEvent.getY() > (int)(100 * scaleFactor)
+                            && motionEvent.getY() < (int)(300 * scaleFactor)) {
+                                menustate = "items";
+                                phoneVibrate.vibrate(30); //vibrate phone
+                        } else if(motionEvent.getX() < (int)(964 * scaleFactor)
+                                && motionEvent.getX() > (int)(584 * scaleFactor)
+                                && motionEvent.getY() > (int)(100 * scaleFactor)
+                                && motionEvent.getY() < (int)(300 * scaleFactor)) {
+                                    if(menustate.equals("items")) {
+                                        menustate = "upgrades";
+                                        phoneVibrate.vibrate(30); //vibrate phone
+                                    }
+
+                        }
+                    }
                     // Touched menu button
                     if(motionEvent.getX() < (int)(270 * scaleFactor)
                             && motionEvent.getY() > (int)(1600 * scaleFactor)) {
                         if(gamestate.equals("main")) {
                             menuTransitionSpeed = 200;
+                            menustate = "items";
+                            menuAnchorX = 0;
                             gamestate = "mainToMenu";
                         } else if(gamestate.equals("menu")){
                             menuTransitionSpeed = 200;
