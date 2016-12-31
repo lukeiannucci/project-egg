@@ -92,7 +92,9 @@ public class MainActivity extends AppCompatActivity{
         Bitmap flyingEggGraphicLarge;
         Bitmap flyingEggGraphicHuge;
         Bitmap menuUpgradesButton;
+        Bitmap menuUpgradesButtonDown;
         Bitmap menuItemsButton;
+        Bitmap menuItemsButtonDown;
 
         //for calculations
         boolean secondPassed = false;
@@ -185,8 +187,13 @@ public class MainActivity extends AppCompatActivity{
 
             menuItemsButton = BitmapFactory.decodeResource(this.getResources(), R.drawable.items_button);
             menuItemsButton = Bitmap.createScaledBitmap(menuItemsButton, (int)(400 * scaleFactor), (int)(200 * scaleFactor), false);
+            menuItemsButtonDown = BitmapFactory.decodeResource(this.getResources(), R.drawable.items_button_down);
+            menuItemsButtonDown = Bitmap.createScaledBitmap(menuItemsButtonDown, (int)(400 * scaleFactor), (int)(200 * scaleFactor), false);
+
             menuUpgradesButton = BitmapFactory.decodeResource(this.getResources(), R.drawable.upgrades_button);
             menuUpgradesButton = Bitmap.createScaledBitmap(menuUpgradesButton, (int)(400 * scaleFactor), (int)(200 * scaleFactor), false);
+            menuUpgradesButtonDown = BitmapFactory.decodeResource(this.getResources(), R.drawable.upgrades_button_down);
+            menuUpgradesButtonDown = Bitmap.createScaledBitmap(menuUpgradesButtonDown, (int)(400 * scaleFactor), (int)(200 * scaleFactor), false);
 
         }
         /**
@@ -369,8 +376,13 @@ public class MainActivity extends AppCompatActivity{
             canvas.drawText("item_1", (int)(540 * scaleFactor) + (int)(scaleFactor * menuAnchorX), (int)(400 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
             canvas.drawText("upgrade_1", (int)(1620 * scaleFactor) + (int)(scaleFactor * menuAnchorX), (int)(400 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
 
-            canvas.drawBitmap(menuItemsButton, (int)(92 * scaleFactor), (int)(100 * scaleFactor) + (int)(scaleFactor * menuAnchor), paint);
-            canvas.drawBitmap(menuUpgradesButton, (int)(584 * scaleFactor), (int)(100 * scaleFactor) + (int)(scaleFactor * menuAnchor), paint);
+            if(menustate.equals("items")) {
+                canvas.drawBitmap(menuItemsButtonDown, (int) (92 * scaleFactor), (int) (100 * scaleFactor) + (int) (scaleFactor * menuAnchor), paint);
+                canvas.drawBitmap(menuUpgradesButton, (int) (584 * scaleFactor), (int) (100 * scaleFactor) + (int) (scaleFactor * menuAnchor), paint);
+            } else {
+                canvas.drawBitmap(menuItemsButton, (int) (92 * scaleFactor), (int) (100 * scaleFactor) + (int) (scaleFactor * menuAnchor), paint);
+                canvas.drawBitmap(menuUpgradesButtonDown, (int) (584 * scaleFactor), (int) (100 * scaleFactor) + (int) (scaleFactor * menuAnchor), paint);
+            }
         }
 
         //add in number of frames failsafe for menu transition
