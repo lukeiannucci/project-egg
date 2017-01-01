@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity{
         Thread gameThread = null;
         SurfaceHolder ourHolder;
         volatile boolean playing;
+        boolean goldenEggBought = false;
 
         //for drawing
         Canvas canvas;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity{
         Bitmap flyingEggGraphicMedium;
         Bitmap flyingEggGraphicLarge;
         Bitmap flyingEggGraphicHuge;
+        Bitmap goldenEgg;
 
         //for calculations
         boolean secondPassed = false;
@@ -173,6 +175,9 @@ public class MainActivity extends AppCompatActivity{
             flyingEggGraphicMedium = Bitmap.createScaledBitmap(flyingEggGraphicMe, (int) (150 * scaleFactor), (int) (150 * scaleFactor), false);
             flyingEggGraphicLarge = Bitmap.createScaledBitmap(flyingEggGraphic, (int) (200 * scaleFactor), (int) (200 * scaleFactor), false);
             flyingEggGraphicHuge = Bitmap.createScaledBitmap(flyingEggGraphic, (int) (250 * scaleFactor), (int) (250 * scaleFactor), false);
+
+            goldenEgg = BitmapFactory.decodeResource(this.getResources(), R.drawable.golden_egg);
+            goldenEgg = Bitmap.createScaledBitmap(goldenEgg, (int)(1300 * scaleFactor), (int)(1300 * scaleFactor), false);
 
             flyingEggGraphics.add(flyingEggGraphicSmall);
             flyingEggGraphics.add(flyingEggGraphicMedium);
@@ -273,11 +278,14 @@ public class MainActivity extends AppCompatActivity{
             //free up our list
             itemsToRemove.clear();
 
-            if(mainEggFrameCounter >= 1) {
+            if(mainEggFrameCounter >= 1 && goldenEggBought == false) {
                 mainEggFrameCounter--;
                 canvas.drawBitmap(mainEggFrames.get(1), (int) (-110 * scaleFactor), (int) (500 * scaleFactor), paint); //draw main egg
-            } else {
+            } else if (mainEggFrameCounter <= 1 && goldenEggBought == false){
                 canvas.drawBitmap(mainEggFrames.get(0), (int) (-110 * scaleFactor), (int) (500 * scaleFactor), paint); //draw main egg
+            } else {
+                // canvas.drawBitmap(goldenEgg, (int)(35 * scaleFactor), (int) (1629 * scaleFactor), paint);
+                canvas.drawBitmap(goldenEgg, (int) (-110 * scaleFactor), (int) (500 * scaleFactor), paint);
             }
 
             //loop through and run our front animations until it reaches the bottom of the screen
@@ -341,8 +349,8 @@ public class MainActivity extends AppCompatActivity{
             canvas.drawRect(0, (int)(scaleFactor * anchorPoint), (int)(1080 * scaleFactor), (int)(1920 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
             paint.setARGB(255, 0, 0, 0);
             //canvas.drawText("0x" + 0 + (int)(scaleFactor * anchorPoint) + "x" + (int)(1080 * scaleFactor) + "x" +  ((int)(1920 * scaleFactor) + (int)(scaleFactor)), 300, 300, paint);
-            canvas.drawText("Menu", (int)(540 * scaleFactor), (int)(300 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
-            canvas.drawText("item_1", (int)(540 * scaleFactor), (int)(400 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
+            canvas.drawText("Menu", (int)(540 * scaleFactor), (int)(300 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);//draw main egg
+            canvas.drawText("golden_egg_test", (int)(500 * scaleFactor), (int)(400 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
             canvas.drawText("item_2", (int)(540 * scaleFactor), (int)(480 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
             canvas.drawText("item_3", (int)(540 * scaleFactor), (int)(560 * scaleFactor) + (int)(scaleFactor * anchorPoint), paint);
         }
@@ -435,6 +443,43 @@ public class MainActivity extends AppCompatActivity{
                             gamestate = "menuToMain";
                         }
                         phoneVibrate.vibrate(30); //vibrate phone
+                    }
+
+                    if(motionEvent.getX() > 0
+                            && motionEvent.getY() < (int)(480 * scaleFactor) &&
+                            motionEvent.getY() > (int)(380 * scaleFactor)
+                            && gamestate.equals("menu")){
+                        //test purposes
+                        System.out.print("here");
+
+                                if(Double.valueOf(counter.toString()) >= 2000 && goldenEggBought == false) {
+                                    new AlertDialog.Builder(this.getContext())
+                                    .setMessage("Are you sure you want to purchase the golden egg clicker for 2,000 eggs?")
+                                            .setCancelable(false)
+                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    goldenEggBought = true;
+                                                    BigDecimal price = new BigDecimal("2000");
+                                                    counter = counter.subtract(price);
+                                                    save();
+                                                }
+                                            })
+                                            .setNegativeButton("No", null)
+                                            .show();
+                                } else if (goldenEggBought == true){
+                                    new AlertDialog.Builder(this.getContext())
+                                            .setMessage("You already purchased this item!")
+                                            .setCancelable(false)
+                                            .setPositiveButton("Ok", null)
+                                            .show();
+                                } else {
+                                    new AlertDialog.Builder(this.getContext())
+                                            .setMessage("You do not have enough eggs! Keep clicking!")
+                                            .setCancelable(false)
+                                            .setPositiveButton("Ok", null)
+                                            .show();
+                                }
+
                     }
                     break;
             }
