@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.createaccount.CreateAccountController">
    <center>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: none;" BorderPane.alignment="CENTER">
          <children>
@@ -42,26 +42,27 @@
                   </VBox>
                   <VBox layoutX="167.0" layoutY="15.0" prefHeight="200.0" prefWidth="389.0">
                      <children>
-                        <TextField promptText="Type the username you wish to use">
+                        <TextField fx:id="usernameField" promptText="Type the username you wish to use">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </TextField>
                         <Region prefHeight="18.0" prefWidth="15.0" />
-                        <PasswordField promptText="Type a password">
+                        <PasswordField fx:id="passwordField" promptText="Type a password">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </PasswordField>
                         <Region prefHeight="18.0" prefWidth="15.0" />
-                        <PasswordField promptText="Retype the password">
+                        <PasswordField fx:id="passwordConfirmField" promptText="Retype the password">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </PasswordField>
                      </children>
                   </VBox>
-                  <Button layoutX="471.0" layoutY="215.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="84.0" text="Create">
+                  <Label fx:id="errorMessageLabel" layoutX="63.0" layoutY="215.0" />
+                  <Button fx:id="createAccountBtn" layoutX="471.0" layoutY="215.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="44.0" prefWidth="84.0" text="Create">
                      <font>
                         <Font size="14.0" />
                      </font>
