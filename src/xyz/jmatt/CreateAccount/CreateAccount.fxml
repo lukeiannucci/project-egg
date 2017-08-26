@@ -7,17 +7,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <Pane prefHeight="203.0" prefWidth="63.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: none;" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="38.0" text="Create a New Account">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <Pane layoutX="14.0" layoutY="52.0" prefHeight="327.0" prefWidth="569.0" style="-fx-background-color: #e8e8ee;">
+            <Pane layoutX="14.0" layoutY="52.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="327.0" prefWidth="569.0" style="-fx-background-color: #e8e8ee;">
                <children>
                   <VBox layoutX="14.0" layoutY="15.0" prefHeight="200.0" prefWidth="153.0">
                      <children>

@@ -32,8 +32,10 @@ public class LoginController {
                try {
                    BorderPane CreateAccountPane = FXMLLoader.load(getClass().getResource("/xyz/jmatt/CreateAccount/CreateAccount.fxml"));
                    Stage createAccountWindow = new Stage();
-                   createAccountWindow.setScene(new Scene(CreateAccountPane, 960, 540));
+                   createAccountWindow.setScene(new Scene(CreateAccountPane, 600, 400));
                    createAccountWindow.show();
+                   createAccountWindow.setMinWidth(createAccountWindow.getWidth());
+                   createAccountWindow.setMinHeight(createAccountWindow.getHeight());
                    //((Node) (event.getSource())).getScene().getWindow().;
                }
                catch (Exception e){
