@@ -19,7 +19,7 @@ public class CreateAccountController {
     @FXML
     private PasswordField passwordConfirmField;
     @FXML
-    private Label errorMessageLabel;
+    private Label messageLabel;
 
     private final String ERROR_EMPTY_FIELDS = "ERROR: Please fill out all fields before proceeding";
     private final String ERROR_DIFFERENT_PASSWORDS = "ERROR: Passwords did not match";
@@ -33,19 +33,20 @@ public class CreateAccountController {
         if(usernameField.getText().equals("")
             || passwordField.getText().equals("")
             || passwordConfirmField.getText().equals("")) {
-            setErrorMessage(ERROR_EMPTY_FIELDS);
+            setMessage(ERROR_EMPTY_FIELDS);
             return;
         }
         // Make sure confirm passwords match
         if(!passwordField.getText().equals(passwordConfirmField.getText())) {
-            setErrorMessage(ERROR_DIFFERENT_PASSWORDS);
+            setMessage(ERROR_DIFFERENT_PASSWORDS);
             return;
         }
 
         //proceed with creating a new account
+        setMessage("creating account...");
+        createAccountBtn.setDisable(true); //disable the button until it's done to prevent duplicates
         //do in separate thread
         Platform.runLater(() -> {
-            createAccountBtn.setDisable(true); //disable the button until it's done to prevent duplicates
             CreateAccountService accountService = new CreateAccountService();
             SimpleResult result = accountService.createAccount(usernameField.getText(), passwordField.getText().toCharArray());
             handleCreateAccountResult(result);
@@ -54,23 +55,23 @@ public class CreateAccountController {
 
     /**
      * Called after the create account thread finishes
-     * @param result
+     * @param result the result of the account creation process
      */
     private void handleCreateAccountResult(SimpleResult result) {
         createAccountBtn.setDisable(false); //re-enable button
         if(!result.isError()) {
             //account was made TODO
-            System.out.println("account created");
+            setMessage("account created");
         } else {
-            setErrorMessage(result.getMessage());
+            setMessage(result.getMessage());
         }
     }
 
     /**
-     * Sets the on screen error message label to the given message
+     * Sets the on screen  message label to the given message
      * @param message The message to display to the user
      */
-    private void setErrorMessage(String message) {
-        errorMessageLabel.setText(message);
+    private void setMessage(String message) {
+        messageLabel.setText(message);
     }
 }
