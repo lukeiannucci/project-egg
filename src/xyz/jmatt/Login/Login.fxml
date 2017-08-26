@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #666666;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.Login.LoginController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #666666;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.Login.LoginController">
    <center>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="391.0" prefWidth="300.0" style="-fx-background-color: none;" BorderPane.alignment="CENTER">
          <children>
@@ -41,9 +38,15 @@
                      </font>
                   </Label>
                   <Region prefHeight="10.0" />
-                  <TextField prefHeight="75.0" promptText="Username" />
+                  <TextField prefHeight="75.0" promptText="Username">
+                     <font>
+                        <Font size="18.0" />
+                     </font></TextField>
                   <Region prefHeight="5.0" />
-                  <PasswordField prefHeight="75.0" promptText="Password" />
+                  <PasswordField prefHeight="75.0" promptText="Password">
+                     <font>
+                        <Font size="18.0" />
+                     </font></PasswordField>
                   <Region prefHeight="10.0" />
                   <CheckBox mnemonicParsing="false" text="Remember Me" />
                   <Region prefHeight="10.0" />
@@ -60,7 +63,7 @@
                            </padding>
                         </Button>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onMouseEntered="#OnMouseEntered" onMouseExited="#OnMouseExited" style="-fx-background-color: none;" text="Create Account">
+                        <Button mnemonicParsing="false" onMouseClicked="#OnMouseClicked" onMouseEntered="#OnMouseEntered" onMouseExited="#OnMouseExited" style="-fx-background-color: none;" text="Create Account">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
