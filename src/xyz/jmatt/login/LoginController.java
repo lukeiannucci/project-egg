@@ -47,17 +47,6 @@ public class LoginController implements Initializable{
     }
 
     @FXML
-    private void OnMouseEntered(MouseEvent event){
-        Button myButton = (Button)event.getSource();
-        myButton.setUnderline(true);
-    }
-    @FXML
-    private void OnMouseExited(MouseEvent event){
-        Button myButton = (Button)event.getSource();
-        myButton.setUnderline(false);
-    }
-
-    @FXML
     private void OnMouseClicked(MouseEvent event){
         if(event.getButton() == MouseButton.PRIMARY){
                try {

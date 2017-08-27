@@ -15,7 +15,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         BorderPane root = FXMLLoader.load(getClass().getResource("/xyz/jmatt/login/Login.fxml"));
         primaryStage.setTitle("login");
-        primaryStage.setScene(new Scene(root, 600, 450));
+        Scene scene = new Scene(root, 600, 450);
+        scene.getStylesheets().add("xyz/jmatt/login/Login.css");
+        primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setMinHeight(primaryStage.getHeight());
         primaryStage.setMinWidth(primaryStage.getWidth());

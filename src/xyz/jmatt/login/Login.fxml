@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -14,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="LoginPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #666666;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.login.LoginController">
+<BorderPane fx:id="LoginPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #666666;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.login.LoginController">
    <center>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="391.0" prefWidth="300.0" style="-fx-background-color: none;" BorderPane.alignment="CENTER">
          <children>
@@ -48,13 +54,19 @@
                         <Font size="18.0" />
                      </font></PasswordField>
                   <Region prefHeight="10.0" />
-                  <CheckBox mnemonicParsing="false" text="Remember Me" />
+                  <CheckBox mnemonicParsing="false" text="Remember Me">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></CheckBox>
                   <Region prefHeight="10.0" />
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" text="Login" />
+                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" text="Login">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
                   <Region prefHeight="10.0" />
                   <HBox prefWidth="600.0">
                      <children>
-                        <Button mnemonicParsing="false" onMouseEntered="#OnMouseEntered" onMouseExited="#OnMouseExited" style="-fx-background-color: none;" text="Forgot Password?">
+                        <Button mnemonicParsing="false" style="-fx-background-color: none;" styleClass="textBtn" text="Forgot Password?">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -63,7 +75,7 @@
                            </padding>
                         </Button>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onMouseClicked="#OnMouseClicked" onMouseEntered="#OnMouseEntered" onMouseExited="#OnMouseExited" style="-fx-background-color: none;" text="Create Account">
+                        <Button mnemonicParsing="false" onMouseClicked="#OnMouseClicked" style="-fx-background-color: none;" styleClass="textBtn" text="Create Account">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

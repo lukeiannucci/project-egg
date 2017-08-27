@@ -6,6 +6,8 @@ import xyz.jmatt.daos.UsersDao;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.models.UserModel;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -52,6 +54,9 @@ public class CreateAccountService {
             }
         } catch (SQLException e) {
             result = new SimpleResult("ERROR: Internal database error", true);
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            result = new SimpleResult("ERROR: Internal server error", true);
             e.printStackTrace();
         } finally {
             if(transaction != null) {

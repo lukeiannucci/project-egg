@@ -64,7 +64,7 @@
                         </PasswordField>
                      </children>
                   </VBox>
-                  <Label fx:id="errorMessageLabel" layoutX="63.0" layoutY="215.0" />
+                  <Label fx:id="messageLabel" layoutX="63.0" layoutY="215.0" />
                   <Button fx:id="createAccountBtn" layoutX="471.0" layoutY="215.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="44.0" prefWidth="84.0" text="Create">
                      <font>
                         <Font size="14.0" />
