@@ -1,15 +1,25 @@
 package xyz.jmatt.createaccount;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.util.Duration;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.services.CreateAccountService;
 
-public class CreateAccountController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class CreateAccountController implements Initializable{
     @FXML
     private Button createAccountBtn;
     @FXML
@@ -20,9 +30,15 @@ public class CreateAccountController {
     private PasswordField passwordConfirmField;
     @FXML
     private Label messageLabel;
-
+    @FXML
+    private BorderPane CreateAccountPane;
     private final String ERROR_EMPTY_FIELDS = "ERROR: Please fill out all fields before proceeding";
     private final String ERROR_DIFFERENT_PASSWORDS = "ERROR: Passwords did not match";
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        SlideTransition(CreateAccountPane);
+    }
 
     /*
      * Attempts to create a new account with the information given
@@ -66,6 +82,17 @@ public class CreateAccountController {
             setMessage(result.getMessage());
         }
     }
+
+    private void SlideTransition(Node e)
+    {
+        TranslateTransition x = new TranslateTransition(new Duration(500), e);
+        x.setFromX(600.0);
+        x.setToX(0);
+        x.setCycleCount(1);
+        x.play();
+    }
+
+
 
     /**
      * Sets the on screen  message label to the given message

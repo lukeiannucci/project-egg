@@ -1,8 +1,8 @@
 package xyz.jmatt.login;
 
-import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
+import javafx.application.ConditionalFeature;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +20,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import javafx.util.Duration;
+import xyz.jmatt.Main;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -29,37 +31,49 @@ public class LoginController implements Initializable{
     @FXML
     private BorderPane LoginPane;
 
+    //@FXML
+    //private BorderPane CreateAccountPane;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        TranslateTransition transition = new TranslateTransition();
-        transition.setDuration(Duration.seconds(4));
+        //TranslateTransition transition = new TranslateTransition();
+        //transition.setDuration(Duration.seconds(4));
         try{
-            BorderPane CreateAccountPane = FXMLLoader.load(getClass().getResource("/xyz/jmatt/createaccount/CreateAccount.fxml"));
-            transition.setNode(CreateAccountPane);
-            transition.setToX(500);
-            transition.setToY(200);
-            transition.play();
+            //BorderPane CreateAccountPane = FXMLLoader.load(getClass().getResource("/xyz/jmatt/createaccount/CreateAccount.fxml"));
+            //CreateAccountPane.set
+            //transition.setNode(CreateAccountPane);
+            //transition.setToX(500);
+            //transition.setToY(200);
+            //transition.play();
         }catch (Exception e)
         {
-
+            System.out.println(e.toString());
         }
 
+    }
+    private void trans(Node e) throws Exception
+    {
+        FadeTransition x = new FadeTransition(new Duration(500), e);
+        x.setFromValue(0);
+        x.setToValue(100);
+        x.setCycleCount(1);
+        x.setOnFinished(event -> {
+            try {
+                    Main.changeScene("");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            });
+    x.setInterpolator(Interpolator.LINEAR);
+        x.play();
     }
 
     @FXML
     private void OnMouseClicked(MouseEvent event){
         if(event.getButton() == MouseButton.PRIMARY){
                try {
-                   //BorderPane CreateAccountPane = FXMLLoader.load(getClass().getResource("/xyz/jmatt/createaccount/CreateAccount.fxml"));
-                   //TranslateTransition slide = new TranslateTransition(new Duration(5000), CreateAccountPane);
-                   //slide.setToX(0);
-                   //slide.play();
-                   //Stage createAccountWindow = new Stage();
-                   //createAccountWindow.setScene(new Scene(CreateAccountPane, 600, 400));
-                   //createAccountWindow.show();
-                   //createAccountWindow.setMinWidth(createAccountWindow.getWidth());
-                   //createAccountWindow.setMinHeight(createAccountWindow.getHeight());
-                   //LoginPane.getChildren().setAll(CreateAccountPane);
+                   //trans(LoginPane);
+                   Main.changeScene("");
                }
                catch (Exception e){
                    e.printStackTrace();
