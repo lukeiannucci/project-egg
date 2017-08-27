@@ -49,7 +49,7 @@ public class CreateAccountController {
         Platform.runLater(() -> {
             CreateAccountService accountService = new CreateAccountService();
             SimpleResult result = accountService.createAccount(usernameField.getText(), passwordField.getText().toCharArray());
-            handleCreateAccountResult(result);
+            onCreateAccountResult(result);
         });
     }
 
@@ -57,7 +57,7 @@ public class CreateAccountController {
      * Called after the create account thread finishes
      * @param result the result of the account creation process
      */
-    private void handleCreateAccountResult(SimpleResult result) {
+    private void onCreateAccountResult(SimpleResult result) {
         createAccountBtn.setDisable(false); //re-enable button
         if(!result.isError()) {
             //account was made TODO

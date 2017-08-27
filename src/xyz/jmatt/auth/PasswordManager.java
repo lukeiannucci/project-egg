@@ -2,6 +2,7 @@ package xyz.jmatt.auth;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -29,7 +30,7 @@ public class PasswordManager {
 
         originalPassword = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
 
-        return iterations + ":" + toHex(salt) + ":" + toHex(hash);
+        return iterations + ":" + DatatypeConverter.printHexBinary(salt) + ":" + DatatypeConverter.printHexBinary(hash);
     }
 
     /**
@@ -44,24 +45,26 @@ public class PasswordManager {
     }
 
     /**
-     * Converts the given byte array into a hexadecimal string
-     * @param bytes the array of bytes to convert
-     * @return a hexadecimal String
-     */
-    private String toHex(byte[] bytes) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for(byte b : bytes) {
-            stringBuilder.append(String.format("%02x", b));
-        }
-        return stringBuilder.toString();
-    }
-
-    /**
      * Compares the given password to the hashed & salted one stored in the database
      * @return whether or not the password matches
      */
-    public boolean validatePassword() {
-        //TODO
-        return false;
+    public boolean validatePassword(char[] password, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException{
+        String[] storedSections= storedPassword.split(":");
+        int iterations = Integer.parseInt(storedSections[0]);
+        byte[] salt = DatatypeConverter.parseHexBinary(storedSections[1]);
+        byte[] hash = DatatypeConverter.parseHexBinary(storedSections[2]);
+
+        PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterations, hash.length * 8);
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+        byte[] testHash = keyFactory.generateSecret(keySpec).getEncoded();
+
+        int diff = hash.length ^ testHash.length;
+        for(int i = 0; i < hash.length && i < testHash.length; i++) {
+            diff |= hash[i] ^ testHash[i];
+        }
+
+        password = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
+
+        return diff == 0;
     }
 }

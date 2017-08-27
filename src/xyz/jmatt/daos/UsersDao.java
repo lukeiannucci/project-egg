@@ -54,4 +54,16 @@ public class UsersDao {
             return false;
         }
     }
+
+    public String getStoredPassword(String username) throws SQLException {
+        PreparedStatement prep = connection.prepareStatement(
+                "SELECT Password FROM Users WHERE Username = ?;");
+        prep.setString(1, username);
+        ResultSet resultSet = prep.executeQuery();
+
+        String password = resultSet.getString("Password");
+        prep.close();
+        resultSet.close();
+        return password;
+    }
 }

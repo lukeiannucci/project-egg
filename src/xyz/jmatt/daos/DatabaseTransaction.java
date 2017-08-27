@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseTransaction {
-    private final String DB_URL = "jdbc:sqlite:" + "db" + File.separator + "database.sqlite";
+    private final String DB_URL = "jdbc:sqlite:" + "db" + File.separator + "main.sqlite";
     private Connection connection;
 
     public DatabaseTransaction() throws SQLException {

@@ -43,13 +43,13 @@
                         <Font size="50.0" />
                      </font>
                   </Label>
-                  <Region prefHeight="10.0" />
-                  <TextField prefHeight="75.0" promptText="Username">
+                  <Label fx:id="messageLabel" text="Label" />
+                  <TextField fx:id="usernameField" prefHeight="75.0" promptText="Username">
                      <font>
                         <Font size="18.0" />
                      </font></TextField>
                   <Region prefHeight="5.0" />
-                  <PasswordField prefHeight="75.0" promptText="Password">
+                  <PasswordField fx:id="passwordField" prefHeight="75.0" promptText="Password">
                      <font>
                         <Font size="18.0" />
                      </font></PasswordField>
@@ -59,7 +59,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor></CheckBox>
                   <Region prefHeight="10.0" />
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" text="Login">
+                  <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#login" prefHeight="50.0" prefWidth="300.0" text="Login">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Button>
@@ -75,7 +75,7 @@
                            </padding>
                         </Button>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onMouseClicked="#OnMouseClicked" style="-fx-background-color: none;" styleClass="textBtn" text="Create Account">
+                        <Button mnemonicParsing="false" onAction="#createAccount" style="-fx-background-color: none;" styleClass="textBtn" text="Create Account">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
