@@ -24,7 +24,7 @@ public class DatabaseTransaction {
      * Gets the active connection to the database for the transaction
      * @return the active connection
      */
-    public Connection getConnection() {
+    Connection getConnection() {
         return connection;
     }
 
