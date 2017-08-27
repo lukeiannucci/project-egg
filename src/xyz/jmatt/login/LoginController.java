@@ -1,20 +1,36 @@
 package xyz.jmatt.login;
 
 import javafx.application.Platform;
+import javafx.animation.*;
+import javafx.application.ConditionalFeature;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.services.LoginService;
 
+import javafx.util.Duration;
+import xyz.jmatt.Main;
 
-public class LoginController {
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+
+public class LoginController implements Initializable{
     @FXML
     private BorderPane LoginPane;
     @FXML
@@ -53,7 +69,7 @@ public class LoginController {
 
     private void onLoginResult(SimpleResult result) {
         loginBtn.setDisable(false);
-        if(!result.isError()) {
+        if (!result.isError()) {
             //logged in TODO
             setMessage("logged in");
         } else {
@@ -61,14 +77,36 @@ public class LoginController {
         }
     }
 
+    //@FXML
+    //private BorderPane CreateAccountPane;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {}
+
+    private void trans(Node e) throws Exception
+    {
+        FadeTransition x = new FadeTransition(new Duration(500), e);
+        x.setFromValue(0);
+        x.setToValue(100);
+        x.setCycleCount(1);
+        x.setOnFinished(event -> {
+            try {
+                    Main.changeScene("");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            });
+    x.setInterpolator(Interpolator.LINEAR);
+        x.play();
+    }
+
     /**
      * Launches the create account pane
      */
     @FXML
-    private void createAccount(){
+    private void createAccount() {
        try {
-           BorderPane CreateAccountPane = FXMLLoader.load(getClass().getResource("/xyz/jmatt/createaccount/CreateAccount.fxml"));
-           LoginPane.getChildren().setAll(CreateAccountPane);
+           Main.changeScene("");
        }
        catch (Exception e){
            e.printStackTrace();
