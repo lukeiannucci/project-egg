@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOError;
@@ -30,8 +31,9 @@ public class Main extends Application {
     }
     //for now just hardcode change to create account scene change will come back and fix later
     public static void changeScene(String scene) throws IOException {
-        Parent CreateAccountPane = FXMLLoader.load(Main.class.getResource("/xyz/jmatt/createaccount/CreateAccount.fxml"));
-        stage.setScene(new Scene(CreateAccountPane, 600, 450));
+        Parent CreateAccountPane = FXMLLoader.load(Main.class.getResource(scene));
+        stage.setScene(new Scene(CreateAccountPane, 600, 450, Color.valueOf("#666666"))
+        );
 
     }
 }

@@ -106,7 +106,7 @@ public class LoginController implements Initializable{
     @FXML
     private void createAccount() {
        try {
-           Main.changeScene("");
+           Main.changeScene("/xyz/jmatt/createaccount/CreateAccount.fxml");
        }
        catch (Exception e){
            e.printStackTrace();
