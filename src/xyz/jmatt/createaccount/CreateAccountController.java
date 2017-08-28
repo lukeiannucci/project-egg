@@ -13,9 +13,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
+import xyz.jmatt.Main;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.services.CreateAccountService;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -32,13 +34,15 @@ public class CreateAccountController implements Initializable{
     private Label messageLabel;
     @FXML
     private BorderPane CreateAccountPane;
+    @FXML
+    private Button backButton;
 
     private final String ERROR_EMPTY_FIELDS = "ERROR: Please fill out all fields before proceeding";
     private final String ERROR_DIFFERENT_PASSWORDS = "ERROR: Passwords did not match";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        SlideTransition(CreateAccountPane);
+        SlideTransitionEnter(CreateAccountPane);
     }
 
     /*
@@ -66,7 +70,11 @@ public class CreateAccountController implements Initializable{
         Platform.runLater(() -> {
             CreateAccountService accountService = new CreateAccountService();
             SimpleResult result = accountService.createAccount(usernameField.getText(), passwordField.getText().toCharArray());
-            onCreateAccountResult(result);
+            try {
+                onCreateAccountResult(result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -74,17 +82,40 @@ public class CreateAccountController implements Initializable{
      * Called after the create account thread finishes
      * @param result the result of the account creation process
      */
-    private void onCreateAccountResult(SimpleResult result) {
+    private void onCreateAccountResult(SimpleResult result) throws IOException {
         createAccountBtn.setDisable(false); //re-enable button
         if(!result.isError()) {
             //account was made TODO
+            //TODO login them in or make them retype credentials??
             setMessage("account created");
+            SlideTransitionExit(CreateAccountPane);
         } else {
             setMessage(result.getMessage());
         }
     }
+    @FXML
+    private void BackButtonPressed() throws IOException
+    {
+        SlideTransitionExit(CreateAccountPane);
+    }
 
-    private void SlideTransition(Node e)
+    private void SlideTransitionExit(Node e)
+    {
+        TranslateTransition x = new TranslateTransition(new Duration(500), e);
+        x.setFromX(0.0);
+        x.setToX(600.0);
+        x.setCycleCount(1);
+        x.setOnFinished(event -> {
+            try {
+                Main.changeScene("/xyz/jmatt/login/Login.fxml");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+        x.play();
+    }
+
+    private void SlideTransitionEnter(Node e)
     {
         TranslateTransition x = new TranslateTransition(new Duration(500), e);
         x.setFromX(600.0);
