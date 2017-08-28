@@ -95,7 +95,7 @@ public class LoginController implements Initializable{
                     e1.printStackTrace();
                 }
             });
-    x.setInterpolator(Interpolator.LINEAR);
+        x.setInterpolator(Interpolator.LINEAR);
         x.play();
     }
 
