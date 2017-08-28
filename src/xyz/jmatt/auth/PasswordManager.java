@@ -1,8 +1,11 @@
 package xyz.jmatt.auth;
 
+import com.sun.org.apache.xml.internal.security.exceptions.AlgorithmAlreadyRegisteredException;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import javax.xml.bind.DatatypeConverterInterface;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -15,22 +18,23 @@ public class PasswordManager {
         return INSTANCE;
     }
 
+    private int iterations = 10000;
+    private int hashByteSize = 512;
+
     /**
      * Generate a secure password using the PBKDF2 algorithm implementation for SHA-512 & a random salt
      * @param originalPassword the original password supplied by the user in a char array
      * @return the salted & hashed password
      */
     public String getSaltedHashedPassword(char[] originalPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        int iterations = 10000;
-        byte[] salt = getNewSalt();
+        byte[] salt = getNewSalt(); //salt for the user's password
+        byte[] dbSalt = getNewSalt(); //salt for the user's database encryption key
 
-        PBEKeySpec keySpec = new PBEKeySpec(originalPassword, salt, iterations, 512);
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-        byte[] hash = keyFactory.generateSecret(keySpec).getEncoded(); //compute hash
-
+        byte[] hash = getHashForPasswordAndSalt(originalPassword, salt); //generate the password hash
         originalPassword = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
 
-        return iterations + ":" + DatatypeConverter.printHexBinary(salt) + ":" + DatatypeConverter.printHexBinary(hash);
+        //format = passwordSalt:databaseSalt:passwordHash
+        return DatatypeConverter.printHexBinary(salt) + ":" + DatatypeConverter.printHexBinary(dbSalt) + ":" + DatatypeConverter.printHexBinary(hash);
     }
 
     /**
@@ -48,23 +52,34 @@ public class PasswordManager {
      * Compares the given password to the hashed & salted one stored in the database
      * @return whether or not the password matches
      */
-    public boolean validatePassword(char[] password, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException{
+    public boolean validatePassword(char[] password, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        //format = passwordSalt:databaseSalt:passwordHash
         String[] storedSections= storedPassword.split(":");
-        int iterations = Integer.parseInt(storedSections[0]);
-        byte[] salt = DatatypeConverter.parseHexBinary(storedSections[1]);
-        byte[] hash = DatatypeConverter.parseHexBinary(storedSections[2]);
+        byte[] passwordSalt = DatatypeConverter.parseHexBinary(storedSections[0]);
+        byte[] passwordHash = DatatypeConverter.parseHexBinary(storedSections[2]);
 
-        PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterations, hash.length * 8);
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-        byte[] testHash = keyFactory.generateSecret(keySpec).getEncoded();
+        byte[] testHash = getHashForPasswordAndSalt(password, passwordSalt); //generate a new hash using the user-provided password & the hash stored in the database
 
-        int diff = hash.length ^ testHash.length;
-        for(int i = 0; i < hash.length && i < testHash.length; i++) {
-            diff |= hash[i] ^ testHash[i];
+        //compare the newly generated hash to the one stored in the database
+        int diff = passwordHash.length ^ testHash.length;
+        for(int i = 0; i < passwordHash.length && i < testHash.length; i++) {
+            diff |= passwordHash[i] ^ testHash[i];
         }
 
         password = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
 
         return diff == 0;
+    }
+
+    /**
+     * Generates a hash  using the PBKDF2 algorithm implementation for SHA-512 & a random salt using the given password & salt
+     * @param password the password provided by the user
+     * @param salt the random salt
+     * @return the resulting hash
+     */
+    public byte[] getHashForPasswordAndSalt(char[] password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException{
+        PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterations, hashByteSize);
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+        return keyFactory.generateSecret(keySpec).getEncoded();
     }
 }

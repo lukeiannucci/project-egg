@@ -1,9 +1,11 @@
 package xyz.jmatt.services;
 
 import org.h2.jdbcx.JdbcDataSource;
+import xyz.jmatt.Strings;
 import xyz.jmatt.auth.PasswordManager;
 import xyz.jmatt.daos.DatabaseTransaction;
 import xyz.jmatt.daos.UsersDao;
+import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.models.UserModel;
 
@@ -12,7 +14,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -36,11 +37,10 @@ public class CreateAccountService {
 
             //Make sure username was not already in the database
             if(usersDao.doesUsernameExist(username)) {
-                result = new SimpleResult("ERROR: Username already exists", true);
+                result = new SimpleResult(Strings.ERROR_USERNAME, true); //username was already taken
             } else {
                 //salt & hash the user's password for secure storage
                 String securePassword = PasswordManager.getInstance().getSaltedHashedPassword(originalPassword);
-                originalPassword = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
                 //generate a new UserId
                 String userId = UUID.randomUUID().toString().replaceAll("-", ""); //get rid of dashes for nicer looking string
 
@@ -52,8 +52,14 @@ public class CreateAccountService {
                 //push new user to Users table
                 usersDao.pushNewUser(userModel);
 
-                //set up a new database for the new user
-                createNewUserDatabase(userId);
+                //set up a new database for the new user - each user get's their own db that will be encrypted with a key generated from their salted & hashed password
+                byte[] dbSalt = securePassword.split(":")[1].getBytes(); //get the salt for the database encryption key - note: this is not the same salt for the login password authentication,
+                                                                                //this way the hash stored in the database for the user's password and encryption key are different but the user only needs
+                                                                                //to remember one password
+                ClientSingleton.getINSTANCE().generateDbKey(originalPassword, dbSalt); //use the database salt and the user-provided password to generate the encryption key for their database
+                createNewUserDatabase(userId); //create a new database file encrypted with their key
+
+                originalPassword = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
 
                 //if everything else worked, commit then database changes
                 transaction.commit();
@@ -63,13 +69,13 @@ public class CreateAccountService {
                 result = new SimpleResult("", false);
             }
         } catch (SQLException e) {
-            result = new SimpleResult("ERROR: Internal database error", true);
+            result = new SimpleResult(Strings.ERROR_DATABASE, true);
             e.printStackTrace();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            result = new SimpleResult("ERROR: Internal server error", true);
+            result = new SimpleResult(Strings.ERROR_SERVER, true);
             e.printStackTrace();
         } catch (IOException e) {
-            result = new SimpleResult("ERROR: Failed to initialize new database", true);
+            result = new SimpleResult(Strings.ERROR_NEW_DATABASE, true);
             e.printStackTrace();
         } finally {
             if(transaction != null) {
@@ -108,7 +114,7 @@ public class CreateAccountService {
             System.out.print("creating new database file ... ");
             JdbcDataSource ds = new JdbcDataSource();
             ds.setURL("jdbc:h2:./db/" + userId + ";CIPHER=AES");
-            ds.setPassword("beans ");
+            ds.setPassword(ClientSingleton.getINSTANCE().getDbKey() + " ");
             Connection connection = ds.getConnection();
             System.out.println("success");
 
@@ -130,7 +136,7 @@ public class CreateAccountService {
             System.out.print("attempting connection *with* password ... ");
             JdbcDataSource ds2 = new JdbcDataSource();
             ds2.setURL("jdbc:h2:./db/" + userId + ";CIPHER=AES");
-            ds2.setPassword("beans ");
+            ds2.setPassword(ClientSingleton.getINSTANCE().getDbKey() + " ");
             Connection connection2 = ds2.getConnection();
             PreparedStatement prep2 = connection2.prepareStatement("SELECT * FROM Test;");
             prep2.executeQuery();
@@ -156,17 +162,5 @@ public class CreateAccountService {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void testEdit(String userid) throws SQLException {
-        System.out.println("3");
-        Connection connection = DriverManager.getConnection("jdbc:sqlite:db/" + userid + ".sqlite");
-        PreparedStatement prep = connection.prepareStatement("select * from Test;");
-        prep.executeQuery();
-        System.out.println("4");
-    }
-
-    private void encrypt(String userid) {
-
     }
 }
