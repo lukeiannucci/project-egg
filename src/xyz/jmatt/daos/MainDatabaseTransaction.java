@@ -5,11 +5,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseTransaction {
+/**
+ * Manages a connection to the central sqlite database
+ */
+public class MainDatabaseTransaction {
     private final String DB_URL = "jdbc:sqlite:" + "db" + File.separator + "main.sqlite";
     private Connection connection;
 
-    public DatabaseTransaction() throws SQLException {
+    /**
+     * Open a new transaction to the main sqlite database
+     * @throws SQLException could not connect to database
+     */
+    public MainDatabaseTransaction() throws SQLException {
         try {
             Class.forName("org.sqlite.JDBC").newInstance();
         } catch (Exception e) {

@@ -2,7 +2,7 @@ package xyz.jmatt.services;
 
 import xyz.jmatt.Strings;
 import xyz.jmatt.auth.PasswordManager;
-import xyz.jmatt.daos.DatabaseTransaction;
+import xyz.jmatt.daos.MainDatabaseTransaction;
 import xyz.jmatt.daos.UsersDao;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
@@ -13,6 +13,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.UUID;
 
+/**
+ * Performs tasks related to logging in a user wit the provided credentials
+ */
 public class LoginService {
     public LoginService() {}
 
@@ -23,11 +26,11 @@ public class LoginService {
      * @return result of the login attempt
      */
     public SimpleResult login(String username, char[] password) {
-        DatabaseTransaction transaction = null;
+        MainDatabaseTransaction transaction = null;
         SimpleResult result = null;
 
         try {
-            transaction = new DatabaseTransaction();
+            transaction = new MainDatabaseTransaction();
             UsersDao usersDao = new UsersDao(transaction);
 
             //check to see if the username exists before we bother checking passwords
@@ -46,7 +49,9 @@ public class LoginService {
 
                     password = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
 
-                    //TODO log in
+                    String userId = usersDao.getUserId(username); //get the userId for the given username from the database
+                    ClientSingleton.getINSTANCE().setUserId(userId); //save for the session
+
                     result = new SimpleResult("", false);
                 } else { //password was incorrect
                     result = new SimpleResult(Strings.ERROR_LOGIN, true);

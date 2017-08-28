@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class UsersDao {
     private Connection connection;
 
-    public UsersDao(DatabaseTransaction transaction) {
+    public UsersDao(MainDatabaseTransaction transaction) {
         this.connection = transaction.getConnection();
     }
 
@@ -55,6 +55,12 @@ public class UsersDao {
         }
     }
 
+    /**
+     * Retrieves the stored password hash for the given username
+     * @param username the username to get the password for
+     * @return the password hash & salts stored in the database
+     * @throws SQLException database error
+     */
     public String getStoredPassword(String username) throws SQLException {
         PreparedStatement prep = connection.prepareStatement(
                 "SELECT Password FROM Users WHERE Username = ?;");
@@ -65,5 +71,23 @@ public class UsersDao {
         prep.close();
         resultSet.close();
         return password;
+    }
+
+    /**
+     * Gets the userId for the given username
+     * @param username the username for the given username
+     * @return the userId stored in the database
+     * @throws SQLException database error
+     */
+    public String getUserId(String username) throws SQLException {
+        PreparedStatement prep = connection.prepareStatement(
+                "SELECT UserId FROM Users WHERE Username = ?;");
+        prep.setString(1, username);
+        ResultSet resultSet = prep.executeQuery();
+
+        String userId = resultSet.getString("UserId");
+        prep.close();
+        resultSet.close();
+        return userId;
     }
 }

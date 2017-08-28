@@ -1,7 +1,5 @@
 package xyz.jmatt.createaccount;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -15,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import xyz.jmatt.Main;
 import xyz.jmatt.Strings;
+import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.services.CreateAccountService;
 
@@ -66,13 +65,10 @@ public class CreateAccountController implements Initializable{
         createAccountBtn.setDisable(true); //disable the button until it's done to prevent duplicates
         //do in separate thread
         Platform.runLater(() -> {
+            //send the user's info the create account service for processing
             CreateAccountService accountService = new CreateAccountService();
             SimpleResult result = accountService.createAccount(usernameField.getText(), passwordField.getText().toCharArray());
-            try {
-                onCreateAccountResult(result);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            onCreateAccountResult(result);
         });
     }
 
@@ -80,11 +76,13 @@ public class CreateAccountController implements Initializable{
      * Called after the create account thread finishes
      * @param result the result of the account creation process
      */
-    private void onCreateAccountResult(SimpleResult result) throws IOException {
+    private void onCreateAccountResult(SimpleResult result) {
         createAccountBtn.setDisable(false); //re-enable button
         if(!result.isError()) {
             //account was made TODO
             //TODO login them in or make them retype credentials??
+            System.out.println(ClientSingleton.getINSTANCE().getUserId());
+            System.out.println(ClientSingleton.getINSTANCE().getDbKey());
             setMessage("account created");
             SlideTransitionExit(CreateAccountPane);
         } else {

@@ -2,24 +2,13 @@ package xyz.jmatt.login;
 
 import javafx.application.Platform;
 import javafx.animation.*;
-import javafx.application.ConditionalFeature;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.CubicCurveTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import xyz.jmatt.Strings;
+import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.services.LoginService;
 
@@ -70,6 +59,8 @@ public class LoginController implements Initializable{
         loginBtn.setDisable(false);
         if (!result.isError()) {
             //logged in TODO
+            System.out.println(ClientSingleton.getINSTANCE().getUserId());
+            System.out.println(ClientSingleton.getINSTANCE().getDbKey());
             setMessage("logged in");
         } else {
             setMessage(result.getMessage());

@@ -1,24 +1,24 @@
 package xyz.jmatt.services;
 
-import org.h2.jdbcx.JdbcDataSource;
 import xyz.jmatt.Strings;
 import xyz.jmatt.auth.PasswordManager;
-import xyz.jmatt.daos.DatabaseTransaction;
+import xyz.jmatt.daos.MainDatabaseTransaction;
+import xyz.jmatt.daos.PersonalDatabaseTransaction;
 import xyz.jmatt.daos.UsersDao;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.models.UserModel;
 
 import javax.xml.bind.DatatypeConverter;
-import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
+/**
+ * Performs tasks related to creating a new account for given user credentials
+ */
 public class CreateAccountService {
     public CreateAccountService() {}
 
@@ -29,11 +29,11 @@ public class CreateAccountService {
      * @return result of the account creation
      */
     public SimpleResult createAccount(String username, char[] originalPassword) {
-        DatabaseTransaction transaction = null;
+        MainDatabaseTransaction transaction = null;
         SimpleResult result = null;
 
         try {
-            transaction = new DatabaseTransaction();
+            transaction = new MainDatabaseTransaction();
             UsersDao usersDao = new UsersDao(transaction);
 
             //Make sure username was not already in the database
@@ -44,6 +44,7 @@ public class CreateAccountService {
                 String securePassword = PasswordManager.getInstance().getSaltedHashedPassword(originalPassword);
                 //generate a new UserId
                 String userId = UUID.randomUUID().toString().replaceAll("-", ""); //get rid of dashes for nicer looking string
+                ClientSingleton.getINSTANCE().setUserId(userId); //save the userId for the session
 
                 //gather all data for model
                 UserModel userModel = new UserModel();
@@ -95,75 +96,8 @@ public class CreateAccountService {
      * @throws IOException thrown if the file creation fails
      */
     private void createNewUserDatabase(String userId) throws IOException, SQLException {
-//        File file = new File("db/" + userId + ".sqlite");
-//        if(!file.createNewFile()) {
-//            throw new IOException();
-//        } else {
-//            System.out.println("1");
-//            Connection connection = DriverManager.getConnection("jdbc:sqlite:db/" + userId + ".sqlite", "admin", "test");
-//            PreparedStatement prep = connection.prepareStatement("CREATE TABLE Test (" +
-//                    "test VARCHAR PRIMARY KEY  NOT NULL  UNIQUE"    +
-//                    ");");
-//            prep.executeUpdate();
-//            System.out.println("2");
-//            testEdit(userId);
-//            encrypt(userId);
-//            testEdit(userId);
-//        }
-        boolean startedFinalTest = false;
-        try {
-            System.out.println("TESTING DATABASE STUFF");
-
-            System.out.print("creating new database file ... ");
-            JdbcDataSource ds = new JdbcDataSource();
-            ds.setURL("jdbc:h2:./db/" + userId + ";CIPHER=AES");
-            ds.setPassword(ClientSingleton.getINSTANCE().getDbKey() + " ");
-            Connection connection = ds.getConnection();
-            System.out.println("success");
-
-            System.out.print("verifying file creation ... ");
-            File file = new File("db/" + userId + ".mv.db");
-            if(file.exists()) {
-                System.out.println("success");
-            } else {
-                System.out.println("failed");
-            }
-
-            System.out.print("attempting table creation ... ");
-            PreparedStatement prep = connection.prepareStatement("CREATE TABLE Test (test VARCHAR(255));");
-            prep.executeUpdate();
-            connection.commit();
-            connection.close();
-            System.out.println("success");
-
-            System.out.print("attempting connection *with* password ... ");
-            JdbcDataSource ds2 = new JdbcDataSource();
-            ds2.setURL("jdbc:h2:./db/" + userId + ";CIPHER=AES");
-            ds2.setPassword(ClientSingleton.getINSTANCE().getDbKey() + " ");
-            Connection connection2 = ds2.getConnection();
-            PreparedStatement prep2 = connection2.prepareStatement("SELECT * FROM Test;");
-            prep2.executeQuery();
-            connection2.commit();
-            connection2.close();
-            System.out.println("success");
-
-            startedFinalTest = true;
-            System.out.print("attempting connection *without* password ... ");
-            JdbcDataSource ds3 = new JdbcDataSource();
-            ds3.setURL("jdbc:h2:./db/" + userId + ";CIPHER=AES");
-            Connection connection3 = ds3.getConnection();
-            PreparedStatement prep3 = connection3.prepareStatement("SELECT * FROM Test;");
-            prep3.executeQuery();
-            connection3.commit();
-            connection3.close();
-            System.out.println("failed");
-        } catch (Exception e) {
-            if(e.getMessage().contains("Wrong password") && startedFinalTest) {
-                System.out.println("success");
-            } else {
-                System.err.println("TEST FAILED...");
-                e.printStackTrace();
-            }
-        }
+        PersonalDatabaseTransaction transaction = new PersonalDatabaseTransaction(
+                ClientSingleton.getINSTANCE().getUserId(),
+                ClientSingleton.getINSTANCE().getDbKey());
     }
 }

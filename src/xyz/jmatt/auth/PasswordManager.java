@@ -1,25 +1,22 @@
 package xyz.jmatt.auth;
 
-import com.sun.org.apache.xml.internal.security.exceptions.AlgorithmAlreadyRegisteredException;
-
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.DatatypeConverterInterface;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.UUID;
 
+/**
+ * Deals with salt & hash generation & password validation
+ */
 public class PasswordManager {
     private static final PasswordManager INSTANCE = new PasswordManager();
 
     public static PasswordManager getInstance() {
         return INSTANCE;
     }
-
-    private int iterations = 10000;
-    private int hashByteSize = 512;
 
     /**
      * Generate a secure password using the PBKDF2 algorithm implementation for SHA-512 & a random salt
@@ -77,8 +74,11 @@ public class PasswordManager {
      * @param salt the random salt
      * @return the resulting hash
      */
-    public byte[] getHashForPasswordAndSalt(char[] password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException{
-        PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterations, hashByteSize);
+    public byte[] getHashForPasswordAndSalt(char[] password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        int iterations = 10000;
+        int hashSizeBytes = 512;
+
+        PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterations, hashSizeBytes);
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
         return keyFactory.generateSecret(keySpec).getEncoded();
     }
