@@ -7,9 +7,11 @@ import xyz.jmatt.daos.UsersDao;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 
+import javax.xml.bind.DatatypeConverter;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public class LoginService {
     public LoginService() {}
@@ -39,7 +41,10 @@ public class LoginService {
                     //get the database key salt from the storedPassword
                     byte[] dbSalt = storedPassword.split(":")[1].getBytes(); //format = "passwordSalt:databaseSalt:passwordHash"
                     //re-generate the user's database encryption key for this session using their provided password & database salt
-                    ClientSingleton.getINSTANCE().generateDbKey(password, dbSalt);
+                    String dbKey = DatatypeConverter.printHexBinary(PasswordManager.getInstance().getHashForPasswordAndSalt(password, dbSalt));
+                    ClientSingleton.getINSTANCE().setDbKey(dbKey);
+
+                    password = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
 
                     //TODO log in
                     result = new SimpleResult("", false);

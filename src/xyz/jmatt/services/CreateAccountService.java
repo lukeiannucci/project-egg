@@ -9,6 +9,7 @@ import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.models.UserModel;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -56,7 +57,9 @@ public class CreateAccountService {
                 byte[] dbSalt = securePassword.split(":")[1].getBytes(); //get the salt for the database encryption key - note: this is not the same salt for the login password authentication,
                                                                                 //this way the hash stored in the database for the user's password and encryption key are different but the user only needs
                                                                                 //to remember one password
-                ClientSingleton.getINSTANCE().generateDbKey(originalPassword, dbSalt); //use the database salt and the user-provided password to generate the encryption key for their database
+                //re-generate the user's database encryption key for this session using their provided password & database salt
+                String dbKey = DatatypeConverter.printHexBinary(PasswordManager.getInstance().getHashForPasswordAndSalt(originalPassword, dbSalt));
+                ClientSingleton.getINSTANCE().setDbKey(dbKey);
                 createNewUserDatabase(userId); //create a new database file encrypted with their key
 
                 originalPassword = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory

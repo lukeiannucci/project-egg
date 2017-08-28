@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import xyz.jmatt.Main;
+import xyz.jmatt.Strings;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.services.CreateAccountService;
 
@@ -37,9 +38,6 @@ public class CreateAccountController implements Initializable{
     @FXML
     private Button backButton;
 
-    private final String ERROR_EMPTY_FIELDS = "ERROR: Please fill out all fields before proceeding";
-    private final String ERROR_DIFFERENT_PASSWORDS = "ERROR: Passwords did not match";
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         SlideTransitionEnter(CreateAccountPane);
@@ -54,12 +52,12 @@ public class CreateAccountController implements Initializable{
         if(usernameField.getText().equals("")
             || passwordField.getText().equals("")
             || passwordConfirmField.getText().equals("")) {
-            setMessage(ERROR_EMPTY_FIELDS);
+            setMessage(Strings.ERROR_EMPTY_FIELD);
             return;
         }
         // Make sure confirm passwords match
         if(!passwordField.getText().equals(passwordConfirmField.getText())) {
-            setMessage(ERROR_DIFFERENT_PASSWORDS);
+            setMessage(Strings.ERROR_BAD_PASSWORD_CONFIRM);
             return;
         }
 

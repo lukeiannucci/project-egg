@@ -19,6 +19,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import xyz.jmatt.Strings;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.services.LoginService;
 
@@ -42,8 +43,6 @@ public class LoginController implements Initializable{
     @FXML
     private Button loginBtn;
 
-    private final String ERROR_EMPTY_FIELDS = "ERROR: Please fill out all fields before proceeding";
-
     /**
      * Attempts to log in the user with the given credentials
      */
@@ -52,7 +51,7 @@ public class LoginController implements Initializable{
         //Make sure all fields were filled out
         if(usernameField.getText().equals("")
             || passwordField.getText().equals("")) {
-            setMessage(ERROR_EMPTY_FIELDS);
+            setMessage(Strings.ERROR_EMPTY_FIELD);
             return;
         }
 
