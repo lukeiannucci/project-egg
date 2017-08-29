@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import xyz.jmatt.Strings;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
+import xyz.jmatt.services.CreateAccountService;
 import xyz.jmatt.services.LoginService;
 
 import javafx.util.Duration;
@@ -17,6 +18,7 @@ import xyz.jmatt.Main;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 
@@ -65,7 +67,6 @@ public class LoginController implements Initializable{
             //logged in TODO
             System.out.println(ClientSingleton.getINSTANCE().getUserId());
             System.out.println(ClientSingleton.getINSTANCE().getDbKey());
-            setMessage("logged in");
             Main.changeScene("/xyz/jmatt/MainForm/MainForm.fxml", 1200, 900);
         } else {
             setMessage(result.getMessage());

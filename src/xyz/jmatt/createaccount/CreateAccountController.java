@@ -84,8 +84,6 @@ public class CreateAccountController implements Initializable{
             //TODO login them in or make them retype credentials??
             System.out.println(ClientSingleton.getINSTANCE().getUserId());
             System.out.println(ClientSingleton.getINSTANCE().getDbKey());
-            setMessage("account created");
-//            SlideTransitionExit(CreateAccountPane);
             Main.changeScene("/xyz/jmatt/MainForm/MainForm.fxml", 1200, 900);
         } else {
             setMessage(result.getMessage());

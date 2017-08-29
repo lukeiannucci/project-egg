@@ -1,6 +1,7 @@
 package xyz.jmatt.models;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class TransactionModel {
     private String name;
