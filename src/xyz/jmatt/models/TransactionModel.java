@@ -16,6 +16,8 @@ public class TransactionModel {
         date = Date;
     }
 
+    public TransactionModel() {}
+
 
     public String getName() {
         return name;
