@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import xyz.jmatt.Strings;
 import xyz.jmatt.models.ClientSingleton;
@@ -77,12 +78,18 @@ public class LoginController implements Initializable{
     //private BorderPane CreateAccountPane;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {}
+    public void initialize(URL location, ResourceBundle resources) {
+        LoginPane.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER) {
+                login();
+            }
+        });
+    }
 
     private void trans(Node e) throws Exception
     {
         FadeTransition x = new FadeTransition(new Duration(500), e);
-        x.setFromValue(0);
+        x.setFromValue(0);x.setFromValue(0);
         x.setToValue(100);
         x.setCycleCount(1);
         x.setOnFinished(event -> {

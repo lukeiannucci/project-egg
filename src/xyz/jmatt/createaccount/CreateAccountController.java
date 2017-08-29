@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import xyz.jmatt.Main;
@@ -37,6 +38,11 @@ public class CreateAccountController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         SlideTransitionEnter(CreateAccountPane);
+        CreateAccountPane.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER) {
+                createAccount();
+            }
+        });
     }
 
     /*
