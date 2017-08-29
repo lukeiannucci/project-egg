@@ -33,8 +33,6 @@ public class Main extends Application {
     //for now just hardcode change to create account scene change will come back and fix later
     public static void changeScene(String sceneName, int width, int height) throws IOException {
         Parent scene = FXMLLoader.load(Main.class.getResource(sceneName));
-        stage.setScene(new Scene(scene, width, height, Color.valueOf("#666666"))
-        );
-
+        stage.setScene(new Scene(scene, width, height, Color.valueOf("#666666")));
     }
 }

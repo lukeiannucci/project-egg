@@ -66,7 +66,6 @@ public class LoginController implements Initializable{
             System.out.println(ClientSingleton.getINSTANCE().getUserId());
             System.out.println(ClientSingleton.getINSTANCE().getDbKey());
             setMessage("logged in");
-            System.out.println("Creating main form...");
             Main.changeScene("/xyz/jmatt/MainForm/MainForm.fxml", 1200, 900);
         } else {
             setMessage(result.getMessage());

@@ -4,6 +4,7 @@ import xyz.jmatt.Strings;
 import xyz.jmatt.auth.PasswordManager;
 import xyz.jmatt.daos.MainDatabaseTransaction;
 import xyz.jmatt.daos.PersonalDatabaseTransaction;
+import xyz.jmatt.daos.TransactionDao;
 import xyz.jmatt.daos.UsersDao;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
@@ -99,5 +100,8 @@ public class CreateAccountService {
         PersonalDatabaseTransaction transaction = new PersonalDatabaseTransaction(
                 ClientSingleton.getINSTANCE().getUserId(),
                 ClientSingleton.getINSTANCE().getDbKey());
+
+        TransactionDao transactionDao = new TransactionDao(transaction);
+        transactionDao.intializeTable();
     }
 }

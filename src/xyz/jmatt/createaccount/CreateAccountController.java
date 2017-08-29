@@ -65,7 +65,11 @@ public class CreateAccountController implements Initializable{
             //send the user's info the create account service for processing
             CreateAccountService accountService = new CreateAccountService();
             SimpleResult result = accountService.createAccount(usernameField.getText(), passwordField.getText().toCharArray());
-            onCreateAccountResult(result);
+            try {
+                onCreateAccountResult(result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -73,7 +77,7 @@ public class CreateAccountController implements Initializable{
      * Called after the create account thread finishes
      * @param result the result of the account creation process
      */
-    private void onCreateAccountResult(SimpleResult result) {
+    private void onCreateAccountResult(SimpleResult result) throws IOException {
         createAccountBtn.setDisable(false); //re-enable button
         if(!result.isError()) {
             //account was made TODO
@@ -81,7 +85,8 @@ public class CreateAccountController implements Initializable{
             System.out.println(ClientSingleton.getINSTANCE().getUserId());
             System.out.println(ClientSingleton.getINSTANCE().getDbKey());
             setMessage("account created");
-            SlideTransitionExit(CreateAccountPane);
+//            SlideTransitionExit(CreateAccountPane);
+            Main.changeScene("/xyz/jmatt/MainForm/MainForm.fxml", 1200, 900);
         } else {
             setMessage(result.getMessage());
         }
