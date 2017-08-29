@@ -8,7 +8,12 @@ public class TransactionModel {
     private BigDecimal amount;
     private long date;
 
-    public TransactionModel() {}
+    public TransactionModel(String Name, String Category, BigDecimal Amount, long Date){
+        name = Name;
+        category = Category;
+        amount = Amount;
+        date = Date;
+    }
 
 
     public String getName() {

@@ -10,7 +10,28 @@
    <center>
       <Pane prefHeight="900.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="586.0" layoutY="442.0" text="Main Form" />
+            <TableView fx:id="TransactionTable" layoutX="14.0" layoutY="14.0" prefHeight="231.0" prefWidth="1171.0">
+              <columns>
+                <TableColumn fx:id="Name" prefWidth="360.0" text="Name" />
+                <TableColumn fx:id="Category" minWidth="0.0" prefWidth="73.0" text="Category" />
+                  <TableColumn fx:id="Amount" prefWidth="73.0" text="Amount" />
+                  <TableColumn fx:id="Date" prefWidth="73.0" text="Date" />
+                  <TableColumn fx:id="Total" prefWidth="73.0" text="Total" />
+              </columns>
+            </TableView>
+            <VBox layoutX="14.0" layoutY="279.0" prefHeight="200.0" prefWidth="191.0">
+               <children>
+                  <TextField fx:id="TransIn" promptText="Transaction Name" />
+                  <Region prefHeight="16.0" prefWidth="191.0" />
+                  <TextField fx:id="CategoryIn" promptText="Category" />
+                  <Region prefHeight="16.0" prefWidth="191.0" />
+                  <TextField fx:id="AmountIn" promptText="Amount" />
+                  <Region prefHeight="16.0" prefWidth="191.0" />
+                  <TextField fx:id="DateIn" promptText="Date" />
+                  <Region prefHeight="16.0" prefWidth="191.0" />
+                  <Button fx:id="AddTransaction" mnemonicParsing="false" onAction="#AddTransactionModel" text="Hello WRLD" />
+               </children>
+            </VBox>
          </children>
       </Pane>
    </center>
