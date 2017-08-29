@@ -12,11 +12,11 @@
          <children>
             <TableView fx:id="TransactionTable" layoutX="14.0" layoutY="14.0" prefHeight="231.0" prefWidth="1171.0">
               <columns>
-                <TableColumn fx:id="Name" prefWidth="360.0" text="Name" />
-                <TableColumn fx:id="Category" minWidth="0.0" prefWidth="73.0" text="Category" />
-                  <TableColumn fx:id="Amount" prefWidth="73.0" text="Amount" />
-                  <TableColumn fx:id="Date" prefWidth="73.0" text="Date" />
-                  <TableColumn fx:id="Total" prefWidth="73.0" text="Total" />
+                <TableColumn fx:id="Name" maxWidth="400.0" minWidth="50.0" prefWidth="360.0" text="Name" />
+                <TableColumn fx:id="Category" editable="false" maxWidth="400.0" minWidth="60.0" prefWidth="75.0" text="Category" />
+                  <TableColumn fx:id="Amount" editable="false" maxWidth="400.0" minWidth="60.0" prefWidth="75.0" text="Amount" />
+                  <TableColumn fx:id="Date" editable="false" maxWidth="400.0" minWidth="50.0" prefWidth="75.0" text="Date" />
+                  <TableColumn fx:id="Total" editable="false" maxWidth="400.0" minWidth="50.0" prefWidth="75.0" text="Total" />
               </columns>
             </TableView>
             <VBox layoutX="14.0" layoutY="279.0" prefHeight="200.0" prefWidth="191.0">
