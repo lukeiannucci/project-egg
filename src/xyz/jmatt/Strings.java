@@ -10,4 +10,5 @@ public class Strings {
     public static String ERROR_NEW_DATABASE = "ERROR: Failed to initialize new database";
     public static String ERROR_EMPTY_FIELD = "ERROR: Please fill out all fields before proceeding";
     public static String ERROR_BAD_PASSWORD_CONFIRM = "ERROR: Passwords did not match";
+    public static String ERROR_BAD_USERNAME = "ERROR: Username can only be letters and numbers";
 }

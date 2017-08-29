@@ -43,6 +43,33 @@ public class CreateAccountController implements Initializable{
                 createAccount();
             }
         });
+        usernameField.textProperty().addListener((observable -> {
+            removeHighlightStyle(usernameField);
+        }));
+        passwordField.textProperty().addListener((observable -> {
+            removeHighlightStyle(passwordField);
+            removeHighlightStyle(passwordConfirmField);
+        }));
+        passwordConfirmField.textProperty().addListener((observable -> {
+            removeHighlightStyle(passwordField);
+            removeHighlightStyle(passwordConfirmField);
+        }));
+    }
+
+    /**
+     * Adds the highlighting style to the given textfield
+     * @param field the field to highlight
+     */
+    private void addHighlightStyle(TextField field) {
+        field.getStyleClass().add("field-error");
+    }
+
+    /**
+     * Removes the highlighting style class from the given textfield
+     * @param field the field to remove highlighting from
+     */
+    private void removeHighlightStyle(TextField field) {
+        field.getStyleClass().remove("field-error");
     }
 
     /*
@@ -51,15 +78,31 @@ public class CreateAccountController implements Initializable{
     @FXML
     public void createAccount() {
         // Make sure all fields were filled out
-        if(usernameField.getText().equals("")
-            || passwordField.getText().equals("")
-            || passwordConfirmField.getText().equals("")) {
+        if(usernameField.getText().equals("")) {
+            addHighlightStyle(usernameField);
+            setMessage(Strings.ERROR_EMPTY_FIELD);
+            return;
+        }
+        if(!usernameField.getText().matches("^([a-zA-Z]|\\d)+$")) {
+            addHighlightStyle(usernameField);
+            setMessage(Strings.ERROR_BAD_USERNAME);
+            return;
+        }
+        if(passwordField.getText().equals("")) {
+            addHighlightStyle(passwordField);
+            setMessage(Strings.ERROR_EMPTY_FIELD);
+            return;
+        }
+        if(passwordConfirmField.getText().equals("")) {
+            addHighlightStyle(passwordConfirmField);
             setMessage(Strings.ERROR_EMPTY_FIELD);
             return;
         }
         // Make sure confirm passwords match
         if(!passwordField.getText().equals(passwordConfirmField.getText())) {
             setMessage(Strings.ERROR_BAD_PASSWORD_CONFIRM);
+            addHighlightStyle(passwordField);
+            addHighlightStyle(passwordConfirmField);
             return;
         }
 
