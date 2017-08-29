@@ -1,6 +1,3 @@
-.textBtn:hover {
-    -fx-underline: true;
-}
 .field-error {
     -fx-background-color: red;
 }

@@ -41,8 +41,13 @@ public class LoginController implements Initializable{
     @FXML
     private void login() {
         //Make sure all fields were filled out
-        if(usernameField.getText().equals("")
-            || passwordField.getText().equals("")) {
+        if(usernameField.getText().equals("")) {
+            addHighlightStyle(usernameField);
+            setMessage(Strings.ERROR_EMPTY_FIELD);
+            return;
+        }
+        if(passwordField.getText().equals("")) {
+            addHighlightStyle(passwordField);
             setMessage(Strings.ERROR_EMPTY_FIELD);
             return;
         }
@@ -62,6 +67,22 @@ public class LoginController implements Initializable{
         });
     }
 
+    /**
+     * Adds the highlighting style to the given textfield
+     * @param field the field to highlight
+     */
+    private void addHighlightStyle(TextField field) {
+        field.getStyleClass().add("field-error");
+    }
+
+    /**
+     * Removes the highlighting style class from the given textfield
+     * @param field the field to remove highlighting from
+     */
+    private void removeHighlightStyle(TextField field) {
+        field.getStyleClass().remove("field-error");
+    }
+
     private void onLoginResult(SimpleResult result) throws IOException {
         loginBtn.setDisable(false);
         if (!result.isError()) {
@@ -71,6 +92,7 @@ public class LoginController implements Initializable{
             Main.changeScene("/xyz/jmatt/MainForm/MainForm.fxml", 1200, 900);
         } else {
             setMessage(result.getMessage());
+            passwordField.clear();
         }
     }
 
@@ -84,6 +106,12 @@ public class LoginController implements Initializable{
                 login();
             }
         });
+        usernameField.textProperty().addListener((observable -> {
+            removeHighlightStyle(usernameField);
+        }));
+        passwordField.textProperty().addListener((observable -> {
+            removeHighlightStyle(passwordField);
+        }));
     }
 
     private void trans(Node e) throws Exception
