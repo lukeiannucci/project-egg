@@ -13,7 +13,7 @@ import java.io.IOError;
 import java.io.IOException;
 
 public class Main extends Application {
-    static Stage stage;
+    public static Stage stage;
     //public static void main(String args[]) {
         //launch(args);
     //}
@@ -22,7 +22,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         BorderPane root = FXMLLoader.load(getClass().getResource("/xyz/jmatt/login/Login.fxml"));
         stage  = primaryStage;
-        primaryStage.setTitle("login");
+        primaryStage.setTitle("Bank Notes");
         Scene scene = new Scene(root, 600, 450);
         scene.getStylesheets().add("xyz/jmatt/login/Login.css");
         primaryStage.setScene(scene);
@@ -31,7 +31,7 @@ public class Main extends Application {
         primaryStage.setMinWidth(primaryStage.getWidth());
     }
 
-    //for now just hardcode change to create account scene change will come back and fix later
+    //TODO pass is window dimenstions to set the scene size
     public static void changeScene(String sceneName, int width, int height) throws IOException {
         Parent scene = FXMLLoader.load(Main.class.getResource(sceneName));
         stage.setScene(new Scene(scene, width, height, Color.valueOf("#666666")));

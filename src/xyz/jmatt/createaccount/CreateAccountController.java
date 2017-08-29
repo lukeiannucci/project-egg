@@ -105,11 +105,11 @@ public class CreateAccountController implements Initializable{
     {
         TranslateTransition x = new TranslateTransition(new Duration(500), e);
         x.setFromX(0.0);
-        x.setToX(600.0);
+        x.setToX(Main.stage.getWidth());
         x.setCycleCount(1);
         x.setOnFinished(event -> {
             try {
-                Main.changeScene("/xyz/jmatt/login/Login.fxml", 600, 450);
+                Main.changeScene("/xyz/jmatt/login/Login.fxml", (int)Main.stage.getWidth(), (int)Main.stage.getHeight());
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -120,7 +120,7 @@ public class CreateAccountController implements Initializable{
     private void SlideTransitionEnter(Node e)
     {
         TranslateTransition x = new TranslateTransition(new Duration(500), e);
-        x.setFromX(600.0);
+        x.setFromX(Main.stage.getWidth());
         x.setToX(0);
         x.setCycleCount(1);
         x.play();
