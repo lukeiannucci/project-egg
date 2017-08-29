@@ -5,10 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import xyz.jmatt.Main;
@@ -103,7 +100,7 @@ public class CreateAccountController implements Initializable{
         x.setCycleCount(1);
         x.setOnFinished(event -> {
             try {
-                Main.changeScene("/xyz/jmatt/login/Login.fxml");
+                Main.changeScene("/xyz/jmatt/login/Login.fxml", 600, 450);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

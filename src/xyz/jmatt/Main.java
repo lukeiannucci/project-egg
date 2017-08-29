@@ -29,10 +29,11 @@ public class Main extends Application {
         primaryStage.setMinHeight(primaryStage.getHeight());
         primaryStage.setMinWidth(primaryStage.getWidth());
     }
+
     //for now just hardcode change to create account scene change will come back and fix later
-    public static void changeScene(String scene) throws IOException {
-        Parent CreateAccountPane = FXMLLoader.load(Main.class.getResource(scene));
-        stage.setScene(new Scene(CreateAccountPane, 600, 450, Color.valueOf("#666666"))
+    public static void changeScene(String sceneName, int width, int height) throws IOException {
+        Parent scene = FXMLLoader.load(Main.class.getResource(sceneName));
+        stage.setScene(new Scene(scene, width, height, Color.valueOf("#666666"))
         );
 
     }

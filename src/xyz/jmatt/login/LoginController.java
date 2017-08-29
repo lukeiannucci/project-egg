@@ -51,17 +51,23 @@ public class LoginController implements Initializable{
         Platform.runLater(() -> {
             LoginService loginService = new LoginService();
             SimpleResult result = loginService.login(usernameField.getText(), passwordField.getText().toCharArray());
-            onLoginResult(result);
+            try {
+                onLoginResult(result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
-    private void onLoginResult(SimpleResult result) {
+    private void onLoginResult(SimpleResult result) throws IOException {
         loginBtn.setDisable(false);
         if (!result.isError()) {
             //logged in TODO
             System.out.println(ClientSingleton.getINSTANCE().getUserId());
             System.out.println(ClientSingleton.getINSTANCE().getDbKey());
             setMessage("logged in");
+            System.out.println("Creating main form...");
+            Main.changeScene("/xyz/jmatt/MainForm/MainForm.fxml", 1200, 900);
         } else {
             setMessage(result.getMessage());
         }
@@ -81,7 +87,7 @@ public class LoginController implements Initializable{
         x.setCycleCount(1);
         x.setOnFinished(event -> {
             try {
-                    Main.changeScene("");
+                    Main.changeScene("", 0, 0);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -96,7 +102,7 @@ public class LoginController implements Initializable{
     @FXML
     private void createAccount() {
        try {
-           Main.changeScene("/xyz/jmatt/createaccount/CreateAccount.fxml");
+           Main.changeScene("/xyz/jmatt/createaccount/CreateAccount.fxml",600, 450);
        }
        catch (Exception e){
            e.printStackTrace();
