@@ -1,6 +1,7 @@
 package xyz.jmatt.daos;
 
 import org.h2.jdbcx.JdbcDataSource;
+import xyz.jmatt.models.ClientSingleton;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,11 +11,12 @@ public class PersonalDatabaseTransaction {
     private final String URL_SUFFIX = ";CIPHER=AES";
     private Connection connection;
 
-    public PersonalDatabaseTransaction(String userId, String dbKey) throws SQLException {
+    public PersonalDatabaseTransaction() throws SQLException {
         JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setURL(URL_PREFIX + userId + URL_SUFFIX);
-        dataSource.setPassword(URL_SUFFIX + " ");
+        dataSource.setURL(URL_PREFIX + ClientSingleton.getINSTANCE().getUserId() + URL_SUFFIX);
+        dataSource.setPassword(ClientSingleton.getINSTANCE().getDbKey() + " ");
         connection = dataSource.getConnection();
+        connection.setAutoCommit(false);
     }
 
     /**
@@ -34,6 +36,10 @@ public class PersonalDatabaseTransaction {
         } catch (SQLException e) {
             System.err.println("Could not rollback database transaction");
         }
+    }
+
+    public void commit() throws SQLException {
+        connection.commit();
     }
 
     /**

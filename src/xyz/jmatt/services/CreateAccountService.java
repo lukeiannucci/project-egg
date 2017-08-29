@@ -62,7 +62,7 @@ public class CreateAccountService {
                 //re-generate the user's database encryption key for this session using their provided password & database salt
                 String dbKey = DatatypeConverter.printHexBinary(PasswordManager.getInstance().getHashForPasswordAndSalt(originalPassword, dbSalt));
                 ClientSingleton.getINSTANCE().setDbKey(dbKey);
-                createNewUserDatabase(userId); //create a new database file encrypted with their key
+                createNewUserDatabase(); //create a new database file encrypted with their key
 
                 originalPassword = UUID.randomUUID().toString().toCharArray(); //overwrite the original password in memory
 
@@ -93,15 +93,14 @@ public class CreateAccountService {
 
     /**
      * Creates a new encrypted database to hold all of the user's personal data
-     * @param userId the userId to create the database for; file will be named according to this id
      * @throws IOException thrown if the file creation fails
      */
-    private void createNewUserDatabase(String userId) throws IOException, SQLException {
-        PersonalDatabaseTransaction transaction = new PersonalDatabaseTransaction(
-                ClientSingleton.getINSTANCE().getUserId(),
-                ClientSingleton.getINSTANCE().getDbKey());
+    private void createNewUserDatabase() throws IOException, SQLException {
+        PersonalDatabaseTransaction transaction = new PersonalDatabaseTransaction();
 
         TransactionDao transactionDao = new TransactionDao(transaction);
         transactionDao.intializeTable();
+        transaction.commit();
+        transaction.close();
     }
 }
