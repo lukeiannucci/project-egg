@@ -1,9 +1,9 @@
 package xyz.jmatt.models;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class TransactionModel {
+    private String transactionId;
     private String name;
     private String category;
     private BigDecimal amount;
@@ -49,5 +49,13 @@ public class TransactionModel {
 
     public void setDate(long date) {
         this.date = date;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 }

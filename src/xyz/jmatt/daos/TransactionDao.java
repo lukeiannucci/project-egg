@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Handles interactions with the Transactions database table
@@ -25,7 +26,7 @@ public class TransactionDao {
      */
     public void intializeTable() throws SQLException {
         PreparedStatement prep = connection.prepareStatement(
-                "CREATE TABLE Transactions (Name VARCHAR(255), Category VARCHAR(255), Amount DECIMAL(20,2), Date BIGINT);");
+                "CREATE TABLE Transactions (TransactionId VARCHAR(255) PRIMARY KEY, Name VARCHAR(255), Category VARCHAR(255), Amount DECIMAL(20,2), Date BIGINT);");
         prep.execute();
         prep.close();
     }
@@ -41,6 +42,7 @@ public class TransactionDao {
         List<TransactionModel> transactions = new ArrayList<>();
         while(resultSet.next()) {
             TransactionModel model = new TransactionModel();
+            model.setTransactionId(resultSet.getString("TransactionId"));
             model.setName(resultSet.getString("Name"));
             model.setCategory(resultSet.getString("Category"));
             model.setAmount(resultSet.getBigDecimal("Amount"));
@@ -58,11 +60,12 @@ public class TransactionDao {
      */
     public void pushTransaction(TransactionModel model) throws SQLException {
         PreparedStatement prep = connection.prepareStatement(
-                "INSERT INTO Transactions (Name,Category,Amount,Date) VALUES (?,?,?,?);");
-        prep.setString(1, model.getName());
-        prep.setString(2, model.getCategory());
-        prep.setBigDecimal(3, model.getAmount());
-        prep.setLong(4, model.getDate());
+                "INSERT INTO Transactions (TransactionId,Name,Category,Amount,Date) VALUES (?,?,?,?,?);");
+        prep.setString(1, UUID.randomUUID().toString().replaceAll("-", ""));
+        prep.setString(2, model.getName());
+        prep.setString(3, model.getCategory());
+        prep.setBigDecimal(4, model.getAmount());
+        prep.setLong(5, model.getDate());
         prep.executeUpdate();
         prep.close();
     }
