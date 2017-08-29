@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class Main extends Application {
         stage  = primaryStage;
         primaryStage.setTitle("login");
         Scene scene = new Scene(root, 600, 450);
+//        Font.loadFont(getClass().getResource("res/font/Roboto-Thin.ttf").toExternalForm(), 10);
         scene.getStylesheets().add("xyz/jmatt/login/Login.css");
         primaryStage.setScene(scene);
         primaryStage.show();

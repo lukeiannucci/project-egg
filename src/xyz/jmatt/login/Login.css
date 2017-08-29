@@ -4,3 +4,6 @@
 .field-error {
     -fx-background-color: red;
 }
+label {
+    -fx-font-family: Roboto-Thin;
+}
