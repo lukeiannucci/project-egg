@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main extends Application {
@@ -21,9 +22,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         BorderPane root = FXMLLoader.load(getClass().getResource("/xyz/jmatt/login/Login.fxml"));
         stage  = primaryStage;
-        primaryStage.setTitle("Bank Notes");
+        primaryStage.setTitle("Banknotes");
         Scene scene = new Scene(root, 600, 450);
-//        Font.loadFont(getClass().getResource("res/font/Roboto-Thin.ttf").toExternalForm(), 10);
+        Font.loadFont(new File("/font/Roboto-Thin.tff").toURI().toURL().toExternalForm(), 10);
+        Font.loadFont(new File("/font/Roboto-Black.tff").toURI().toURL().toExternalForm(), 10);
+        Font.loadFont(new File("/font/Roboto-Medium.tff").toURI().toURL().toExternalForm(), 10);
         scene.getStylesheets().add("xyz/jmatt/login/Login.css");
         primaryStage.setScene(scene);
         primaryStage.show();

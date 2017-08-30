@@ -3,12 +3,10 @@ package xyz.jmatt.MainForm;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import xyz.jmatt.models.TransactionModel;
 import xyz.jmatt.services.TransactionService;
@@ -16,8 +14,6 @@ import xyz.jmatt.services.TransactionService;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
-
-import static java.lang.invoke.MethodHandles.lookup;
 
 public class MainFormController extends MenuItem implements Initializable {
     @FXML

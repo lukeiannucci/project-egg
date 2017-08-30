@@ -71,6 +71,7 @@ public class CreateAccountController implements Initializable{
     private void removeHighlightStyle(TextField field) {
         field.getStyleClass().remove("field-error");
     }
+
     @FXML
     private void UsernameKeyReleased()
     {
@@ -78,11 +79,7 @@ public class CreateAccountController implements Initializable{
             System.out.println("adding...");
             addHighlightStyle(usernameField);
             setMessage(Strings.ERROR_BAD_USERNAME);
-        }
-        else if(messageLabel.getText().equals(Strings.ERROR_BAD_USERNAME))
-        {
-            System.out.println("removing...");
-            //usernameField.getStyleClass().remove("field-error");
+        } else if(messageLabel.getText().equals(Strings.ERROR_BAD_USERNAME)) {
             setMessage("");
         }
     }

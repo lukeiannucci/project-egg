@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -14,39 +20,66 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="LoginPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #666666;" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.login.LoginController">
+<BorderPane fx:id="LoginPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.login.LoginController">
    <center>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="391.0" prefWidth="300.0" style="-fx-background-color: none;" BorderPane.alignment="CENTER">
          <children>
             <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0">
                <children>
-                  <Region prefHeight="20.0" />
-                  <Label text="BANKNOTES">
+                  <Region prefHeight="10.0" />
+                  <Label fx:id="loginLabel" text="Login">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
+                     <font>
+                        <Font size="20.0" />
+                     </font>
                      <padding>
-                        <Insets left="5.0" />
+                        <Insets left="-1.0" />
                      </padding>
                   </Label>
-                  <Label text="Login">
-                     <VBox.margin>
-                        <Insets top="-10.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="50.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="messageLabel" text="Label" />
+                  <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="5.0" />
+                  <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="42.0">
+                     <children>
+                        <Label fx:id="titleLeft" text="BANK">
+                           <font>
+                              <Font size="35.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="-8.0" left="-3.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="titleRight" text="NOTES">
+                           <font>
+                              <Font size="35.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="-8.0" left="-3.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2.0" />
+                  <Label fx:id="messageLabel" />
+                  <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2.0" />
                   <TextField fx:id="usernameField" prefHeight="75.0" promptText="Username">
                      <font>
                         <Font size="18.0" />
-                     </font></TextField>
+                     </font>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding></TextField>
                   <Region prefHeight="5.0" />
                   <PasswordField fx:id="passwordField" prefHeight="75.0" promptText="Password">
                      <font>
                         <Font size="18.0" />
-                     </font></PasswordField>
+                     </font>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding></PasswordField>
                   <Region prefHeight="10.0" />
                   <CheckBox mnemonicParsing="false" text="Remember Me">
                      <cursor>
@@ -65,7 +98,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                            <padding>
-                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                              <Insets bottom="1.0" right="1.0" top="1.0" />
                            </padding>
                         </Button>
                         <Region HBox.hgrow="ALWAYS" />
@@ -74,7 +107,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                            <padding>
-                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                              <Insets bottom="1.0" left="1.0" top="1.0" />
                            </padding>
                         </Button>
                      </children>

@@ -1,0 +1,81 @@
+.textBtn:hover {
+    -fx-underline: true;
+}
+.textBtn,CheckBox {
+    -fx-text-fill: #E0E0E080;
+    -fx-font-family: 'Roboto Black';
+}
+.field-error {
+    -fx-background-color: #FFE0B2E6;
+}
+#loginBtn {
+    -fx-font-family: 'Roboto Black';
+    -fx-background-color: #4CAF50CB;
+    -fx-font-size: 16;
+    -fx-text-fill: #F5F5F5;
+}
+#loginBtn:hover {
+    -fx-background-color: #43A047CB;
+}
+#messageLabel {
+    -fx-text-fill: #F44336E6;
+    -fx-font-family: 'Roboto Medium';
+    -fx-font-size: 14;
+}
+#LoginPane {
+    -fx-background-color: radial-gradient(radius -180%, #2E5A75, #688998, #697E75);
+}
+#titleLeft {
+    -fx-text-fill: #F5F5F5B3;
+    -fx-font-family: 'Roboto Thin';
+    -fx-font-size: 40;
+}
+#titleRight {
+    -fx-text-fill: #F5F5F5B3;
+    -fx-font-family: 'Roboto Medium';
+    -fx-font-size: 40;
+}
+#loginLabel {
+    -fx-text-fill: #F5F5F5B3;
+    -fx-font-family: 'Roboto Medium';
+}
+
+CheckBox .box {
+    -fx-background-color: transparent;
+    -fx-border-color: #F5F5F580;
+    -fx-border-radius: 3px;
+}
+CheckBox:selected .box {
+    -fx-background-color: #4CAF50CB;
+    -fx-border-color: transparent;
+}
+CheckBox:selected .mark {
+    -fx-background-color: #F5F5F580;
+}
+TextField,PasswordField,Button,CheckBox {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+TextField:focused,PasswordField:focused,Button:focused,CheckBox:focused {
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: #FFFFFFFF;
+}
+TextField,PasswordField {
+    -fx-text-fill: #424242;
+    -fx-background-color: #F5F5F5E6;
+}
+TextField,PasswordField:hover {
+    -fx-background-color: #E0E0E0E6;
+}
+TextField {
+    -fx-background-image: url("/img/ic_person.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 30 30;
+    -fx-background-position: 12 center;
+}
+PasswordField {
+    -fx-background-image: url("/img/ic_key.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 30 30;
+    -fx-background-position: 12 center;
+}

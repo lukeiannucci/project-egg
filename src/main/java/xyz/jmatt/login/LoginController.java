@@ -11,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import xyz.jmatt.Strings;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
-import xyz.jmatt.services.CreateAccountService;
 import xyz.jmatt.services.LoginService;
 
 import javafx.util.Duration;
@@ -19,7 +18,6 @@ import xyz.jmatt.Main;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 

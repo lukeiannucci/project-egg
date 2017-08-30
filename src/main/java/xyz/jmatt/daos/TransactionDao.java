@@ -1,6 +1,5 @@
 package xyz.jmatt.daos;
 
-import xyz.jmatt.models.Category;
 import xyz.jmatt.models.TransactionModel;
 
 import java.sql.Connection;
