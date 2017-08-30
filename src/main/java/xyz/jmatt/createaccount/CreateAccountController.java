@@ -26,6 +26,8 @@ public class CreateAccountController implements Initializable{
     @FXML
     private Button createAccountBtn;
     @FXML
+    private TextField nameField;
+    @FXML
     private TextField usernameField;
     @FXML
     private PasswordField passwordField;
@@ -79,7 +81,7 @@ public class CreateAccountController implements Initializable{
     @FXML
     private void KeyReleased()
     {
-        if(!usernameField.getText().matches("^([a-zA-Z]|\\d)+$") && !usernameField.getText().equals("")) {
+        if(!usernameField.getText().matches("^([a-zA-Z]|\\d)+$")) {
             addHighlightStyle(usernameField);
             setMessage(Strings.ERROR_BAD_USERNAME);
         } else if(messageLabel.getText().equals(Strings.ERROR_BAD_USERNAME)) {
@@ -120,6 +122,11 @@ public class CreateAccountController implements Initializable{
     @FXML
     public void createAccount() {
         // Make sure all fields were filled out
+        if(nameField.getText().equals("")) {
+            addHighlightStyle(nameField);
+            setMessage(Strings.ERROR_EMPTY_FIELD);
+            return;
+        }
         if(usernameField.getText().equals("")) {
             addHighlightStyle(usernameField);
             setMessage(Strings.ERROR_EMPTY_FIELD);

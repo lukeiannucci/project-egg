@@ -1,15 +1,72 @@
 .field-error {
-    -fx-background-color: red;
+    -fx-background-color: #FFE0B2E6;
 }
 .incorrect-password{
-    -fx-background-image: url("/img/ic_incorrect_pw.png");
+    -fx-background-image: url("/img/ic_cross.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 15 15;
     -fx-background-position: 350 center;
 }
 .correct-password{
-    -fx-background-image: url("/img/ic_correct_pw.png");
+    -fx-background-image: url("/img/ic_check.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 15 15;
     -fx-background-position: 350 center;
+}
+
+TextField,PasswordField,Button,CheckBox {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+TextField:focused,PasswordField:focused,Button:focused,CheckBox:focused {
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: #FFFFFFFF;
+}
+TextField,PasswordField {
+    -fx-text-fill: #424242;
+    -fx-background-color: #F5F5F5E6;
+}
+TextField,PasswordField:hover {
+    -fx-background-color: #E0E0E0E6;
+}
+Label {
+    -fx-text-fill: #F5F5F5B3;
+    -fx-font-family: 'Roboto Medium';
+}
+
+#messageLabel {
+    -fx-text-fill: #F44336E6;
+    -fx-font-family: 'Roboto Medium';
+    -fx-font-size: 14;
+}
+#CreateAccountPane {
+    -fx-background-color: radial-gradient(radius -180%, #2E5A75, #688998, #697E75);
+}
+#createAccountBtn {
+    -fx-font-family: 'Roboto Black';
+    -fx-background-color: #4CAF50CB;
+    -fx-font-size: 16;
+    -fx-text-fill: #F5F5F5;
+}
+#createAccountBtn:hover {
+    -fx-background-color: #43A047CB;
+}
+#backButton {
+    -fx-font-family: 'Roboto Black';
+    -fx-background-color: #F44336CB;
+    -fx-font-size: 16;
+    -fx-text-fill: #F5F5F5;
+}
+#backButton:hover {
+    -fx-background-color: #E53935CB;
+}
+#titleLeft {
+    -fx-text-fill: #F5F5F5B3;
+    -fx-font-family: 'Roboto Thin';
+    -fx-font-size: 40;
+}
+#titleRight {
+    -fx-text-fill: #F5F5F5B3;
+    -fx-font-family: 'Roboto Medium';
+    -fx-font-size: 40;
 }
