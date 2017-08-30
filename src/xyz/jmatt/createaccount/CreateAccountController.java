@@ -71,7 +71,21 @@ public class CreateAccountController implements Initializable{
     private void removeHighlightStyle(TextField field) {
         field.getStyleClass().remove("field-error");
     }
-
+    @FXML
+    private void UsernameKeyReleased()
+    {
+        if(!usernameField.getText().matches("^([a-zA-Z]|\\d)+$") && !usernameField.getText().equals("")) {
+            System.out.println("adding...");
+            addHighlightStyle(usernameField);
+            setMessage(Strings.ERROR_BAD_USERNAME);
+        }
+        else if(messageLabel.getText().equals(Strings.ERROR_BAD_USERNAME))
+        {
+            System.out.println("removing...");
+            //usernameField.getStyleClass().remove("field-error");
+            setMessage("");
+        }
+    }
     /*
      * Attempts to create a new account with the information given
      */
