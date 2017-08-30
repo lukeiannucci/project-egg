@@ -10,26 +10,44 @@
    <center>
       <Pane prefHeight="900.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="TransactionTable" layoutX="14.0" layoutY="14.0" prefHeight="231.0" prefWidth="1171.0">
-              <columns>
-                <TableColumn fx:id="Name" maxWidth="400.0" minWidth="50.0" prefWidth="360.0" text="Name" />
-                <TableColumn fx:id="Category" editable="false" maxWidth="400.0" minWidth="60.0" prefWidth="75.0" text="Category" />
-                  <TableColumn fx:id="Amount" editable="false" maxWidth="400.0" minWidth="60.0" prefWidth="75.0" text="Amount" />
-                  <TableColumn fx:id="Date" editable="false" maxWidth="400.0" minWidth="50.0" prefWidth="75.0" text="Date" />
-                  <TableColumn fx:id="Total" editable="false" maxWidth="400.0" minWidth="50.0" prefWidth="75.0" text="Total" />
-              </columns>
-            </TableView>
-            <VBox layoutX="14.0" layoutY="279.0" prefHeight="200.0" prefWidth="191.0">
+            <VBox layoutX="14.0" layoutY="-1.0" prefHeight="862.0" prefWidth="798.0">
                <children>
-                  <TextField fx:id="TransIn" promptText="Transaction Name" />
-                  <Region prefHeight="16.0" prefWidth="191.0" />
-                  <TextField fx:id="CategoryIn" promptText="Category" />
-                  <Region prefHeight="16.0" prefWidth="191.0" />
-                  <TextField fx:id="AmountIn" promptText="Amount" />
-                  <Region prefHeight="16.0" prefWidth="191.0" />
-                  <TextField fx:id="DateIn" promptText="Date" />
-                  <Region prefHeight="16.0" prefWidth="191.0" />
-                  <Button fx:id="AddTransaction" mnemonicParsing="false" onAction="#AddTransactionModel" text="Hello WRLD" />
+                  <TableView fx:id="TransactionTable" prefHeight="725.0" prefWidth="798.0">
+                     <columns>
+                        <TableColumn fx:id="Name" maxWidth="500.0" minWidth="50.0" prefWidth="400.0" text="Name" />
+                        <TableColumn fx:id="Category" editable="false" maxWidth="400.0" minWidth="60.0" prefWidth="99.0" text="Category" />
+                        <TableColumn fx:id="Amount" editable="false" maxWidth="400.0" minWidth="60.0" prefWidth="99.0" text="Amount" />
+                        <TableColumn fx:id="Date" editable="false" maxWidth="400.0" minWidth="50.0" prefWidth="99.0" text="Date" />
+                        <TableColumn fx:id="Total" editable="false" maxWidth="400.0" minWidth="50.0" prefWidth="99.0" text="Total" />
+                     </columns>
+                  </TableView>
+                  <VBox prefHeight="200.0" prefWidth="191.0">
+                     <children>
+                        <Region prefHeight="39.0" prefWidth="798.0" />
+                        <HBox prefHeight="42.0" prefWidth="798.0">
+                           <children>
+                              <TextField fx:id="TransIn" prefHeight="25.0" prefWidth="180.0" promptText="Transaction Name" />
+                              <Region prefHeight="100.0" prefWidth="57.0" />
+                              <TextField fx:id="CategoryIn" promptText="Category" />
+                              <Region prefHeight="100.0" prefWidth="57.0" />
+                              <TextField fx:id="AmountIn" promptText="Amount" />
+                              <Region prefHeight="16.0" prefWidth="57.0" />
+                              <DatePicker fx:id="DateIn" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Region prefHeight="100.0" prefWidth="690.0" />
+                              <Button fx:id="AddTransaction" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#AddTransactionModel" prefHeight="25.0" prefWidth="111.0" text="Add Transaction" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox layoutX="829.0" layoutY="-1.0" prefHeight="874.0" prefWidth="363.0">
+               <children>
+                  <Label text="TODO " />
                </children>
             </VBox>
          </children>

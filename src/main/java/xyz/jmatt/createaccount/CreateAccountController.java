@@ -89,6 +89,10 @@ public class CreateAccountController implements Initializable{
             if(!passwordField.getText().equals(passwordConfirmField.getText()))
             {
                 setMessage(Strings.ERROR_BAD_PASSWORD_CONFIRM);
+                if(passwordField.getStyleClass().contains("correct-password")){
+                    passwordField.getStyleClass().remove("correct-password");
+                    passwordConfirmField.getStyleClass().remove("correct-password");
+                }
                 passwordField.getStyleClass().add("incorrect-password");
                 passwordConfirmField.getStyleClass().add("incorrect-password");
             }
@@ -99,6 +103,15 @@ public class CreateAccountController implements Initializable{
                 passwordConfirmField.getStyleClass().remove("incorrect-password");
                 passwordConfirmField.getStyleClass().add("correct-password");
             }
+        }
+        //TODO for some reason it still displays a red x even when i when there is no text, have to click backspace delete nothing, not sure why
+        else if(passwordConfirmField.getText().equals("") && passwordConfirmField.getStyleClass().contains("correct-password")){
+            passwordField.getStyleClass().remove("correct-password");
+            passwordConfirmField.getStyleClass().remove("correct-password");
+        }
+        else if(passwordConfirmField.getText().equals("") && passwordConfirmField.getStyleClass().contains("incorrect-password")){
+            passwordField.getStyleClass().remove("incorrect-password");
+            passwordConfirmField.getStyleClass().remove("incorrect-password");
         }
     }
     /*

@@ -41,19 +41,21 @@ public class MainFormController extends MenuItem implements Initializable {
     @FXML
     private TextField AmountIn;
     @FXML
-    private TextField DateIn;
+    private DatePicker DateIn;
 
     private ObservableList<TransactionModel> data;
     @FXML
     private void AddTransactionModel()
     {
-        TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), Long.valueOf(DateIn.getText()));
+        //TODO fix the date
+        TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), 1);
         new TransactionService().addTransaction(trans);
         data.add(trans);
         TransIn.setText("");
         CategoryIn.setText("");
         AmountIn.setText("");
-        DateIn.setText("");
+        DateIn.getEditor().setText("");
+
 
     }
     @Override
