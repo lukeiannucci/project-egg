@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -10,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="CreateAccountPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #666666;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.createaccount.CreateAccountController">
+<BorderPane fx:id="CreateAccountPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #666666;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.createaccount.CreateAccountController">
    <center>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #666666;" BorderPane.alignment="CENTER">
          <children>
@@ -45,19 +49,19 @@
                   </VBox>
                   <VBox layoutX="185.0" layoutY="15.0" prefHeight="200.0" prefWidth="371.0">
                      <children>
-                        <TextField fx:id="usernameField" onKeyReleased="#UsernameKeyReleased" promptText="Type the username you wish to use">
+                        <TextField fx:id="usernameField" onKeyReleased="#KeyReleased" promptText="Type the username you wish to use">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </TextField>
                         <Region prefHeight="18.0" prefWidth="15.0" />
-                        <PasswordField fx:id="passwordField" promptText="Type a password">
+                        <PasswordField fx:id="passwordField" onKeyReleased="#KeyReleased" promptText="Type a password">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </PasswordField>
                         <Region prefHeight="18.0" prefWidth="15.0" />
-                        <PasswordField fx:id="passwordConfirmField" promptText="Retype the password">
+                        <PasswordField fx:id="passwordConfirmField" onKeyReleased="#KeyReleased" promptText="Retype the password">
                            <font>
                               <Font size="18.0" />
                            </font>

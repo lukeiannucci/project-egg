@@ -1,3 +1,15 @@
 .field-error {
     -fx-background-color: red;
 }
+.incorrect-password{
+    -fx-background-image: url("/img/ic_incorrect_pw.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 15 15;
+    -fx-background-position: 350 center;
+}
+.correct-password{
+    -fx-background-image: url("/img/ic_correct_pw.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 15 15;
+    -fx-background-position: 350 center;
+}

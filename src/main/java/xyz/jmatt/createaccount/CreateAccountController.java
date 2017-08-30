@@ -5,8 +5,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import xyz.jmatt.Main;
@@ -34,6 +37,7 @@ public class CreateAccountController implements Initializable{
     private BorderPane CreateAccountPane;
     @FXML
     private Button backButton;
+    private Parent scene;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -73,14 +77,28 @@ public class CreateAccountController implements Initializable{
     }
 
     @FXML
-    private void UsernameKeyReleased()
+    private void KeyReleased()
     {
         if(!usernameField.getText().matches("^([a-zA-Z]|\\d)+$") && !usernameField.getText().equals("")) {
-            System.out.println("adding...");
             addHighlightStyle(usernameField);
             setMessage(Strings.ERROR_BAD_USERNAME);
         } else if(messageLabel.getText().equals(Strings.ERROR_BAD_USERNAME)) {
             setMessage("");
+        }
+        if(!passwordField.getText().equals("") && !passwordConfirmField.getText().equals("")){
+            if(!passwordField.getText().equals(passwordConfirmField.getText()))
+            {
+                setMessage(Strings.ERROR_BAD_PASSWORD_CONFIRM);
+                passwordField.getStyleClass().add("incorrect-password");
+                passwordConfirmField.getStyleClass().add("incorrect-password");
+            }
+            else if(passwordField.getText().equals(passwordConfirmField.getText()) && messageLabel.getText().equals(Strings.ERROR_BAD_PASSWORD_CONFIRM)){
+                setMessage("");
+                passwordField.getStyleClass().remove("incorrect-password");
+                passwordField.getStyleClass().add("correct-password");
+                passwordConfirmField.getStyleClass().remove("incorrect-password");
+                passwordConfirmField.getStyleClass().add("correct-password");
+            }
         }
     }
     /*
