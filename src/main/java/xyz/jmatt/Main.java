@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,6 +29,7 @@ public class Main extends Application {
         Font.loadFont(new File("/font/Roboto-Black.tff").toURI().toURL().toExternalForm(), 10);
         Font.loadFont(new File("/font/Roboto-Medium.tff").toURI().toURL().toExternalForm(), 10);
         scene.getStylesheets().add("xyz/jmatt/login/Login.css");
+        stage.getIcons().add(new Image("/img/icon.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setMinHeight(primaryStage.getHeight());
