@@ -4,14 +4,14 @@
 .incorrect-password{
     -fx-background-image: url("/img/ic_cross.png");
     -fx-background-repeat: no-repeat;
-    -fx-background-size: 15 15;
-    -fx-background-position: 350 center;
+    -fx-background-size: 30 30;
+    -fx-background-position: 265 center;
 }
 .correct-password{
     -fx-background-image: url("/img/ic_check.png");
     -fx-background-repeat: no-repeat;
-    -fx-background-size: 15 15;
-    -fx-background-position: 350 center;
+    -fx-background-size: 30 30;
+    -fx-background-position: 265 center;
 }
 
 TextField,PasswordField,Button,CheckBox {

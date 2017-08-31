@@ -81,12 +81,7 @@ public class CreateAccountController implements Initializable{
     @FXML
     private void KeyReleased()
     {
-        if(!usernameField.getText().matches("^([a-zA-Z]|\\d)+$")) {
-            addHighlightStyle(usernameField);
-            setMessage(Strings.ERROR_BAD_USERNAME);
-        } else if(messageLabel.getText().equals(Strings.ERROR_BAD_USERNAME)) {
-            setMessage("");
-        }
+
         if(!passwordField.getText().equals("") && !passwordConfirmField.getText().equals("")){
             if(!passwordField.getText().equals(passwordConfirmField.getText()))
             {
@@ -114,6 +109,17 @@ public class CreateAccountController implements Initializable{
         else if(passwordConfirmField.getText().equals("") && passwordConfirmField.getStyleClass().contains("incorrect-password")){
             passwordField.getStyleClass().remove("incorrect-password");
             passwordConfirmField.getStyleClass().remove("incorrect-password");
+            passwordField.getStyleClass().add("no-icon");
+            passwordConfirmField.getStyleClass().add("no-icon");
+        }
+        if(usernameField.getText().equals("")){
+            return;
+        }
+        if(!usernameField.getText().matches("^([a-zA-Z]|\\d)+$")) {
+            addHighlightStyle(usernameField);
+            setMessage(Strings.ERROR_BAD_USERNAME);
+        } else if(messageLabel.getText().equals(Strings.ERROR_BAD_USERNAME)) {
+            setMessage("");
         }
     }
     /*
