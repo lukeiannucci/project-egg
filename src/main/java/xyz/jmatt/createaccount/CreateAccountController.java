@@ -171,7 +171,7 @@ public class CreateAccountController implements Initializable{
         Platform.runLater(() -> {
             //send the user's info the create account service for processing
             CreateAccountService accountService = new CreateAccountService();
-            SimpleResult result = accountService.createAccount(usernameField.getText(), passwordField.getText().toCharArray());
+            SimpleResult result = accountService.createAccount(nameField.getText(), usernameField.getText(), passwordField.getText().toCharArray());
             try {
                 onCreateAccountResult(result);
             } catch (IOException e) {

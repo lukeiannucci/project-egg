@@ -8,7 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import xyz.jmatt.models.Category;
 import xyz.jmatt.models.TransactionModel;
+import xyz.jmatt.services.CategoryService;
 import xyz.jmatt.services.TransactionService;
 
 import java.math.BigDecimal;
@@ -84,5 +86,9 @@ public class MainFormController extends MenuItem implements Initializable {
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> {header.setReordering(false);});
         });
         TransactionTable.setItems(data);
+
+        //temp
+        Category category = new CategoryService().getAllCategories();
+        System.out.println();
     }
 }

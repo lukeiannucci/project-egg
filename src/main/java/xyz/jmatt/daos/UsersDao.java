@@ -24,10 +24,11 @@ public class UsersDao {
      */
     public void pushNewUser(UserModel userModel) throws SQLException {
         PreparedStatement prep = connection.prepareStatement(
-                "INSERT INTO Users (Username, Password, UserId) VALUES (?,?,?);");
+                "INSERT INTO Users (Username, Password, UserId, Name) VALUES (?,?,?,?);");
         prep.setString(1, userModel.getUsername());
         prep.setString(2, userModel.getPassword());
         prep.setString(3, userModel.getUserId());
+        prep.setString(4, userModel.getName());
         prep.executeUpdate();
         prep.close();
     }

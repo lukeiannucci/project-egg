@@ -7,6 +7,7 @@ public class UserModel {
     private String username;
     private String password;
     private String userId;
+    private String name;
 
     public UserModel() {}
 
@@ -32,5 +33,13 @@ public class UserModel {
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

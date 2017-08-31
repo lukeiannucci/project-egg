@@ -23,7 +23,7 @@ public class TransactionDao {
     /**
      * Creates the table and all the columns for the first time
      */
-    public void intializeTable() throws SQLException {
+    public void initializeTable() throws SQLException {
         PreparedStatement prep = connection.prepareStatement(
                 "CREATE TABLE Transactions (TransactionId VARCHAR(255) PRIMARY KEY, Name VARCHAR(255), Category VARCHAR(255), Amount DECIMAL(20,2), Date BIGINT);");
         prep.execute();
@@ -65,6 +65,7 @@ public class TransactionDao {
         prep.setString(3, model.getCategory());
         prep.setBigDecimal(4, model.getAmount());
         prep.setLong(5, model.getDate());
+
         prep.executeUpdate();
         prep.close();
     }

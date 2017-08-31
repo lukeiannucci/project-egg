@@ -2,10 +2,8 @@ package xyz.jmatt.services;
 
 import xyz.jmatt.Strings;
 import xyz.jmatt.auth.PasswordManager;
-import xyz.jmatt.daos.MainDatabaseTransaction;
-import xyz.jmatt.daos.PersonalDatabaseTransaction;
-import xyz.jmatt.daos.TransactionDao;
-import xyz.jmatt.daos.UsersDao;
+import xyz.jmatt.daos.*;
+import xyz.jmatt.models.Category;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.models.UserModel;
@@ -29,7 +27,7 @@ public class CreateAccountService {
      * @param originalPassword the password for the new account
      * @return result of the account creation
      */
-    public SimpleResult createAccount(String username, char[] originalPassword) {
+    public SimpleResult createAccount(String name, String username, char[] originalPassword) {
         MainDatabaseTransaction transaction = null;
         SimpleResult result = null;
 
@@ -52,6 +50,7 @@ public class CreateAccountService {
                 userModel.setUsername(username);
                 userModel.setPassword(securePassword);
                 userModel.setUserId(userId);
+                userModel.setName(name);
                 //push new user to Users table
                 usersDao.pushNewUser(userModel);
 
@@ -70,6 +69,9 @@ public class CreateAccountService {
                 transaction.commit();
                 transaction.close();
                 transaction = null;
+
+                //temp
+                generateCategories();
 
                 result = new SimpleResult("", false);
             }
@@ -99,8 +101,41 @@ public class CreateAccountService {
         PersonalDatabaseTransaction transaction = new PersonalDatabaseTransaction();
 
         TransactionDao transactionDao = new TransactionDao(transaction);
-        transactionDao.intializeTable();
+        transactionDao.initializeTable();
         transaction.commit();
         transaction.close();
+
+        transaction = new PersonalDatabaseTransaction();
+        CategoryDao categoryDao = new CategoryDao(transaction);
+        categoryDao.initializeTable();
+        transaction.commit();
+        transaction.close();
+    }
+
+    //temp
+    private void generateCategories() {
+        Category category1 = new Category();
+        category1.setName("Root");
+        category1.setParentId(null);
+        category1.setId("c1");
+        new CategoryService().addCategory(category1);
+
+        Category category2 = new Category();
+        category2.setName("Child A");
+        category2.setParentId("c1");
+        category2.setId("c2");
+        new CategoryService().addCategory(category2);
+
+        Category category3 = new Category();
+        category3.setName("Child B");
+        category3.setParentId("c1");
+        category3.setId("c3");
+        new CategoryService().addCategory(category3);
+
+        Category category4 = new Category();
+        category4.setName("Child AA");
+        category4.setParentId("c2");
+        category4.setId("c4");
+        new CategoryService().addCategory(category4);
     }
 }
