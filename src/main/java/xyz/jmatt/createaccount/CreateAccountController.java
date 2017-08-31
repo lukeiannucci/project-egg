@@ -11,7 +11,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import xyz.jmatt.Globals.Globals;
 import xyz.jmatt.Main;
 import xyz.jmatt.Strings;
 import xyz.jmatt.models.ClientSingleton;
@@ -39,11 +41,12 @@ public class CreateAccountController implements Initializable{
     private BorderPane CreateAccountPane;
     @FXML
     private Button backButton;
-    private Parent scene;
+    @FXML
+    public Pane SlidePane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        SlideTransitionEnter(CreateAccountPane);
+        Globals.SlideTransition(SlidePane, Main.stage.getWidth(), 0, null, 0 , 0);
         CreateAccountPane.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.ENTER) {
                 createAccount();
@@ -196,33 +199,13 @@ public class CreateAccountController implements Initializable{
     @FXML
     private void BackButtonPressed() throws IOException
     {
-        SlideTransitionExit(CreateAccountPane);
+        Globals.NeedsTransition = true;
+        Globals.SlideTransition(SlidePane, 0, Main.stage.getWidth(), "/xyz/jmatt/login/Login.fxml", 600, 450);
     }
 
-    private void SlideTransitionExit(Node e)
-    {
-        TranslateTransition x = new TranslateTransition(new Duration(500), e);
-        x.setFromX(0.0);
-        x.setToX(Main.stage.getWidth());
-        x.setCycleCount(1);
-        x.setOnFinished(event -> {
-            try {
-                Main.changeScene("/xyz/jmatt/login/Login.fxml", (int)Main.stage.getWidth(), (int)Main.stage.getHeight());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-        x.play();
-    }
 
-    private void SlideTransitionEnter(Node e)
-    {
-        TranslateTransition x = new TranslateTransition(new Duration(500), e);
-        x.setFromX(Main.stage.getWidth());
-        x.setToX(0);
-        x.setCycleCount(1);
-        x.play();
-    }
+
+
 
     /**
      * Sets the on screen  message label to the given message

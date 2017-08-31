@@ -8,6 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import xyz.jmatt.Globals.Globals;
 import xyz.jmatt.Strings;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
@@ -32,6 +34,8 @@ public class LoginController implements Initializable{
     private PasswordField passwordField;
     @FXML
     private Button loginBtn;
+    @FXML
+    private Pane SlidePane;
 
     /**
      * Attempts to log in the user with the given credentials
@@ -99,6 +103,10 @@ public class LoginController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if(Globals.NeedsTransition){
+            Globals.SlideTransition(SlidePane, -(Main.stage.getWidth()), 0, null, 0, 0);
+            Globals.NeedsTransition = false;
+        }
         LoginPane.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.ENTER) {
                 login();
@@ -114,13 +122,17 @@ public class LoginController implements Initializable{
 
     private void trans(Node e) throws Exception
     {
-        FadeTransition x = new FadeTransition(new Duration(500), e);
-        x.setFromValue(0);x.setFromValue(0);
-        x.setToValue(100);
+        TranslateTransition x = new TranslateTransition(new Duration(500), e);
+        x.setFromX(0);
+        x.setToX(-Main.stage.getWidth());
         x.setCycleCount(1);
+        //FadeTransition x = new FadeTransition(new Duration(500), e);
+        //x.setFromValue(100);
+        //x.setToValue(0);
+        //x.setCycleCount(1);
         x.setOnFinished(event -> {
             try {
-                    Main.changeScene("", 0, 0);
+                    Main.changeScene("/xyz/jmatt/createaccount/CreateAccount.fxml", 600, 625);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -135,7 +147,8 @@ public class LoginController implements Initializable{
     @FXML
     private void createAccount() {
        try {
-           Main.changeScene("/xyz/jmatt/createaccount/CreateAccount.fxml", 600, 625);
+           Globals.SlideTransition(SlidePane,0, -(Main.stage.getWidth()),"/xyz/jmatt/createaccount/CreateAccount.fxml", 600, 625);
+           //Main.changeScene("/xyz/jmatt/createaccount/CreateAccount.fxml", 600, 625);
        }
        catch (Exception e){
            e.printStackTrace();

@@ -14,7 +14,7 @@
 
 <BorderPane fx:id="CreateAccountPane" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.createaccount.CreateAccountController">
    <center>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="SlidePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
             <VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0">
                <children>
