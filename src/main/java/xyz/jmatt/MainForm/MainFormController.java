@@ -7,7 +7,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import xyz.jmatt.models.Category;
 import xyz.jmatt.models.TransactionModel;
 import xyz.jmatt.services.TransactionService;
 
@@ -42,6 +44,10 @@ public class MainFormController extends MenuItem implements Initializable {
     private TextField AmountIn;
     @FXML
     private DatePicker DateIn;
+    @FXML
+    private TreeTableView CategoryTreeTableView;
+    @FXML
+    private TreeTableColumn TreeCategory;
 
     private ObservableList<TransactionModel> data;
     @FXML
@@ -60,6 +66,7 @@ public class MainFormController extends MenuItem implements Initializable {
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        List<String> Categories = new ArrayList<>();
         data = FXCollections.observableArrayList(
                 new TransactionService().getAllTransactions()
         );
@@ -84,5 +91,28 @@ public class MainFormController extends MenuItem implements Initializable {
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> {header.setReordering(false);});
         });
         TransactionTable.setItems(data);
+
+//        TreeItem<Category> root = new TreeItem<>();
+//        //root.add(new TreeItem<>(new Category("Show Categories")));
+//        List<TreeItem<Category>> CategoryList = new ArrayList<>();
+//        for(int i = 0; i < data.size(); i++){
+//            xyz.jmatt.models.Category myCat = new Category(data.get(i).getCategory());
+//            myCat.Categories.add("Food");
+//            myCat.Categories.add("Sports");
+//            myCat.Categories.add("Entertainment");
+//            myCat.Categories.add("Auto");
+//            myCat.Categories.add("Health");
+//            myCat.Categories.add("Utilities");
+//            myCat.Categories.add("Misc");
+//            CategoryList.add(new TreeItem<Category>(myCat));
+//            //root.add(new TreeItem<Category>(myCat));
+//            //root.get(i).getChildren().add(new TreeItem<Category>(myCat.getSubcategories().get(i)));
+//            //test.add(Test(data.get(i).getCategory()));
+//        }
+//        root.getChildren().setAll(CategoryList);
+//        TreeCategory.setCellValueFactory(new TreeItemPropertyValueFactory<Category, String>("Categories"));
+//        CategoryTreeTableView.setRoot(root);
+        //List<TreeItem<String>> root = new ArrayList<>();
     }
 }
+
