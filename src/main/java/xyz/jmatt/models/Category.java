@@ -10,6 +10,7 @@ public class Category {
     private List<Category> subcategories = new ArrayList<>();
 
     public Category() {
+
     }
 
     public void setName(String name) {

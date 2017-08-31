@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="MainForm" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.MainForm.MainFormController">
+<BorderPane fx:id="MainForm" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.jmatt.MainForm.MainFormController">
    <center>
       <Pane prefHeight="900.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
@@ -32,7 +42,7 @@
                               <Region prefHeight="100.0" prefWidth="57.0" />
                               <TextField fx:id="AmountIn" promptText="Amount" />
                               <Region prefHeight="16.0" prefWidth="57.0" />
-                              <DatePicker fx:id="DateIn" />
+                              <DatePicker fx:id="DateIn" promptText="Date" />
                            </children>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
@@ -47,7 +57,11 @@
             </VBox>
             <VBox layoutX="829.0" layoutY="-1.0" prefHeight="874.0" prefWidth="363.0">
                <children>
-                  <Label text="TODO " />
+                  <TreeTableView fx:id="CategoryTreeTableView" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TreeTableColumn fx:id="TreeCategory" prefWidth="75.0" text="Category" />
+                    </columns>
+                  </TreeTableView>
                </children>
             </VBox>
          </children>
