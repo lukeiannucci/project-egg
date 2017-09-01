@@ -96,27 +96,65 @@ public class MainFormController extends MenuItem implements Initializable {
         //temp
         Category category = new CategoryService().getAllCategories();
         System.out.println();
-//        TreeItem<Category> root = new TreeItem<>();
-//        //root.add(new TreeItem<>(new Category("Show Categories")));
-//        List<TreeItem<Category>> CategoryList = new ArrayList<>();
-//        for(int i = 0; i < data.size(); i++){
-//            xyz.jmatt.models.Category myCat = new Category(data.get(i).getCategory());
-//            myCat.Categories.add("Food");
-//            myCat.Categories.add("Sports");
-//            myCat.Categories.add("Entertainment");
-//            myCat.Categories.add("Auto");
-//            myCat.Categories.add("Health");
-//            myCat.Categories.add("Utilities");
-//            myCat.Categories.add("Misc");
+        TreeItem<Category> returnTree = new TreeItem<Category>(category);
+        List<Category> node = new ArrayList<>();
+        List<Integer> indexes = new ArrayList<>();
+        List<TreeItem<Category>> findNode = new ArrayList<>();
+        TreeItem<Category> root = ReadCategory(category, returnTree, node, findNode);
+        //TreeItem<Category> ChildA = new TreeItem<>();
+        //TreeItem<Category> ChildB = new TreeItem<>();
+        //TreeItem<Category> ChildAA = new TreeItem<>();
+        //List<TreeItem<Category>> test = new ArrayList<>();
+        //root.setValue(category);
+        //ChildA.setValue(category.getSubcategories().get(0));
+        //ChildB.setValue(category.getSubcategories().get(1));
+        //ChildAA.setValue(category.getSubcategories().get(0).getSubcategories().get(0));
+         //root.add(new TreeItem<>(new Category("Show Categories")));
+        //List<TreeItem<Category>> CategoryList = new ArrayList<>();
+//            Category myCat = new Category(data.get(i).getCategory());
 //            CategoryList.add(new TreeItem<Category>(myCat));
-//            //root.add(new TreeItem<Category>(myCat));
-//            //root.get(i).getChildren().add(new TreeItem<Category>(myCat.getSubcategories().get(i)));
-//            //test.add(Test(data.get(i).getCategory()));
+//            root.add(new TreeItem<Category>(myCat));
+//            root.get(i).getChildren().add(new TreeItem<Category>(myCat.getSubcategories().get(i)));
+//            test.add(Test(data.get(i).getCategory()));
 //        }
-//        root.getChildren().setAll(CategoryList);
-//        TreeCategory.setCellValueFactory(new TreeItemPropertyValueFactory<Category, String>("Categories"));
-//        CategoryTreeTableView.setRoot(root);
+        //ChildA.getChildren().setAll(ChildAA);
+        //test.add(ChildA);
+        //test.add(ChildB);
+        //root.getChildren().setAll(test);
+        TreeCategory.setCellValueFactory(new TreeItemPropertyValueFactory<Category, String>("name"));
+        CategoryTreeTableView.setRoot(root);
         //List<TreeItem<String>> root = new ArrayList<>();
+    }
+
+    public TreeItem<Category> ReadCategory(Category cat, TreeItem<Category> returnTree, List<Category> comeBackToNode, List<TreeItem<Category>> findNode){
+        ///TreeItem<Category> returnTree = new ArrayList<>();
+        if(comeBackToNode.size() > 0){
+            comeBackToNode.remove(0);
+            findNode.remove(0);
+        }
+        if(cat.getSubcategories().size() > 0){
+            List<TreeItem<Category>> test = new ArrayList<>();
+            int i = 0;
+            for(Category cat1 : cat.getSubcategories()){
+                test.add(new TreeItem<>(cat1));
+                if(cat1.getSubcategories().size() > 0){
+                    comeBackToNode.add(cat1);
+                    findNode.add(test.get(i));
+                }
+                i++;
+
+            }
+            returnTree.getChildren().setAll(test);
+            if(comeBackToNode.size() > 0){
+                TreeItem<Category> passedItem = findNode.get(0);
+                ReadCategory(comeBackToNode.get(0), passedItem, comeBackToNode, findNode);
+            }
+            else{
+                return returnTree;
+            }
+            return returnTree;
+        }
+        return returnTree;
     }
 }
 

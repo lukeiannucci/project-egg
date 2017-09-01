@@ -117,7 +117,7 @@ public class CreateAccountService {
 
     //temp
     private void generateCategories() {
-        int categoriesToGenerate = 500;
+        int categoriesToGenerate = 100;
 
         List<Category> categories = new ArrayList<>();
 
@@ -130,7 +130,7 @@ public class CreateAccountService {
         for(int i = 0; i < categoriesToGenerate - 1; i++) {
             Category category1 = new Category();
             String string = UUID.randomUUID().toString().replaceAll("-", "");
-            category1.setName(string);
+            category1.setName(Integer.toString(i));
             category1.setId(string);
             category1.setParentId(categories.get(new Random().nextInt(categories.size())).getId());
             categories.add(category1);
