@@ -9,9 +9,7 @@ public class Category {
     private String parentId;
     private List<Category> subcategories = new ArrayList<>();
 
-    public Category() {
-
-    }
+    public Category() {}
 
     public void setName(String name) {
         this.name = name;

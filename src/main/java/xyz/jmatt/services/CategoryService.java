@@ -5,11 +5,10 @@ import xyz.jmatt.daos.PersonalDatabaseTransaction;
 import xyz.jmatt.models.Category;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class CategoryService {
+
     public CategoryService() {}
 
     /**
@@ -31,6 +30,7 @@ public class CategoryService {
             transaction = null;
 
             result = getOrganizedCategories(unsortedCategories);
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -44,44 +44,47 @@ public class CategoryService {
     }
 
     /**
-     * Returns a structured tree of categories
-     * @param categories the unsorted list of all categories
-     * @return a structured tree of categories
+     * Gets a structured tree of categories
+     * @param categories the list of all categories
+     * @return the root node of the category tree
      */
     private Category getOrganizedCategories(List<Category> categories) {
-        for(Category category : categories) { //go through each individual category
-            List<Category> children = getChildrenForParentId(category.getId(), categories); //get all categories with current category as a parent
-            //add each child as a child of the current node
-            for(Category child : children) {
-                category.addSubcategory(child);
+        //binary search will be used to find given categories, so first we sort by id
+        categories.sort(new Comparator<Category>() {
+            @Override
+            public int compare(Category o1, Category o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+
+        Category root = null; //eventually will want to return the root
+
+        for(Category category : categories) { //go through each category
+            if(category.getParentId() == null) { //root category has no parent, must be the root
+                root = category; //save
+            } else { //if the current category has a parent
+                int index = getIndexOfParent(category, categories); //find that parent
+                categories.get(index).addSubcategory(category); //add the current node as a child of its' parent
             }
         }
 
-        //find the root category
-        for(Category category : categories) {
-            if(category.getParentId() == null) {
-                return category;
-            }
-        }
-        return null;
+        return root;
     }
 
     /**
-     * Gets all the categories that have the given id as a parent
-     * @param parentId the parent id to search for children for
-     * @param categories the full list of categories
-     * @return the list of children for the given id
+     * Gets the index of the parent category for the given category in the list of categories
+     * @param category the category whose parent to find the index of
+     * @param categories the list of all categories
+     * @return the index of the parent category in the given list
      */
-    private List<Category> getChildrenForParentId(String parentId, List<Category> categories) {
-        //new empty list to put children in
-        List<Category> result = new ArrayList<>();
-        //go through all categories
-        for(Category category : categories) {
-            if(category.getParentId() != null && category.getParentId().equals(parentId)) { //current category has parentId marked as the given id
-                result.add(category); //add the current category to the list of children
+    private int getIndexOfParent(Category category, List<Category> categories) {
+        //binary search in O(log(n)) time
+        return Collections.binarySearch(categories, category, new Comparator<Category>() {
+            @Override
+            public int compare(Category o1, Category o2) {
+                return o1.getId().compareTo(o2.getParentId());
             }
-        }
-        return result;
+        });
     }
 
     /**
@@ -89,7 +92,7 @@ public class CategoryService {
      * @param model the category to add
      * @return whether the category was added successfully or not
      */
-    public boolean addCategory(Category model) {
+    boolean addCategory(Category model) {
         PersonalDatabaseTransaction transaction = null;
 
         try {

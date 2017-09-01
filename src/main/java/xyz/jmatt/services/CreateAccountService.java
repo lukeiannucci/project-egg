@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -114,28 +117,27 @@ public class CreateAccountService {
 
     //temp
     private void generateCategories() {
-        Category category1 = new Category();
-        category1.setName("Root");
-        category1.setParentId(null);
-        category1.setId("c1");
-        new CategoryService().addCategory(category1);
+        int categoriesToGenerate = 500;
 
-        Category category2 = new Category();
-        category2.setName("Child A");
-        category2.setParentId("c1");
-        category2.setId("c2");
-        new CategoryService().addCategory(category2);
+        List<Category> categories = new ArrayList<>();
 
-        Category category3 = new Category();
-        category3.setName("Child B");
-        category3.setParentId("c1");
-        category3.setId("c3");
-        new CategoryService().addCategory(category3);
+        Category category = new Category();
+        category.setName("Root");
+        category.setParentId(null);
+        category.setId("c1");
+        categories.add(category);
 
-        Category category4 = new Category();
-        category4.setName("Child AA");
-        category4.setParentId("c2");
-        category4.setId("c4");
-        new CategoryService().addCategory(category4);
+        for(int i = 0; i < categoriesToGenerate - 1; i++) {
+            Category category1 = new Category();
+            String string = UUID.randomUUID().toString().replaceAll("-", "");
+            category1.setName(string);
+            category1.setId(string);
+            category1.setParentId(categories.get(new Random().nextInt(categories.size())).getId());
+            categories.add(category1);
+        }
+
+        for(Category category1 : categories) {
+            new CategoryService().addCategory(category1);
+        }
     }
 }
