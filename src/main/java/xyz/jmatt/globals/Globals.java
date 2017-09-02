@@ -1,4 +1,4 @@
-package xyz.jmatt.Globals;
+package xyz.jmatt.globals;
 
 import javafx.animation.TranslateTransition;
 import javafx.scene.Node;

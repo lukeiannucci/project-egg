@@ -1,19 +1,13 @@
 package xyz.jmatt.createaccount;
 
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
-import xyz.jmatt.Globals.Globals;
+import xyz.jmatt.globals.Globals;
 import xyz.jmatt.Main;
 import xyz.jmatt.Strings;
 import xyz.jmatt.models.ClientSingleton;

@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import xyz.jmatt.Globals.Globals;
+import xyz.jmatt.globals.Globals;
 import xyz.jmatt.Strings;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;

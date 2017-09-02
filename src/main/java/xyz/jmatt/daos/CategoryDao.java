@@ -21,7 +21,7 @@ public class CategoryDao {
      */
     public void initializeTable() throws SQLException {
         PreparedStatement prep = connection.prepareStatement(
-                "CREATE TABLE Categories (CategoryId VARCHAR(255) PRIMARY KEY, ParentId VARCHAR(255), Name VARCHAR(255), Depth INT, Lineage VARCHAR(255));");
+                "CREATE TABLE Categories (CategoryId VARCHAR(255) PRIMARY KEY, ParentId VARCHAR(255), Name VARCHAR(255));");
         prep.execute();
         prep.close();
     }
@@ -48,15 +48,31 @@ public class CategoryDao {
         return result;
     }
 
+    /**
+     * Adds the given category to the database
+     * @param model the category model to add
+     */
     public void pushCategory(Category model) throws SQLException {
         PreparedStatement prep = connection.prepareStatement(
-                "INSERT INTO Categories (CategoryId,ParentId,Name,Depth,Lineage) VALUES (?,?,?,?,?)");
+                "INSERT INTO Categories (CategoryId,ParentId,Name) VALUES (?,?,?)");
         prep.setString(1, model.getId());
         prep.setString(2, model.getParentId());
         prep.setString(3, model.getName());
-        prep.setInt(4, 1);
-        prep.setString(5, "");
 
+        prep.executeUpdate();
+        prep.close();
+    }
+
+    /**
+     * Renames a category in the database
+     * @param categoryId the id of the category to rename
+     * @param newName the new name of the category
+     */
+    public void renameCategory(String categoryId, String newName) throws SQLException {
+        PreparedStatement prep = connection.prepareStatement(
+                "UPDATE Categories (Mame=?) Where CategoryId = ?;");
+        prep.setString(1, newName);
+        prep.setString(2, categoryId);
         prep.executeUpdate();
         prep.close();
     }

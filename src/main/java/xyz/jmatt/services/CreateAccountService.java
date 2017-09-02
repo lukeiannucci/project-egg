@@ -84,9 +84,6 @@ public class CreateAccountService {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             result = new SimpleResult(Strings.ERROR_SERVER, true);
             e.printStackTrace();
-        } catch (IOException e) {
-            result = new SimpleResult(Strings.ERROR_NEW_DATABASE, true);
-            e.printStackTrace();
         } finally {
             if(transaction != null) {
                 transaction.rollback();
@@ -98,9 +95,8 @@ public class CreateAccountService {
 
     /**
      * Creates a new encrypted database to hold all of the user's personal data
-     * @throws IOException thrown if the file creation fails
      */
-    private void createNewUserDatabase() throws IOException, SQLException {
+    private void createNewUserDatabase() throws SQLException {
         PersonalDatabaseTransaction transaction = new PersonalDatabaseTransaction();
 
         TransactionDao transactionDao = new TransactionDao(transaction);
@@ -117,7 +113,7 @@ public class CreateAccountService {
 
     //temp
     private void generateCategories() {
-        int categoriesToGenerate = 100;
+        int categoriesToGenerate = 50;
 
         List<Category> categories = new ArrayList<>();
 

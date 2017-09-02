@@ -51,6 +51,7 @@ public class MainFormController extends MenuItem implements Initializable {
     private TreeTableColumn TreeCategory;
 
     private ObservableList<TransactionModel> data;
+
     @FXML
     private void AddTransactionModel()
     {
@@ -62,9 +63,8 @@ public class MainFormController extends MenuItem implements Initializable {
         CategoryIn.setText("");
         AmountIn.setText("");
         DateIn.getEditor().setText("");
-
-
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<String> Categories = new ArrayList<>();

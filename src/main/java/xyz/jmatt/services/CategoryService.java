@@ -44,6 +44,36 @@ public class CategoryService {
     }
 
     /**
+     * Updates the name of a category in the database
+     * @param model the model of category with the new name
+     * @return whether the renaming was successful
+     */
+    public boolean updateCategoryName(Category model) {
+        PersonalDatabaseTransaction transaction = null;
+
+        try {
+            transaction = new PersonalDatabaseTransaction();
+            CategoryDao categoryDao = new CategoryDao(transaction);
+
+            categoryDao.renameCategory(model.getId(), model.getName());
+
+            transaction.commit();
+            transaction.close();
+            transaction = null;
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(transaction != null) {
+                transaction.rollback();
+                transaction.close();
+            }
+        }
+        return false;
+    }
+
+    /**
      * Gets a structured tree of categories
      * @param categories the list of all categories
      * @return the root node of the category tree
