@@ -117,7 +117,7 @@ public class CreateAccountService {
 
     //temp
     private void generateCategories() {
-        int categoriesToGenerate = 100;
+        int categoriesToGenerate = 5;
 
         List<Category> categories = new ArrayList<>();
 
