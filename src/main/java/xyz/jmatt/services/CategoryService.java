@@ -44,11 +44,11 @@ public class CategoryService {
     }
 
     /**
-     * Updates the name of a category in the database
-     * @param model the model of category with the new name
-     * @return whether the renaming was successful
+     * Updates a ategory in the database
+     * @param model the model of category with new details
+     * @return whether the update was successful
      */
-    public boolean updateCategoryName(Category model) {
+    public boolean renameCategory(Category model) {
         PersonalDatabaseTransaction transaction = null;
 
         try {
@@ -56,6 +56,31 @@ public class CategoryService {
             CategoryDao categoryDao = new CategoryDao(transaction);
 
             categoryDao.renameCategory(model.getId(), model.getName());
+
+            transaction.commit();
+            transaction.close();
+            transaction = null;
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(transaction != null) {
+                transaction.rollback();
+                transaction.close();
+            }
+        }
+        return false;
+    }
+
+    public boolean moveCategory(Category model) {
+        PersonalDatabaseTransaction transaction = null;
+
+        try {
+            transaction = new PersonalDatabaseTransaction();
+            CategoryDao categoryDao = new CategoryDao(transaction);
+
+            categoryDao.moveCategory(model.getId(), model.getParentId());
 
             transaction.commit();
             transaction.close();

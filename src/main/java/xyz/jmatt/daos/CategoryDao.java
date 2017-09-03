@@ -64,15 +64,31 @@ public class CategoryDao {
     }
 
     /**
-     * Renames a category in the database
-     * @param categoryId the id of the category to rename
-     * @param newName the new name of the category
+     * Moves a category in the database under the given parentId
+     * @param id the id of the category to move
+     * @param parentId the id of the new parent category
      */
-    public void renameCategory(String categoryId, String newName) throws SQLException {
+    public void moveCategory(String id, String parentId) throws SQLException {
         PreparedStatement prep = connection.prepareStatement(
-                "UPDATE Categories (Mame=?) Where CategoryId = ?;");
-        prep.setString(1, newName);
-        prep.setString(2, categoryId);
+                "UPDATE Categories SET ParentId=? WHERE CategoryId=?;");
+        prep.setString(1, parentId);
+        prep.setString(2, id);
+
+        prep.executeUpdate();
+        prep.close();
+    }
+
+    /**
+     * Renames a category in the database
+     * @param id the id of the category to rename
+     * @param name the new name of the category
+     */
+    public void renameCategory(String id, String name) throws SQLException {
+        PreparedStatement prep = connection.prepareStatement(
+                "UPDATE Categories SET Name=? WHERE CategoryId=?;");
+        prep.setString(1, name);
+        prep.setString(2, id);
+
         prep.executeUpdate();
         prep.close();
     }
