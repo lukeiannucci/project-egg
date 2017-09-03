@@ -10,6 +10,10 @@ public class Category {
     private List<Category> subcategories = new ArrayList<>();
 
     public Category() {}
+    public Category(String passedName)
+    {
+        this.name = passedName;
+    }
 
     public void setName(String name) {
         this.name = name;

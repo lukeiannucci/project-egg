@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import xyz.jmatt.models.Category;
 import xyz.jmatt.models.TransactionModel;
@@ -49,6 +50,12 @@ public class MainFormController extends MenuItem implements Initializable {
     private TreeTableView CategoryTreeTableView;
     @FXML
     private TreeTableColumn TreeCategory;
+    @FXML
+    private Label AddedCategory;
+    @FXML
+    private TextField CategoryInput;
+
+    private TreeItem<Category> root;
 
     private ObservableList<TransactionModel> data;
 
@@ -65,6 +72,53 @@ public class MainFormController extends MenuItem implements Initializable {
         DateIn.getEditor().setText("");
     }
 
+    @FXML
+    private void OnLabelDragDetected(MouseEvent event)
+    {
+        Dragboard db = AddedCategory.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        //TreeItem<Category> test = (AddedCategoryetSelectedItem();
+        content.putString(AddedCategory.getText());
+        db.setContent(content);
+        event.consume();
+        System.out.println(db.getString());
+    }
+
+    @FXML
+    private void OnDragEntered(DragEvent event)
+    {
+        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        event.consume();
+        System.out.println(event.getDragboard().getString());
+    }
+
+    @FXML
+    private void OnDragDropped(DragEvent event)
+    {
+        //System.out.println("Drag Dropped");
+        Dragboard db = event.getDragboard();
+        if(event.getDragboard().hasString()){
+            System.out.println("Drag Dropped");
+            //CategoryTreeTableView.
+            //TreeItem<Category> test = CategoryTreeTableView.getRow(event.)
+            root.getChildren().add(new TreeItem<Category>(new Category(db.getString())));
+        }
+        //
+        event.setDropCompleted(true);
+        event.consume();
+    }
+
+    @FXML
+    private void GetRow(MouseEvent e){
+
+    }
+
+    @FXML
+    private void AddCategory()
+    {
+        root.getChildren().add(new TreeItem<Category>(new Category(CategoryInput.getText())));
+        //AddedCategory.setText(CategoryInput.getText());
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<String> Categories = new ArrayList<>();
@@ -100,7 +154,7 @@ public class MainFormController extends MenuItem implements Initializable {
         List<Category> node = new ArrayList<>();
         List<Integer> indexes = new ArrayList<>();
         List<TreeItem<Category>> findNode = new ArrayList<>();
-        TreeItem<Category> root = ReadCategory(category, returnTree, node, findNode);
+        root = ReadCategory(category, returnTree, node, findNode);
         //TreeItem<Category> ChildA = new TreeItem<>();
         //TreeItem<Category> ChildB = new TreeItem<>();
         //TreeItem<Category> ChildAA = new TreeItem<>();
