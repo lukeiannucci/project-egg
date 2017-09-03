@@ -3,6 +3,7 @@ package xyz.jmatt.MainForm;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -10,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Callback;
 import xyz.jmatt.models.Category;
 import xyz.jmatt.models.TransactionModel;
 import xyz.jmatt.services.CategoryService;
@@ -20,6 +22,7 @@ import java.net.URL;
 import java.util.*;
 
 public class MainFormController extends MenuItem implements Initializable {
+    private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
     @FXML
     private BorderPane MainForm;
     @FXML
@@ -75,37 +78,36 @@ public class MainFormController extends MenuItem implements Initializable {
     @FXML
     private void OnLabelDragDetected(MouseEvent event)
     {
-        Dragboard db = AddedCategory.startDragAndDrop(TransferMode.MOVE);
-        ClipboardContent content = new ClipboardContent();
-        //TreeItem<Category> test = (AddedCategoryetSelectedItem();
-        content.putString(AddedCategory.getText());
-        db.setContent(content);
-        event.consume();
-        System.out.println(db.getString());
+//        Dragboard db = AddedCategory.startDragAndDrop(TransferMode.MOVE);
+//        ClipboardContent content = new ClipboardContent();
+//        //TreeItem<Category> test = (AddedCategoryetSelectedItem();
+//        content.putString(AddedCategory.getText());
+//        db.setContent(content);
+//        event.consume();
+//        System.out.println(db.getString());
     }
 
     @FXML
     private void OnDragEntered(DragEvent event)
     {
-        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-        event.consume();
-        System.out.println(event.getDragboard().getString());
+//        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//        event.consume();
+//        System.out.println(event.getDragboard().getString());
     }
 
     @FXML
     private void OnDragDropped(DragEvent event)
     {
         //System.out.println("Drag Dropped");
-        Dragboard db = event.getDragboard();
-        if(event.getDragboard().hasString()){
-            System.out.println("Drag Dropped");
-            //CategoryTreeTableView.
-            //TreeItem<Category> test = CategoryTreeTableView.getRow(event.)
-            root.getChildren().add(new TreeItem<Category>(new Category(db.getString())));
-        }
-        //
-        event.setDropCompleted(true);
-        event.consume();
+//        Dragboard db = event.getDragboard();
+//        if(event.getDragboard().hasString()){
+//            System.out.println("Drag Dropped");
+//            //CategoryTreeTableView.
+//            //TreeItem<Category> test = CategoryTreeTableView.getRow(event.)
+//            root.getChildren().add(new TreeItem<Category>(new Category(db.getString())));
+//        }
+//        event.setDropCompleted(true);
+//        event.consume();
     }
 
     @FXML
@@ -155,6 +157,64 @@ public class MainFormController extends MenuItem implements Initializable {
         List<Integer> indexes = new ArrayList<>();
         List<TreeItem<Category>> findNode = new ArrayList<>();
         root = ReadCategory(category, returnTree, node, findNode);
+        CategoryTreeTableView.setRowFactory(new Callback<TreeTableView, TreeTableRow<Category>>() {
+            @Override
+            public TreeTableRow<Category> call(TreeTableView param) {
+                final TreeTableRow<Category> row = new TreeTableRow<>();
+                row.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        TreeItem<Category> selectedItem = (TreeItem<Category>)CategoryTreeTableView.getSelectionModel().getSelectedItem();
+                        if(selectedItem != null){
+                            Dragboard db = CategoryTreeTableView.startDragAndDrop(TransferMode.MOVE);
+                            db.setDragView(row.snapshot(null, null));
+                            ClipboardContent content = new ClipboardContent();
+                            content.put(SERIALIZED_MIME_TYPE, row.getIndex());
+                            db.setContent(content);
+                            event.consume();
+                            //System.out.println(db.getString());
+                        }
+                    }
+                });
+                row.setOnDragOver(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard db = event.getDragboard();
+                        if(event.getDragboard().hasContent(SERIALIZED_MIME_TYPE)){
+                            event.acceptTransferModes(TransferMode.MOVE);
+                        }
+                        event.consume();
+                    }
+                });
+                row.setOnDragDropped(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard db = event.getDragboard();
+                        boolean success = false;
+                        if(event.getDragboard().hasContent(SERIALIZED_MIME_TYPE)){
+                            int index = (Integer)db.getContent(SERIALIZED_MIME_TYPE);
+                            //int dropIndex = row.getIndex();
+
+
+                            TreeItem<Category> droppedon = row.getTreeItem();
+                            if(droppedon != null){
+                                TreeItem<Category> removeItem = CategoryTreeTableView.getTreeItem(index);
+                                removeItem.getParent().getChildren().remove(removeItem);
+                                System.out.println(droppedon.getValue().getName());
+                                droppedon.getChildren().add(removeItem);
+                            }
+
+                            //((TreeItem<xyz.jmatt.models.Category>) CategoryTreeTableView.getSelectionModel().getSelectedItem()).getParent().getChildren().remove(CategoryTreeTableView.getSelectionModel().getSelectedItem());
+                            success = true;
+                        }
+                        event.setDropCompleted(success);
+                        event.consume();
+                    }
+
+                });
+                return row;
+            }
+        });
         //TreeItem<Category> ChildA = new TreeItem<>();
         //TreeItem<Category> ChildB = new TreeItem<>();
         //TreeItem<Category> ChildAA = new TreeItem<>();
