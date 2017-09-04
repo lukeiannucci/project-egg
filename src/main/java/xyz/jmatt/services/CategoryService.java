@@ -30,6 +30,7 @@ public class CategoryService {
             transaction = null;
 
             result = getOrganizedCategories(unsortedCategories);
+            sortAllSubcategories(result);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,6 +100,55 @@ public class CategoryService {
     }
 
     /**
+     * Adds the given category into the database
+     * @param model the category to add
+     * @return whether the category was added successfully or not
+     */
+    public static boolean addCategory(Category model) {
+        PersonalDatabaseTransaction transaction = null;
+
+        try {
+            transaction = new PersonalDatabaseTransaction();
+            CategoryDao categoryDao = new CategoryDao(transaction);
+
+            categoryDao.pushCategory(model);
+
+            transaction.commit();
+            transaction.close();
+            transaction = null;
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(transaction != null) {
+                transaction.rollback();
+                transaction.close();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Sorts all the lists of subcategories in the tree into alphabetical order
+     * @param category the category whose children to sort
+     */
+    private void sortAllSubcategories(Category category) {
+        Collections.sort(category.getSubcategories(), new Comparator<Category>() {
+            @Override
+            public int compare(Category o1, Category o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+        List<Category> subcategories = category.getSubcategories();
+        for(Category child : subcategories) {
+            if(child.getSubcategories().size() != 0) {
+                sortAllSubcategories(child);
+            }
+        }
+    }
+
+    /**
      * Gets a structured tree of categories
      * @param categories the list of all categories
      * @return the root node of the category tree
@@ -140,35 +190,5 @@ public class CategoryService {
                 return o1.getId().compareTo(o2.getParentId());
             }
         });
-    }
-
-    /**
-     * Adds the given category into the database
-     * @param model the category to add
-     * @return whether the category was added successfully or not
-     */
-    public static boolean addCategory(Category model) {
-        PersonalDatabaseTransaction transaction = null;
-
-        try {
-            transaction = new PersonalDatabaseTransaction();
-            CategoryDao categoryDao = new CategoryDao(transaction);
-
-            categoryDao.pushCategory(model);
-
-            transaction.commit();
-            transaction.close();
-            transaction = null;
-
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if(transaction != null) {
-                transaction.rollback();
-                transaction.close();
-            }
-        }
-        return false;
     }
 }
