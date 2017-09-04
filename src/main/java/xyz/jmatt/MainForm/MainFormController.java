@@ -1,6 +1,11 @@
 package xyz.jmatt.MainForm;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -13,12 +18,15 @@ import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 import xyz.jmatt.models.Category;
+import xyz.jmatt.models.SortableDate;
 import xyz.jmatt.models.TransactionModel;
 import xyz.jmatt.services.CategoryService;
 import xyz.jmatt.services.TransactionService;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 public class MainFormController extends MenuItem implements Initializable {
@@ -65,10 +73,14 @@ public class MainFormController extends MenuItem implements Initializable {
     @FXML
     private void AddTransactionModel()
     {
-        //TODO fix the date
-        TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), 1);
-        new TransactionService().addTransaction(trans);
-        data.add(trans);
+        LocalDate date = DateIn.getValue();
+        long dateMillis = date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+        TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), dateMillis);
+        if(!new TransactionService().addTransaction(trans)) {
+            //TODO show error or something
+        } else {
+            data.add(trans); //only add it to the chart if it saved properly so the user doesn't get confused
+        }
         TransIn.setText("");
         CategoryIn.setText("");
         AmountIn.setText("");
@@ -136,9 +148,15 @@ public class MainFormController extends MenuItem implements Initializable {
         Amount.setCellValueFactory(
                 new PropertyValueFactory<TransactionModel, BigDecimal>("Amount")
         );
-        Date.setCellValueFactory(
-                new PropertyValueFactory<TransactionModel, Long>("Date")
-        );
+//        Date.setCellValueFactory(
+//                new Callback<TableColumn.CellDataFeatures<TransactionModel, String>, ObservableValue>() {
+//                    @Override
+//                    public ObservableValue call(TableColumn.CellDataFeatures<TransactionModel, String> param) {
+//                        return new ReadOnlyStringWrapper(param.getValue().getFormattedDate());
+//                    }
+//                }
+//        );
+        Date.setCellValueFactory(new PropertyValueFactory<TransactionModel, SortableDate>("FormattedDate"));
         Total.setCellValueFactory(
                 new PropertyValueFactory<TransactionModel, String>("Total")
         );

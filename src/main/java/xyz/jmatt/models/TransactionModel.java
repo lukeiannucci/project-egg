@@ -43,6 +43,10 @@ public class TransactionModel {
         this.amount = amount;
     }
 
+    public SortableDate getFormattedDate() {
+        return new SortableDate(date);
+    }
+
     public long getDate() {
         return date;
     }
