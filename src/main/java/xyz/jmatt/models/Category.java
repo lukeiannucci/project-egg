@@ -1,8 +1,6 @@
 package xyz.jmatt.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Category {
     private String name;
@@ -18,6 +16,15 @@ public class Category {
         this.name = passedName;
         this.parentId = passedParent;
         this.id = UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
+    public void sortSubcategories() {
+        Collections.sort(subcategories, new Comparator<Category>() {
+            @Override
+            public int compare(Category o1, Category o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
     }
 
     public void setName(String name) {
