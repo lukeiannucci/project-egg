@@ -21,6 +21,7 @@ import xyz.jmatt.models.Category;
 import xyz.jmatt.models.SortableDate;
 import xyz.jmatt.models.TransactionModel;
 import xyz.jmatt.services.CategoryService;
+import xyz.jmatt.services.CreateAccountService;
 import xyz.jmatt.services.TransactionService;
 
 import java.math.BigDecimal;
@@ -130,7 +131,10 @@ public class MainFormController extends MenuItem implements Initializable {
     @FXML
     private void AddCategory()
     {
-        root.getChildren().add(new TreeItem<Category>(new Category(CategoryInput.getText())));
+        Category addedCategory = new Category(CategoryInput.getText(), root.getValue().getId());
+        //addedCategory.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+        root.getChildren().add(new TreeItem<Category>(addedCategory));
+        CategoryService.addCategory(addedCategory);
         //AddedCategory.setText(CategoryInput.getText());
     }
     @Override
@@ -169,10 +173,8 @@ public class MainFormController extends MenuItem implements Initializable {
 
         //temp
         Category category = new CategoryService().getAllCategories();
-        System.out.println();
         TreeItem<Category> returnTree = new TreeItem<Category>(category);
         List<Category> node = new ArrayList<>();
-        List<Integer> indexes = new ArrayList<>();
         List<TreeItem<Category>> findNode = new ArrayList<>();
         root = ReadCategory(category, returnTree, node, findNode);
         CategoryTreeTableView.setRowFactory(new Callback<TreeTableView, TreeTableRow<Category>>() {
@@ -212,17 +214,16 @@ public class MainFormController extends MenuItem implements Initializable {
                         if(event.getDragboard().hasContent(SERIALIZED_MIME_TYPE)){
                             int index = (Integer)db.getContent(SERIALIZED_MIME_TYPE);
                             //int dropIndex = row.getIndex();
-
-
                             TreeItem<Category> droppedon = row.getTreeItem();
                             if(droppedon != null){
-                                TreeItem<Category> removeItem = CategoryTreeTableView.getTreeItem(index);
-                                removeItem.getParent().getChildren().remove(removeItem);
+                                TreeItem<Category> moveItem = CategoryTreeTableView.getTreeItem(index);
+                                moveItem.getParent().getChildren().remove(moveItem);
                                 System.out.println(droppedon.getValue().getName());
-                                droppedon.getChildren().add(removeItem);
-                            }
+                                droppedon.getChildren().add(moveItem);
+                                moveItem.getValue().setParentId(droppedon.getValue().getId());
+                                CategoryService.moveCategory(moveItem.getValue());
 
-                            //((TreeItem<xyz.jmatt.models.Category>) CategoryTreeTableView.getSelectionModel().getSelectedItem()).getParent().getChildren().remove(CategoryTreeTableView.getSelectionModel().getSelectedItem());
+                            }
                             success = true;
                         }
                         event.setDropCompleted(success);
@@ -233,33 +234,11 @@ public class MainFormController extends MenuItem implements Initializable {
                 return row;
             }
         });
-        //TreeItem<Category> ChildA = new TreeItem<>();
-        //TreeItem<Category> ChildB = new TreeItem<>();
-        //TreeItem<Category> ChildAA = new TreeItem<>();
-        //List<TreeItem<Category>> test = new ArrayList<>();
-        //root.setValue(category);
-        //ChildA.setValue(category.getSubcategories().get(0));
-        //ChildB.setValue(category.getSubcategories().get(1));
-        //ChildAA.setValue(category.getSubcategories().get(0).getSubcategories().get(0));
-         //root.add(new TreeItem<>(new Category("Show Categories")));
-        //List<TreeItem<Category>> CategoryList = new ArrayList<>();
-//            Category myCat = new Category(data.get(i).getCategory());
-//            CategoryList.add(new TreeItem<Category>(myCat));
-//            root.add(new TreeItem<Category>(myCat));
-//            root.get(i).getChildren().add(new TreeItem<Category>(myCat.getSubcategories().get(i)));
-//            test.add(Test(data.get(i).getCategory()));
-//        }
-        //ChildA.getChildren().setAll(ChildAA);
-        //test.add(ChildA);
-        //test.add(ChildB);
-        //root.getChildren().setAll(test);
         TreeCategory.setCellValueFactory(new TreeItemPropertyValueFactory<Category, String>("name"));
         CategoryTreeTableView.setRoot(root);
-        //List<TreeItem<String>> root = new ArrayList<>();
     }
 
     public TreeItem<Category> ReadCategory(Category cat, TreeItem<Category> returnTree, List<Category> comeBackToNode, List<TreeItem<Category>> findNode){
-        ///TreeItem<Category> returnTree = new ArrayList<>();
         if(comeBackToNode.size() > 0){
             comeBackToNode.remove(0);
             findNode.remove(0);

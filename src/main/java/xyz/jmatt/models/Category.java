@@ -2,6 +2,7 @@ package xyz.jmatt.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Category {
     private String name;
@@ -9,10 +10,14 @@ public class Category {
     private String parentId;
     private List<Category> subcategories = new ArrayList<>();
 
-    public Category() {}
-    public Category(String passedName)
+    public Category() {
+        this.id = UUID.randomUUID().toString().replaceAll("-", "");
+    }
+    public Category(String passedName, String passedParent)
     {
         this.name = passedName;
+        this.parentId = passedParent;
+        this.id = UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     public void setName(String name) {

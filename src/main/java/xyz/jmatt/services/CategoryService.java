@@ -73,7 +73,7 @@ public class CategoryService {
         return false;
     }
 
-    public boolean moveCategory(Category model) {
+    public static boolean moveCategory(Category model) {
         PersonalDatabaseTransaction transaction = null;
 
         try {
@@ -147,7 +147,7 @@ public class CategoryService {
      * @param model the category to add
      * @return whether the category was added successfully or not
      */
-    boolean addCategory(Category model) {
+    public static boolean addCategory(Category model) {
         PersonalDatabaseTransaction transaction = null;
 
         try {
