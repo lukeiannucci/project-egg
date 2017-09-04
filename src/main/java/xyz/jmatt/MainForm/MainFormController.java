@@ -220,6 +220,8 @@ public class MainFormController extends MenuItem implements Initializable {
                                 moveItem.getParent().getChildren().remove(moveItem);
                                 System.out.println(droppedon.getValue().getName());
                                 droppedon.getChildren().add(moveItem);
+                                droppedon.getChildren().sort(Comparator.comparing(t->t.getValue().getName()));
+                                //CategoryTreeTableView.sort();//droppedon.getChildren().sorted();
                                 moveItem.getValue().setParentId(droppedon.getValue().getId());
                                 CategoryService.moveCategory(moveItem.getValue());
 
