@@ -174,9 +174,8 @@ public class MainFormController extends MenuItem implements Initializable {
         //temp
         Category category = new CategoryService().getAllCategories();
         TreeItem<Category> returnTree = new TreeItem<Category>(category);
-        List<Category> node = new ArrayList<>();
         List<TreeItem<Category>> findNode = new ArrayList<>();
-        root = ReadCategory(category, returnTree, node, findNode);
+        root = ReadCategory(category, returnTree, findNode);
         CategoryTreeTableView.setRowFactory(new Callback<TreeTableView, TreeTableRow<Category>>() {
             @Override
             public TreeTableRow<Category> call(TreeTableView param) {
@@ -192,14 +191,12 @@ public class MainFormController extends MenuItem implements Initializable {
                             content.put(SERIALIZED_MIME_TYPE, row.getIndex());
                             db.setContent(content);
                             event.consume();
-                            //System.out.println(db.getString());
                         }
                     }
                 });
                 row.setOnDragOver(new EventHandler<DragEvent>() {
                     @Override
                     public void handle(DragEvent event) {
-                        Dragboard db = event.getDragboard();
                         if(event.getDragboard().hasContent(SERIALIZED_MIME_TYPE)){
                             event.acceptTransferModes(TransferMode.MOVE);
                         }
@@ -211,17 +208,14 @@ public class MainFormController extends MenuItem implements Initializable {
                     public void handle(DragEvent event) {
                         Dragboard db = event.getDragboard();
                         boolean success = false;
-                        if(event.getDragboard().hasContent(SERIALIZED_MIME_TYPE)){
+                        if(db.hasContent(SERIALIZED_MIME_TYPE)){
                             int index = (Integer)db.getContent(SERIALIZED_MIME_TYPE);
-                            //int dropIndex = row.getIndex();
                             TreeItem<Category> droppedon = row.getTreeItem();
                             if(droppedon != null){
                                 TreeItem<Category> moveItem = CategoryTreeTableView.getTreeItem(index);
                                 moveItem.getParent().getChildren().remove(moveItem);
-                                System.out.println(droppedon.getValue().getName());
                                 droppedon.getChildren().add(moveItem);
                                 droppedon.getChildren().sort(Comparator.comparing(t->t.getValue().getName()));
-                                //CategoryTreeTableView.sort();//droppedon.getChildren().sorted();
                                 moveItem.getValue().setParentId(droppedon.getValue().getId());
                                 CategoryService.moveCategory(moveItem.getValue());
 
@@ -240,32 +234,24 @@ public class MainFormController extends MenuItem implements Initializable {
         CategoryTreeTableView.setRoot(root);
     }
 
-    public TreeItem<Category> ReadCategory(Category cat, TreeItem<Category> returnTree, List<Category> comeBackToNode, List<TreeItem<Category>> findNode){
-        if(comeBackToNode.size() > 0){
-            comeBackToNode.remove(0);
+    public TreeItem<Category> ReadCategory(Category category, TreeItem<Category> returnTree, List<TreeItem<Category>> findNode){
+        if(findNode.size() > 0){
             findNode.remove(0);
         }
-        if(cat.getSubcategories().size() > 0){
-            List<TreeItem<Category>> test = new ArrayList<>();
+        if(category.getSubcategories().size() > 0){
+            List<TreeItem<Category>> childrenOfCategory = new ArrayList<>();
             int i = 0;
-            for(Category cat1 : cat.getSubcategories()){
-                test.add(new TreeItem<>(cat1));
+            for(Category cat1 : category.getSubcategories()){
+                childrenOfCategory.add(new TreeItem<>(cat1));
                 if(cat1.getSubcategories().size() > 0){
-                    comeBackToNode.add(cat1);
-                    findNode.add(test.get(i));
+                    findNode.add(childrenOfCategory.get(i));
                 }
                 i++;
-
             }
-            returnTree.getChildren().setAll(test);
-            if(comeBackToNode.size() > 0){
-                TreeItem<Category> passedItem = findNode.get(0);
-                ReadCategory(comeBackToNode.get(0), passedItem, comeBackToNode, findNode);
+            returnTree.getChildren().setAll(childrenOfCategory);
+            if(findNode.size() > 0){
+                ReadCategory(findNode.get(0).getValue(), findNode.get(0), findNode);
             }
-            else{
-                return returnTree;
-            }
-            return returnTree;
         }
         return returnTree;
     }
