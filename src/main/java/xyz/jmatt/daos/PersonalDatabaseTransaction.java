@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class PersonalDatabaseTransaction {
     private final String URL_PREFIX = "jdbc:h2:./db/";
-    private final String URL_SUFFIX = ";CIPHER=AES";
+    private final String URL_SUFFIX = ";CIPHER=AES;TRACE_LEVEL_FILE=0";
     private Connection connection;
 
     public PersonalDatabaseTransaction() throws SQLException {

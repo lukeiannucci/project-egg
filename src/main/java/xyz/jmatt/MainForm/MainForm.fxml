@@ -62,13 +62,13 @@
             <VBox layoutX="823.0" layoutY="1.0" prefHeight="866.0" prefWidth="363.0">
                <children>
                   <Region prefHeight="16.0" prefWidth="363.0" />
-                  <TreeTableView fx:id="CategoryTreeTableView" onDragDetected="#OnLabelDragDetected" onDragDropped="#OnDragDropped" onDragOver="#OnDragEntered" onMouseClicked="#GetRow" prefHeight="592.0" prefWidth="363.0">
+                  <TreeTableView fx:id="CategoryTreeTableView" prefHeight="592.0" prefWidth="363.0">
                     <columns>
                       <TreeTableColumn fx:id="TreeCategory" prefWidth="362.0" text="Category" />
                     </columns>
                   </TreeTableView>
                   <Label text="Recent Tree Item" />
-                  <Label fx:id="AddedCategory" onDragDetected="#OnLabelDragDetected" prefHeight="17.0" prefWidth="89.0" text="Label" />
+                  <Label fx:id="AddedCategory" prefHeight="17.0" prefWidth="89.0" text="Label" />
                   <Region prefHeight="23.0" prefWidth="363.0" />
                   <TextField fx:id="CategoryInput" prefHeight="25.0" prefWidth="228.0" promptText="Add Category" />
                   <Button mnemonicParsing="false" onAction="#AddCategory" text="Add" />

@@ -133,7 +133,7 @@ public class CreateAccountService {
         }
 
         for(Category category1 : categories) {
-            new CategoryService().addCategory(category1);
+            CategoryService.addCategory(category1);
         }
     }
 }
