@@ -1,11 +1,6 @@
 package xyz.jmatt.MainForm;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -17,11 +12,11 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
+
 import xyz.jmatt.models.Category;
 import xyz.jmatt.models.SortableDate;
 import xyz.jmatt.models.TransactionModel;
 import xyz.jmatt.services.CategoryService;
-import xyz.jmatt.services.CreateAccountService;
 import xyz.jmatt.services.TransactionService;
 
 import java.math.BigDecimal;
@@ -68,81 +63,26 @@ public class MainFormController extends MenuItem implements Initializable {
     private TextField CategoryInput;
 
     private TreeItem<Category> root;
+    private ObservableList<TransactionModel> transactionData;
 
-    private ObservableList<TransactionModel> data;
 
-    @FXML
-    private void AddTransactionModel()
-    {
-        LocalDate date = DateIn.getValue();
-        long dateMillis = date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
-        TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), dateMillis);
-        if(!new TransactionService().addTransaction(trans)) {
-            //TODO show error or something
-        } else {
-            data.add(trans); //only add it to the chart if it saved properly so the user doesn't get confused
-        }
-        TransIn.setText("");
-        CategoryIn.setText("");
-        AmountIn.setText("");
-        DateIn.getEditor().setText("");
-    }
-
-    @FXML
-    private void OnLabelDragDetected(MouseEvent event)
-    {
-//        Dragboard db = AddedCategory.startDragAndDrop(TransferMode.MOVE);
-//        ClipboardContent content = new ClipboardContent();
-//        //TreeItem<Category> test = (AddedCategoryetSelectedItem();
-//        content.putString(AddedCategory.getText());
-//        db.setContent(content);
-//        event.consume();
-//        System.out.println(db.getString());
-    }
-
-    @FXML
-    private void OnDragEntered(DragEvent event)
-    {
-//        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-//        event.consume();
-//        System.out.println(event.getDragboard().getString());
-    }
-
-    @FXML
-    private void OnDragDropped(DragEvent event)
-    {
-        //System.out.println("Drag Dropped");
-//        Dragboard db = event.getDragboard();
-//        if(event.getDragboard().hasString()){
-//            System.out.println("Drag Dropped");
-//            //CategoryTreeTableView.
-//            //TreeItem<Category> test = CategoryTreeTableView.getRow(event.)
-//            root.getChildren().add(new TreeItem<Category>(new Category(db.getString())));
-//        }
-//        event.setDropCompleted(true);
-//        event.consume();
-    }
-
-    @FXML
-    private void GetRow(MouseEvent e){
-
-    }
-
-    @FXML
-    private void AddCategory()
-    {
-        Category addedCategory = new Category(CategoryInput.getText(), root.getValue().getId());
-        //addedCategory.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-        root.getChildren().add(new TreeItem<Category>(addedCategory));
-        CategoryService.addCategory(addedCategory);
-        //AddedCategory.setText(CategoryInput.getText());
-    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<String> Categories = new ArrayList<>();
-        data = FXCollections.observableArrayList(
+        setupTransactionTable();
+        setupCategoryTree();
+    }
+
+    /**
+     * Sets up the table of transactions
+     */
+    @SuppressWarnings("unchecked")
+    private void setupTransactionTable() {
+        //get all transactions from the database into a list
+        transactionData = FXCollections.observableArrayList(
                 new TransactionService().getAllTransactions()
         );
+
+        //setup columns
         Name.setCellValueFactory(
                 new PropertyValueFactory<TransactionModel, String>("Name")
         );
@@ -152,30 +92,37 @@ public class MainFormController extends MenuItem implements Initializable {
         Amount.setCellValueFactory(
                 new PropertyValueFactory<TransactionModel, BigDecimal>("Amount")
         );
-//        Date.setCellValueFactory(
-//                new Callback<TableColumn.CellDataFeatures<TransactionModel, String>, ObservableValue>() {
-//                    @Override
-//                    public ObservableValue call(TableColumn.CellDataFeatures<TransactionModel, String> param) {
-//                        return new ReadOnlyStringWrapper(param.getValue().getFormattedDate());
-//                    }
-//                }
-//        );
-        Date.setCellValueFactory(new PropertyValueFactory<TransactionModel, SortableDate>("FormattedDate"));
+        Date.setCellValueFactory(
+                new PropertyValueFactory<TransactionModel, SortableDate>("FormattedDate")
+        );
         Total.setCellValueFactory(
                 new PropertyValueFactory<TransactionModel, String>("Total")
         );
 
+        //disable column reordering
         TransactionTable.skinProperty().addListener((observable, oldValue, newValue) -> {
             final TableHeaderRow header = (TableHeaderRow)TransactionTable.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> {header.setReordering(false);});
         });
-        TransactionTable.setItems(data);
-
         //temp
         Category category = new CategoryService().getAllCategories();
         TreeItem<Category> returnTree = new TreeItem<Category>(category);
         List<TreeItem<Category>> findNode = new ArrayList<>();
         root = ReadCategory(category, returnTree, findNode);
+        //add list of transactions to table
+        TransactionTable.setItems(transactionData);
+    }
+
+    /**
+     * Builds a tree of categories and prepares for drag events
+     */
+    @SuppressWarnings("unchecked")
+    private void setupCategoryTree() {
+        //get the tree of categories from the database
+        Category categoryTree = new CategoryService().getAllCategories();
+        TreeItem<Category> returnTree = new TreeItem<>(categoryTree);
+        List<TreeItem<Category>> findNode = new ArrayList<>();
+        root = ReadCategory(categoryTree, returnTree, findNode);
         CategoryTreeTableView.setRowFactory(new Callback<TreeTableView, TreeTableRow<Category>>() {
             @Override
             public TreeTableRow<Category> call(TreeTableView param) {
@@ -183,8 +130,10 @@ public class MainFormController extends MenuItem implements Initializable {
                 row.setOnDragDetected(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
+                        //get the item that was dragged
                         TreeItem<Category> selectedItem = (TreeItem<Category>)CategoryTreeTableView.getSelectionModel().getSelectedItem();
-                        if(selectedItem != null){
+                        if(selectedItem != null) {
+                            //serialize the category that is being dragged and put in on the clipboard
                             Dragboard db = CategoryTreeTableView.startDragAndDrop(TransferMode.MOVE);
                             db.setDragView(row.snapshot(null, null));
                             ClipboardContent content = new ClipboardContent();
@@ -208,19 +157,22 @@ public class MainFormController extends MenuItem implements Initializable {
                     public void handle(DragEvent event) {
                         Dragboard db = event.getDragboard();
                         boolean success = false;
-                        if(db.hasContent(SERIALIZED_MIME_TYPE)){
+                        if(event.getDragboard().hasContent(SERIALIZED_MIME_TYPE)) {
                             int index = (Integer)db.getContent(SERIALIZED_MIME_TYPE);
-                            TreeItem<Category> droppedon = row.getTreeItem();
-                            if(droppedon != null){
+                            //int dropIndex = row.getIndex();
+                            TreeItem<Category> droppedOn = row.getTreeItem();
+                            if(droppedOn != null){
                                 TreeItem<Category> moveItem = CategoryTreeTableView.getTreeItem(index);
                                 moveItem.getParent().getChildren().remove(moveItem);
-                                droppedon.getChildren().add(moveItem);
-                                droppedon.getChildren().sort(Comparator.comparing(t->t.getValue().getName()));
-                                moveItem.getValue().setParentId(droppedon.getValue().getId());
-                                CategoryService.moveCategory(moveItem.getValue());
-
+                                System.out.println(droppedOn.getValue().getName());
+                                droppedOn.getChildren().add(moveItem);
+                                droppedOn.getChildren().sort(Comparator.comparing(t->t.getValue().getName()));
+                                //CategoryTreeTableView.sort();//droppedon.getChildren().sorted();
+                                moveItem.getValue().setParentId(droppedOn.getValue().getId());
+                                success = CategoryService.moveCategory(moveItem.getValue());
+                            } else {
+                                success = true;
                             }
-                            success = true;
                         }
                         event.setDropCompleted(success);
                         event.consume();
@@ -233,8 +185,38 @@ public class MainFormController extends MenuItem implements Initializable {
         TreeCategory.setCellValueFactory(new TreeItemPropertyValueFactory<Category, String>("name"));
         CategoryTreeTableView.setRoot(root);
     }
+    /**
+     * Creates a new TransactionModel based on user input and adds it to the database
+     */
+    @FXML
+    private void AddTransactionModel()
+    {
+        LocalDate date = DateIn.getValue();
+        long dateMillis = date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+        TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), dateMillis);
+        if(!new TransactionService().addTransaction(trans)) {
+            //TODO show error or something
+        } else {
+            transactionData.add(trans); //only add it to the chart if it saved properly so the user doesn't get confused
+        }
+        TransIn.setText("");
+        CategoryIn.setText("");
+        AmountIn.setText("");
+        DateIn.getEditor().setText("");
+    }
 
-    public TreeItem<Category> ReadCategory(Category category, TreeItem<Category> returnTree, List<TreeItem<Category>> findNode){
+    /**
+     * Creates a new CategoryModel based on the user's input and adds it to the database
+     */
+    @FXML
+    private void AddCategory()
+    {
+        Category addedCategory = new Category(CategoryInput.getText(), root.getValue().getId());
+        root.getChildren().add(new TreeItem<Category>(addedCategory));
+        CategoryService.addCategory(addedCategory);
+    }
+
+    private TreeItem<Category> ReadCategory(Category category, TreeItem<Category> returnTree, List<TreeItem<Category>> findNode){
         if(findNode.size() > 0){
             findNode.remove(0);
         }

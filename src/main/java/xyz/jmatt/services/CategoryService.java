@@ -7,6 +7,9 @@ import xyz.jmatt.models.Category;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Performs tasks related to storing and organizing categories
+ */
 public class CategoryService {
 
     public CategoryService() {}
@@ -45,6 +48,36 @@ public class CategoryService {
     }
 
     /**
+     * Adds the given category into the database
+     * @param model the category to add
+     * @return whether the category was added successfully or not
+     */
+    public static boolean addCategory(Category model) {
+        PersonalDatabaseTransaction transaction = null;
+
+        try {
+            transaction = new PersonalDatabaseTransaction();
+            CategoryDao categoryDao = new CategoryDao(transaction);
+
+            categoryDao.pushCategory(model);
+
+            transaction.commit();
+            transaction.close();
+            transaction = null;
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(transaction != null) {
+                transaction.rollback();
+                transaction.close();
+            }
+        }
+        return false;
+    }
+
+    /**
      * Updates a ategory in the database
      * @param model the model of category with new details
      * @return whether the update was successful
@@ -74,6 +107,11 @@ public class CategoryService {
         return false;
     }
 
+    /**
+     * Updates the parentId of the given category in the database
+     * @param model the model with the new id to update
+     * @return whether the update was successful
+     */
     public static boolean moveCategory(Category model) {
         PersonalDatabaseTransaction transaction = null;
 
@@ -82,36 +120,6 @@ public class CategoryService {
             CategoryDao categoryDao = new CategoryDao(transaction);
 
             categoryDao.moveCategory(model.getId(), model.getParentId());
-
-            transaction.commit();
-            transaction.close();
-            transaction = null;
-
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if(transaction != null) {
-                transaction.rollback();
-                transaction.close();
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Adds the given category into the database
-     * @param model the category to add
-     * @return whether the category was added successfully or not
-     */
-    public static boolean addCategory(Category model) {
-        PersonalDatabaseTransaction transaction = null;
-
-        try {
-            transaction = new PersonalDatabaseTransaction();
-            CategoryDao categoryDao = new CategoryDao(transaction);
-
-            categoryDao.pushCategory(model);
 
             transaction.commit();
             transaction.close();
