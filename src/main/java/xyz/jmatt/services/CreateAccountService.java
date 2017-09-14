@@ -3,19 +3,14 @@ package xyz.jmatt.services;
 import xyz.jmatt.Strings;
 import xyz.jmatt.auth.PasswordManager;
 import xyz.jmatt.daos.*;
-import xyz.jmatt.models.Category;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.models.UserModel;
 
 import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -73,9 +68,6 @@ public class CreateAccountService {
                 transaction.close();
                 transaction = null;
 
-                //temp
-                generateCategories();
-
                 result = new SimpleResult("", false);
             }
         } catch (SQLException e) {
@@ -109,31 +101,5 @@ public class CreateAccountService {
         categoryDao.initializeTable();
         transaction.commit();
         transaction.close();
-    }
-
-    //temp
-    private void generateCategories() {
-        int categoriesToGenerate = 5;
-
-        List<Category> categories = new ArrayList<>();
-
-        Category category = new Category();
-        category.setName("Root");
-        category.setParentId(null);
-        category.setId("c1");
-        categories.add(category);
-
-        for(int i = 0; i < categoriesToGenerate - 1; i++) {
-            Category category1 = new Category();
-            String string = UUID.randomUUID().toString().replaceAll("-", "");
-            category1.setName(Integer.toString(i));
-            category1.setId(string);
-            category1.setParentId(categories.get(new Random().nextInt(categories.size())).getId());
-            categories.add(category1);
-        }
-
-        for(Category category1 : categories) {
-            CategoryService.addCategory(category1);
-        }
     }
 }
