@@ -37,10 +37,17 @@ public class Main extends Application {
         primaryStage.setMinWidth(primaryStage.getWidth());
     }
 
-    //TODO pass is window dimenstions to set the scene size
+    //TODO pass is window dimensions to set the scene size
     public static void changeScene(String sceneName, int width, int height) throws IOException {
         Parent scene = FXMLLoader.load(Main.class.getResource(sceneName));
         scene.getStylesheets().add(sceneName.substring(0, sceneName.length() - 5) + ".css"); //will fix
         stage.setScene(new Scene(scene, width, height, Color.valueOf("#666666")));
+    }
+
+    public static void launchMain() throws IOException {
+        Parent scene = FXMLLoader.load(Main.class.getResource("/xyz/jmatt/MainForm/MainForm.fxml"));
+//        scene.getStylesheets().add();
+        stage.setScene(new Scene(scene));
+//        stage.setMaximized(true);
     }
 }

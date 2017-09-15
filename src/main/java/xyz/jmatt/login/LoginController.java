@@ -91,7 +91,7 @@ public class LoginController implements Initializable{
             //logged in TODO
             System.out.println(ClientSingleton.getINSTANCE().getUserId());
             System.out.println(ClientSingleton.getINSTANCE().getDbKey());
-            Main.changeScene("/xyz/jmatt/MainForm/MainForm.fxml", 1200, 900);
+            Main.launchMain();
         } else {
             setMessage(result.getMessage());
             passwordField.clear();

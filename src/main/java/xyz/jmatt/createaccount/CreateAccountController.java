@@ -185,7 +185,7 @@ public class CreateAccountController implements Initializable{
             //TODO login them in or make them retype credentials??
             System.out.println(ClientSingleton.getINSTANCE().getUserId());
             System.out.println(ClientSingleton.getINSTANCE().getDbKey());
-            Main.changeScene("/xyz/jmatt/MainForm/MainForm.fxml", 1200, 900);
+            Main.launchMain();
         } else {
             setMessage(result.getMessage());
         }
@@ -196,10 +196,6 @@ public class CreateAccountController implements Initializable{
         Globals.NeedsTransition = true;
         Globals.SlideTransition(SlidePane, 0, Main.stage.getWidth(), "/xyz/jmatt/login/Login.fxml", 600, 450);
     }
-
-
-
-
 
     /**
      * Sets the on screen  message label to the given message
