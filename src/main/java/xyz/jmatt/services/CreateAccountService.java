@@ -3,6 +3,7 @@ package xyz.jmatt.services;
 import xyz.jmatt.Strings;
 import xyz.jmatt.auth.PasswordManager;
 import xyz.jmatt.daos.*;
+import xyz.jmatt.models.Category;
 import xyz.jmatt.models.ClientSingleton;
 import xyz.jmatt.models.SimpleResult;
 import xyz.jmatt.models.UserModel;
@@ -99,6 +100,14 @@ public class CreateAccountService {
         transaction = new PersonalDatabaseTransaction();
         CategoryDao categoryDao = new CategoryDao(transaction);
         categoryDao.initializeTable();
+        transaction.commit();
+        transaction.close();
+
+        transaction = new PersonalDatabaseTransaction();
+        Category rootCategory = new Category();
+        rootCategory.setName("ROOT");
+        categoryDao = new CategoryDao(transaction);
+        categoryDao.pushCategory(rootCategory);
         transaction.commit();
         transaction.close();
     }

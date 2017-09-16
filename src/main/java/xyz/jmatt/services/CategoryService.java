@@ -78,7 +78,7 @@ public class CategoryService {
     }
 
     /**
-     * Updates a ategory in the database
+     * Updates a category in the database
      * @param model the model of category with new details
      * @return whether the update was successful
      */
