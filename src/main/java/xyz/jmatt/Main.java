@@ -48,6 +48,6 @@ public class Main extends Application {
         Parent scene = FXMLLoader.load(Main.class.getResource("/xyz/jmatt/MainForm/MainForm.fxml"));
 //        scene.getStylesheets().add();
         stage.setScene(new Scene(scene));
-//        stage.setMaximized(true);
+        stage.setMaximized(true);
     }
 }
