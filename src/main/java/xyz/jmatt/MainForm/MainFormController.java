@@ -179,6 +179,7 @@ public class MainFormController extends MenuItem implements Initializable {
                     }
 
                 });
+                CategoryTreeTableView.refresh();
                 return row;
             }
         });
