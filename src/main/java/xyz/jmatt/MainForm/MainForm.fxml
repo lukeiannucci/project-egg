@@ -29,11 +29,11 @@
                   <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="5.0" prefHeight="15.0" VBox.vgrow="ALWAYS" />
                   <TableView fx:id="TransactionTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="300.0" minWidth="300.0" prefHeight="300.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="Name" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="400.0" text="Name" />
-                        <TableColumn fx:id="Category" editable="false" maxWidth="1.7976931348623157E308" minWidth="60.0" prefWidth="99.0" text="Category" />
-                        <TableColumn fx:id="Amount" editable="false" maxWidth="1.7976931348623157E308" minWidth="60.0" prefWidth="99.0" text="Amount" />
-                        <TableColumn fx:id="Date" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="99.0" text="Date" />
-                        <TableColumn fx:id="Total" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="99.0" text="Total" />
+                        <TableColumn fx:id="Name" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Name" />
+                        <TableColumn fx:id="Category" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Category" />
+                        <TableColumn fx:id="Amount" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Amount" />
+                        <TableColumn fx:id="Date" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Date" />
+                        <TableColumn fx:id="Total" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Total" />
                      </columns>
                   </TableView>
                   <HBox prefHeight="42.0" prefWidth="798.0">
@@ -62,7 +62,7 @@
                   <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="5.0" prefHeight="15.0" VBox.vgrow="ALWAYS" />
                   <TreeTableView fx:id="CategoryTreeTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TreeTableColumn fx:id="TreeCategory" maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Category" />
+                      <TreeTableColumn fx:id="TreeCategory" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Category" />
                     </columns>
                   </TreeTableView>
                   <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="5.0" prefHeight="15.0" VBox.vgrow="ALWAYS" />

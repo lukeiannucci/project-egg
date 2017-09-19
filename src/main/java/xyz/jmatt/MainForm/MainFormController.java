@@ -1,6 +1,7 @@
 package xyz.jmatt.MainForm;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -104,11 +105,6 @@ public class MainFormController extends MenuItem implements Initializable {
             final TableHeaderRow header = (TableHeaderRow)TransactionTable.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> {header.setReordering(false);});
         });
-        //temp
-        Category category = new CategoryService().getAllCategories();
-        TreeItem<Category> returnTree = new TreeItem<Category>(category);
-        List<TreeItem<Category>> findNode = new ArrayList<>();
-        root = ReadCategory(category, returnTree, findNode);
         //add list of transactions to table
         TransactionTable.setItems(transactionData);
     }
@@ -123,6 +119,7 @@ public class MainFormController extends MenuItem implements Initializable {
         TreeItem<Category> returnTree = new TreeItem<>(categoryTree);
         List<TreeItem<Category>> findNode = new ArrayList<>();
         root = ReadCategory(categoryTree, returnTree, findNode);
+        CategoryTreeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
         CategoryTreeTableView.setRowFactory(new Callback<TreeTableView, TreeTableRow<Category>>() {
             @Override
             public TreeTableRow<Category> call(TreeTableView param) {

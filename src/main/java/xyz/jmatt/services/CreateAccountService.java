@@ -92,17 +92,20 @@ public class CreateAccountService {
     private void createNewUserDatabase() throws SQLException {
         PersonalDatabaseTransaction transaction = new PersonalDatabaseTransaction();
 
+        //set up transaction database
         TransactionDao transactionDao = new TransactionDao(transaction);
         transactionDao.initializeTable();
         transaction.commit();
         transaction.close();
 
+        //setup category database
         transaction = new PersonalDatabaseTransaction();
         CategoryDao categoryDao = new CategoryDao(transaction);
         categoryDao.initializeTable();
         transaction.commit();
         transaction.close();
 
+        //add root category to category database
         transaction = new PersonalDatabaseTransaction();
         Category rootCategory = new Category();
         rootCategory.setName("ROOT");
