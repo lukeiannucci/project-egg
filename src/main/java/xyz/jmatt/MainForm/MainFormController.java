@@ -103,8 +103,16 @@ public class MainFormController extends MenuItem implements Initializable {
         //disable column reordering
         TransactionTable.skinProperty().addListener((observable, oldValue, newValue) -> {
             final TableHeaderRow header = (TableHeaderRow)TransactionTable.lookup("TableHeaderRow");
-            header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> {header.setReordering(false);});
+            header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> header.setReordering(false));
         });
+
+        Name.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
+        Category.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
+        Amount.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
+        Date.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
+        Total.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
+
+
         //add list of transactions to table
         TransactionTable.setItems(transactionData);
     }
