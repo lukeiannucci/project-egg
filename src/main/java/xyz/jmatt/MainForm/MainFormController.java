@@ -22,6 +22,7 @@ import xyz.jmatt.services.TransactionService;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -39,7 +40,9 @@ public class MainFormController extends MenuItem implements Initializable {
     @FXML
     private TableColumn Category;
     @FXML
-    private TableColumn Amount;
+    private TableColumn InAmount;
+    @FXML
+    private TableColumn OutAmount;
     @FXML
     private TableColumn Date;
     @FXML
@@ -85,20 +88,17 @@ public class MainFormController extends MenuItem implements Initializable {
 
         //setup columns
         Name.setCellValueFactory(
-                new PropertyValueFactory<TransactionModel, String>("Name")
-        );
+                new PropertyValueFactory<TransactionModel, String>("Name"));
         Category.setCellValueFactory(
-                new PropertyValueFactory<TransactionModel, String>("Category")
-        );
-        Amount.setCellValueFactory(
-                new PropertyValueFactory<TransactionModel, BigDecimal>("Amount")
-        );
+                new PropertyValueFactory<TransactionModel, String>("Category"));
+        InAmount.setCellValueFactory(
+                new PropertyValueFactory<TransactionModel, BigDecimal>("InAmount"));
+        InAmount.setCellValueFactory(
+                new PropertyValueFactory<TransactionModel, BigDecimal>("OutAmount"));
         Date.setCellValueFactory(
-                new PropertyValueFactory<TransactionModel, SortableDate>("FormattedDate")
-        );
+                new PropertyValueFactory<TransactionModel, SortableDate>("FormattedDate"));
         Total.setCellValueFactory(
-                new PropertyValueFactory<TransactionModel, String>("Total")
-        );
+                new PropertyValueFactory<TransactionModel, String>("Total"));
 
         //disable column reordering
         TransactionTable.skinProperty().addListener((observable, oldValue, newValue) -> {
@@ -106,15 +106,17 @@ public class MainFormController extends MenuItem implements Initializable {
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> header.setReordering(false));
         });
 
-        Name.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
-        Category.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
-        Amount.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
-        Date.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
-        Total.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.2));
-
+        Name.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.40));
+        Category.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.16));
+        InAmount.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.10));
+        OutAmount.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.10));
+        Date.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.12));
+        Total.prefWidthProperty().bind(TransactionTable.widthProperty().multiply(0.12));
 
         //add list of transactions to table
         TransactionTable.setItems(transactionData);
+
+        resetTransactionFields();
     }
 
     /**
@@ -197,18 +199,30 @@ public class MainFormController extends MenuItem implements Initializable {
     @FXML
     private void AddTransactionModel()
     {
-        LocalDate date = DateIn.getValue();
-        long dateMillis = date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
-        TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), dateMillis);
-        if(!new TransactionService().addTransaction(trans)) {
-            //TODO show error or something
+        if(TransIn.getText() == null || CategoryIn.getText() == null || AmountIn.getText() == null || DateIn.getValue() == null) {
+            //todo show error
         } else {
-            transactionData.add(trans); //only add it to the chart if it saved properly so the user doesn't get confused
+            LocalDate date = DateIn.getValue();
+            long dateMillis = date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+            TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), dateMillis);
+            if(!new TransactionService().addTransaction(trans)) {
+                //TODO show error or something
+            } else {
+                transactionData.add(trans); //only add it to the chart if it saved properly so the user doesn't get confused
+            }
+            resetTransactionFields();
         }
+
+    }
+
+    /**
+     * Resets the input fields for a new transaction
+     */
+    private void resetTransactionFields() {
         TransIn.setText("");
         CategoryIn.setText("");
         AmountIn.setText("");
-        DateIn.getEditor().setText("");
+        DateIn.setValue(LocalDate.now());
     }
 
     /**

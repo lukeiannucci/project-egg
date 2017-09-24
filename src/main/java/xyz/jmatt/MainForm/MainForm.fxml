@@ -27,30 +27,28 @@
             <VBox layoutX="14.0" layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="300.0" HBox.hgrow="ALWAYS">
                <children>
                   <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="5.0" prefHeight="15.0" VBox.vgrow="ALWAYS" />
-                  <TableView fx:id="TransactionTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="300.0" minWidth="300.0" prefHeight="300.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="TransactionTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="300.0" minWidth="300.0" prefHeight="300.0" prefWidth="700.0" VBox.vgrow="ALWAYS">
                      <columns>
                         <TableColumn fx:id="Name" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Name" />
                         <TableColumn fx:id="Category" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Category" />
-                        <TableColumn fx:id="Amount" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Amount" />
+                        <TableColumn fx:id="InAmount" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="In" />
+                        <TableColumn fx:id="OutAmount" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Out" />
                         <TableColumn fx:id="Date" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Date" />
                         <TableColumn fx:id="Total" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="100.0" text="Total" />
                      </columns>
                   </TableView>
-                  <HBox prefHeight="42.0" prefWidth="798.0">
+                  <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="5.0" prefHeight="15.0" />
+                  <HBox prefHeight="40.0" prefWidth="300.0">
                      <children>
-                        <TextField fx:id="TransIn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Transaction Name" />
-                        <Region prefHeight="100.0" prefWidth="57.0" />
-                        <TextField fx:id="CategoryIn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Category" />
-                        <Region prefHeight="100.0" prefWidth="57.0" />
-                        <TextField fx:id="AmountIn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Amount" />
-                        <Region prefHeight="16.0" prefWidth="57.0" />
-                        <DatePicker fx:id="DateIn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Date" />
-                     </children>
-                  </HBox>
-                  <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="AddTransaction" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AddTransactionModel" prefHeight="25.0" prefWidth="115.0" text="Add Transaction" HBox.hgrow="NEVER" />
+                        <TextField fx:id="TransIn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="125.0" prefWidth="125.0" promptText="Transaction Name" HBox.hgrow="ALWAYS" />
+                        <Region maxWidth="1.7976931348623157E308" minWidth="25.0" prefWidth="25.0" HBox.hgrow="SOMETIMES" />
+                        <TextField fx:id="CategoryIn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="50.0" promptText="Category" HBox.hgrow="ALWAYS" />
+                        <Region maxWidth="1.7976931348623157E308" minWidth="25.0" prefWidth="25.0" HBox.hgrow="SOMETIMES" />
+                        <TextField fx:id="AmountIn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="35.0" prefWidth="35.0" promptText="Amount" HBox.hgrow="ALWAYS" />
+                        <Region maxWidth="1.7976931348623157E308" minWidth="25.0" prefWidth="25.0" HBox.hgrow="SOMETIMES" />
+                        <DatePicker fx:id="DateIn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="50.0" promptText="Date" HBox.hgrow="ALWAYS" />
+                        <Region maxWidth="1.7976931348623157E308" minWidth="25.0" prefWidth="25.0" HBox.hgrow="SOMETIMES" />
+                        <Button fx:id="AddTransaction" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="50.0" mnemonicParsing="false" onAction="#AddTransactionModel" prefWidth="50.0" text="Add Transaction" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <Region maxHeight="-Infinity" maxWidth="-Infinity" minWidth="5.0" prefHeight="15.0" VBox.vgrow="ALWAYS" />
@@ -66,8 +64,13 @@
                     </columns>
                   </TreeTableView>
                   <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="5.0" prefHeight="15.0" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="CategoryInput" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="100.0" prefHeight="25.0" promptText="Add Category" VBox.vgrow="NEVER" />
-                  <Button mnemonicParsing="false" onAction="#AddCategory" text="Add" VBox.vgrow="NEVER" />
+                  <HBox maxWidth="1.7976931348623157E308" minWidth="50.0" prefHeight="40.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="CategoryInput" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="100.0" prefHeight="25.0" promptText="Add Category" HBox.hgrow="ALWAYS" />
+                        <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="25.0" prefWidth="25.0" />
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="50.0" mnemonicParsing="false" onAction="#AddCategory" prefWidth="50.0" text="Add" HBox.hgrow="SOMETIMES" />
+                     </children>
+                  </HBox>
                   <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="5.0" prefHeight="15.0" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
