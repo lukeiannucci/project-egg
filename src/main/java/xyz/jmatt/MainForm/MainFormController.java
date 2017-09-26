@@ -1,28 +1,35 @@
 package xyz.jmatt.MainForm;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import xyz.jmatt.Main;
+import xyz.jmatt.Strings;
+import xyz.jmatt.dialogbox.DialogController;
 import xyz.jmatt.models.Category;
 import xyz.jmatt.models.SortableDate;
 import xyz.jmatt.models.TransactionModel;
 import xyz.jmatt.services.CategoryService;
 import xyz.jmatt.services.TransactionService;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -197,16 +204,15 @@ public class MainFormController extends MenuItem implements Initializable {
      * Creates a new TransactionModel based on user input and adds it to the database
      */
     @FXML
-    private void AddTransactionModel()
-    {
-        if(TransIn.getText() == null || CategoryIn.getText() == null || AmountIn.getText() == null || DateIn.getValue() == null) {
-            //todo show error
+    private void AddTransactionModel() {
+        if(TransIn.getText().trim().isEmpty() || CategoryIn.getText().trim().isEmpty() || AmountIn.getText().trim().isEmpty()) {
+            Main.showDialog(Strings.ERROR_EMPTY_FIELD);
         } else {
             LocalDate date = DateIn.getValue();
             long dateMillis = date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
             TransactionModel trans = new TransactionModel(TransIn.getText(),CategoryIn.getText(),new BigDecimal(AmountIn.getText()), dateMillis);
             if(!new TransactionService().addTransaction(trans)) {
-                //TODO show error or something
+                Main.showDialog(Strings.ERROR_TRANSACTION_ADD);
             } else {
                 transactionData.add(trans); //only add it to the chart if it saved properly so the user doesn't get confused
             }
@@ -222,7 +228,7 @@ public class MainFormController extends MenuItem implements Initializable {
         TransIn.setText("");
         CategoryIn.setText("");
         AmountIn.setText("");
-        DateIn.setValue(LocalDate.now());
+        DateIn.setValue(LocalDate.now()); //default date to today
     }
 
     /**
@@ -232,8 +238,11 @@ public class MainFormController extends MenuItem implements Initializable {
     private void AddCategory()
     {
         Category addedCategory = new Category(CategoryInput.getText(), root.getValue().getId());
-        root.getChildren().add(new TreeItem<Category>(addedCategory));
-        CategoryService.addCategory(addedCategory);
+        if(!CategoryService.addCategory(addedCategory)) {
+            Main.showDialog(Strings.ERROR_CATEGORY_ADD);
+        } else {
+            root.getChildren().add(new TreeItem<Category>(addedCategory)); //only add the category to the on-screen model if it saved correctly
+        }
     }
 
     private TreeItem<Category> ReadCategory(Category category, TreeItem<Category> returnTree, List<TreeItem<Category>> findNode){

@@ -1,5 +1,6 @@
 package xyz.jmatt;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,9 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.RadialGradient;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import xyz.jmatt.dialogbox.DialogController;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +27,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         BorderPane root = FXMLLoader.load(getClass().getResource("/xyz/jmatt/login/Login.fxml"));
         stage  = primaryStage;
-        primaryStage.setTitle("Banknotes");
+        primaryStage.setTitle(Strings.TITLE);
         Scene scene = new Scene(root, 600, 450);
         Font.loadFont(new File("/font/Roboto-Thin.tff").toURI().toURL().toExternalForm(), 10);
         Font.loadFont(new File("/font/Roboto-Black.tff").toURI().toURL().toExternalForm(), 10);
@@ -46,8 +49,27 @@ public class Main extends Application {
 
     public static void launchMain() throws IOException {
         Parent scene = FXMLLoader.load(Main.class.getResource("/xyz/jmatt/MainForm/MainForm.fxml"));
-//        scene.getStylesheets().add();
         stage.setScene(new Scene(scene));
         stage.setMaximized(true);
+    }
+
+    public static void showDialog(String text) {
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        dialogStage.setTitle(Strings.ERROR + " - " + Strings.TITLE);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/xyz/jmatt/dialogbox/DialogBox.fxml"));
+            Parent dialog = loader.load();
+
+            DialogController controller = (DialogController)loader.getController();
+            controller.setMessage(text);
+
+            dialogStage.setScene(new Scene(dialog));
+            dialogStage.show();
+        } catch (IOException e) {
+            System.err.println("ERROR: Failed to display dialog box");
+            e.printStackTrace();
+        }
     }
 }
